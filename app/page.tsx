@@ -1,9 +1,10 @@
 import { ProductGrid } from "@/components/shop/ProductGrid";
 import { GlassPanel } from "@/components/ui/GlassPanel";
 import { getCollection, isShopifyConfigured } from "@/lib/shopify";
+import { SHOPIFY_COLLECTION_HANDLE } from "@/lib/storefront-config";
 
 export default async function HomePage() {
-  const collection = await getCollection("all");
+  const collection = await getCollection(SHOPIFY_COLLECTION_HANDLE);
   const configured = isShopifyConfigured();
 
   return (
@@ -25,7 +26,7 @@ export default async function HomePage() {
           <div className="t-ui mt-4 leading-7 text-[color:var(--text-muted)]">
             {collection?.description ||
               (configured
-                ? "Assign a storefront collection to the `all` handle or update the server fetch handle in app/page.tsx."
+                ? `Set SHOPIFY_COLLECTION_HANDLE to a real collection handle. Current handle: ${SHOPIFY_COLLECTION_HANDLE}.`
                 : "Configure the Shopify domain and storefront token to stream live garments into the grid.")}
           </div>
         </GlassPanel>

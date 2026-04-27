@@ -3,13 +3,14 @@ import { notFound } from "next/navigation";
 import { ProductDetailClient } from "@/components/shop/ProductDetailClient";
 import { GlassPanel } from "@/components/ui/GlassPanel";
 import { getCollection, getProduct, isShopifyConfigured } from "@/lib/shopify";
+import { SHOPIFY_COLLECTION_HANDLE } from "@/lib/storefront-config";
 
 interface ProductPageProps {
   params: Promise<{ handle: string }>;
 }
 
 export async function generateStaticParams() {
-  const collection = await getCollection("all");
+  const collection = await getCollection(SHOPIFY_COLLECTION_HANDLE);
 
   return (collection?.products ?? []).map((product) => ({ handle: product.handle }));
 }

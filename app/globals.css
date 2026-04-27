@@ -1,0 +1,285 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Cabinet Grotesk";
+  src: url("/fonts/CabinetGrotesk-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cabinet Grotesk";
+  src: url("/fonts/CabinetGrotesk-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cabinet Grotesk";
+  src: url("/fonts/CabinetGrotesk-Extrabold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/JetBrainsMono-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/JetBrainsMono-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: oklch(0.12 0.02 40);
+  --bg-soft: oklch(0.17 0.025 38);
+  --bg-elevated: oklch(0.22 0.03 42);
+  --text: oklch(0.92 0.03 85);
+  --text-muted: oklch(0.55 0.04 70);
+  --accent: oklch(0.72 0.18 48);
+  --accent-strong: oklch(0.82 0.14 55);
+  --accent-glow: oklch(0.65 0.22 42);
+  --glass-fill: oklch(1 0 0 / 0.06);
+  --glass-border: oklch(1 0 0 / 0.12);
+  --glass-highlight: oklch(1 0 0 / 0.15);
+  --glass-tint-a: oklch(0.6 0.15 38);
+  --glass-tint-b: oklch(0.7 0.12 65);
+  --glass-shadow: oklch(0.65 0.22 42 / 0.15);
+  --font-display: "Cabinet Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 120ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--bg);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at top, color-mix(in oklch, var(--accent-glow) 20%, transparent), transparent 45%),
+    radial-gradient(circle at bottom, color-mix(in oklch, var(--glass-tint-b) 10%, transparent), transparent 40%),
+    linear-gradient(180deg, color-mix(in oklch, var(--bg) 78%, black), var(--bg-soft) 52%, var(--bg));
+  color: var(--text);
+  font-family: var(--font-display);
+  text-rendering: optimizeLegibility;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(115deg, color-mix(in oklch, var(--accent) 7%, transparent), transparent 28%),
+    linear-gradient(225deg, color-mix(in oklch, var(--accent-strong) 9%, transparent), transparent 38%);
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+::selection {
+  background: color-mix(in oklch, var(--accent-glow) 40%, transparent);
+  color: var(--text);
+}
+
+.t-hero {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3rem, 8vw, 7rem);
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+.t-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 4rem);
+  letter-spacing: -0.03em;
+}
+
+.t-product {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  letter-spacing: 0;
+}
+
+.t-ui {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: 0;
+}
+
+.t-label {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.t-price {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+
+.t-vaulted {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: oklch(0.45 0.06 38);
+}
+
+.glass-panel {
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  background: var(--glass-fill);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight),
+    0 8px 32px var(--glass-shadow);
+  isolation: isolate;
+  will-change: backdrop-filter;
+}
+
+.glass-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    oklch(0.6 0.15 38 / 0.08) 0%,
+    transparent 40%,
+    oklch(0.7 0.12 65 / 0.06) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glass-panel-heavy {
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+}
+
+.terminal-rule {
+  font-family: var(--font-mono);
+  color: color-mix(in oklch, var(--text-muted) 70%, transparent);
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.terminal-input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-mono);
+}
+
+.amber-border {
+  border-color: color-mix(in oklch, var(--accent-glow) 55%, white 10%);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--accent-glow) 35%, white 12%),
+    0 0 24px color-mix(in oklch, var(--accent-glow) 16%, transparent);
+}
+
+.tech-card {
+  border: 1px solid color-mix(in oklch, var(--glass-border) 90%, transparent);
+  background:
+    linear-gradient(135deg, color-mix(in oklch, var(--glass-tint-a) 16%, transparent), transparent 45%),
+    color-mix(in oklch, var(--bg-soft) 84%, transparent);
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: color-mix(in oklch, var(--glass-border) 90%, transparent);
+  border-radius: 999px;
+}
+
+.glow-text {
+  text-shadow: 0 0 18px color-mix(in oklch, var(--accent-glow) 24%, transparent);
+}
+
+@media (max-width: 767px) {
+  .glass-panel {
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+  }
+
+  .glass-panel-heavy {
+    backdrop-filter: blur(20px) saturate(165%);
+    -webkit-backdrop-filter: blur(20px) saturate(165%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

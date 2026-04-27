@@ -23,9 +23,7 @@ export function SpecDrawer({ product }: SpecDrawerProps) {
     ["print", null],
     ["care", null],
   ] as const;
-  const status = product.availableForSale
-    ? `AVAILABLE / ${product.totalInventory ?? "LIMITED"} UNITS REMAINING`
-    : "VAULTED / OUT OF INVENTORY";
+  const status = product.availableForSale ? "AVAILABLE / STOCK ACTIVE" : "VAULTED / OUT OF INVENTORY";
 
   return (
     <LazyMotion features={domAnimation}>

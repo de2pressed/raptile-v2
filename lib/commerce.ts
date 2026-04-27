@@ -34,7 +34,6 @@ export interface ShopifyProduct {
   variants: ProductVariant[];
   metafields: ProductMetafield[];
   description: string;
-  totalInventory: number | null;
 }
 
 export interface ShopifyCollection {

@@ -80,7 +80,6 @@ const COLLECTION_QUERY = /* GraphQL */ `
           title
           handle
           description
-          totalInventory
           availableForSale
           priceRange {
             minVariantPrice {
@@ -134,7 +133,6 @@ const PRODUCT_QUERY = /* GraphQL */ `
       title
       handle
       description
-      totalInventory
       availableForSale
       priceRange {
         minVariantPrice {
@@ -286,7 +284,6 @@ function normalizeProduct(product: {
   handle: string;
   availableForSale: boolean;
   description?: string | null;
-  totalInventory?: number | null;
   priceRange: { minVariantPrice: MoneyV2 };
   images: { nodes: ProductImage[] };
   variants: { nodes: ProductVariant[] };
@@ -298,7 +295,6 @@ function normalizeProduct(product: {
     handle: product.handle,
     availableForSale: product.availableForSale,
     description: product.description ?? "",
-    totalInventory: product.totalInventory ?? null,
     priceRange: product.priceRange,
     images: product.images.nodes,
     variants: product.variants.nodes,

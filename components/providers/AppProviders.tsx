@@ -6,18 +6,14 @@ import { useAnimationFrame } from "framer-motion";
 import type { PropsWithChildren } from "react";
 import { useEffect, useRef } from "react";
 
+import { TimeAccentBridge } from "@/components/providers/TimeAccentBridge";
+import { ShopifyRuntimeProvider, useShopifyRuntime } from "@/components/providers/ShopifyRuntimeContext";
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
 import { CartDrawer } from "@/components/shop/CartDrawer";
 import { formatPrice } from "@/lib/commerce";
-import {
-  IS_SHOPIFY_PUBLIC_READY,
-  PUBLIC_SHOPIFY_DOMAIN,
-  PUBLIC_SHOPIFY_TOKEN,
-  STOREFRONT_API_VERSION,
-} from "@/lib/public-config";
 import { useRaptileStore } from "@/lib/store";
-import { TimeAccentBridge } from "@/components/providers/TimeAccentBridge";
+import type { ShopifyRuntimeConfig } from "@/lib/shopify-config";
 
 function RuntimeBridge() {
   const lenisRef = useRef<Lenis | null>(null);
@@ -48,7 +44,7 @@ function RuntimeBridge() {
   return null;
 }
 
-function CartBridge() {
+function CartBridgeConnected() {
   const cart = useCart();
   const setCartData = useRaptileStore((state) => state.setCartData);
 
@@ -92,35 +88,66 @@ function CartBridge() {
   return null;
 }
 
-export function AppProviders({ children }: PropsWithChildren) {
+function CartBridge() {
+  const { isConfigured } = useShopifyRuntime();
+
+  if (!isConfigured) {
+    return null;
+  }
+
+  return <CartBridgeConnected />;
+}
+
+function AppShell({ children }: PropsWithChildren) {
+  const { isConfigured } = useShopifyRuntime();
+
   return (
-    <ShopifyProvider
-      countryIsoCode="IN"
-      languageIsoCode="EN"
-      storeDomain={PUBLIC_SHOPIFY_DOMAIN || "placeholder.myshopify.com"}
-      storefrontApiVersion={STOREFRONT_API_VERSION}
-      storefrontToken={PUBLIC_SHOPIFY_TOKEN || "placeholder"}
-    >
-      <CartProvider countryCode="IN" languageCode="EN">
-        <TimeAccentBridge />
-        <RuntimeBridge />
-        <CartBridge />
-        <div className="relative z-10 flex min-h-screen flex-col">
-          <Nav />
-          <main className="flex-1 px-4 md:px-6">{children}</main>
-          <Footer />
-        </div>
-        <CartDrawer />
-        {!IS_SHOPIFY_PUBLIC_READY ? (
-          <div className="pointer-events-none fixed bottom-4 right-4 z-[120] hidden max-w-[min(18rem,calc(100vw-2rem))] px-0 md:block md:bottom-6 md:right-6">
-            <div className="glass-panel rounded-full px-4 py-2 before:rounded-full">
-              <div className="t-ui relative z-[1] text-[color:var(--text-muted)]">
-                Storefront offline. Add Shopify env vars to activate commerce.
-              </div>
+    <>
+      <TimeAccentBridge />
+      <RuntimeBridge />
+      <CartBridge />
+      <div className="relative z-10 flex min-h-screen flex-col">
+        <Nav />
+        <main className="flex-1 px-4 md:px-6">{children}</main>
+        <Footer />
+      </div>
+      <CartDrawer />
+      {!isConfigured ? (
+        <div className="pointer-events-none fixed bottom-4 right-4 z-[120] hidden max-w-[min(18rem,calc(100vw-2rem))] px-0 md:block md:bottom-6 md:right-6">
+          <div className="glass-panel rounded-full px-4 py-2 before:rounded-full">
+            <div className="t-ui relative z-[1] text-[color:var(--text-muted)]">
+              Storefront offline. Add Shopify env vars to activate commerce.
             </div>
           </div>
-        ) : null}
-      </CartProvider>
-    </ShopifyProvider>
+        </div>
+      ) : null}
+    </>
+  );
+}
+
+export function AppProviders({
+  children,
+  shopifyConfig,
+}: PropsWithChildren<{
+  shopifyConfig: ShopifyRuntimeConfig;
+}>) {
+  return (
+    <ShopifyRuntimeProvider value={shopifyConfig}>
+      {shopifyConfig.isConfigured ? (
+        <ShopifyProvider
+          countryIsoCode="IN"
+          languageIsoCode="EN"
+          storeDomain={shopifyConfig.storeDomain}
+          storefrontApiVersion={shopifyConfig.storefrontApiVersion}
+          storefrontToken={shopifyConfig.storefrontToken}
+        >
+          <CartProvider countryCode="IN" languageCode="EN">
+            <AppShell>{children}</AppShell>
+          </CartProvider>
+        </ShopifyProvider>
+      ) : (
+        <AppShell>{children}</AppShell>
+      )}
+    </ShopifyRuntimeProvider>
   );
 }

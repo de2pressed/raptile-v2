@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { AppProviders } from "@/components/providers/AppProviders";
 import { ShaderBackgroundMount } from "@/components/background/ShaderBackgroundMount";
 import PageTransition from "@/components/ui/PageTransition";
+import { getShopifyRuntimeConfig } from "@/lib/shopify-config.server";
 
 import "./globals.css";
 
@@ -15,11 +16,13 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const shopifyConfig = getShopifyRuntimeConfig();
+
   return (
     <html lang="en">
       <body>
         <ShaderBackgroundMount />
-        <AppProviders>
+        <AppProviders shopifyConfig={shopifyConfig}>
           <PageTransition>{children}</PageTransition>
         </AppProviders>
       </body>

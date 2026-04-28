@@ -4,6 +4,7 @@ import { useCart } from "@shopify/hydrogen-react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { useShopifyRuntime } from "@/components/providers/ShopifyRuntimeContext";
 import { formatPrice } from "@/lib/commerce";
 import { useRaptileStore } from "@/lib/store";
 import { shopifyImageUrl } from "@/lib/utils/shopifyImage";
@@ -11,6 +12,34 @@ import { shopifyImageUrl } from "@/lib/utils/shopifyImage";
 const FREE_SHIPPING_THRESHOLD = 2999;
 
 export function CartPageClient() {
+  const { isConfigured } = useShopifyRuntime();
+
+  if (!isConfigured) {
+    return (
+      <section className="flex min-h-[calc(100vh-84px-16rem)] items-center justify-center py-12">
+        <div className="text-center">
+          <div className="font-display text-3xl font-medium tracking-[-0.04em] text-[color:var(--text)] md:text-4xl">
+            Storefront offline.
+          </div>
+          <div className="mt-4 max-w-[32rem] text-sm leading-7 text-[color:var(--text-muted)] md:text-base">
+            Add the Shopify env vars to restore cart and checkout behavior.
+          </div>
+          <Link
+            className="t-label mt-6 inline-flex items-center gap-2 text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--accent)]"
+            href="/collection"
+          >
+            <span>Browse Collection</span>
+            <span aria-hidden>{"->"}</span>
+          </Link>
+        </div>
+      </section>
+    );
+  }
+
+  return <CartPageClientConnected />;
+}
+
+function CartPageClientConnected() {
   const cart = useCart();
   const cartLines = useRaptileStore((state) => state.cartLines);
   const itemCount = cartLines.reduce((total, line) => total + line.quantity, 0);
@@ -30,7 +59,7 @@ export function CartPageClient() {
             href="/collection"
           >
             <span>Browse Collection</span>
-            <span aria-hidden>→</span>
+            <span aria-hidden>{"->"}</span>
           </Link>
         </div>
       </section>
@@ -119,7 +148,7 @@ export function CartPageClient() {
             href="/collection"
           >
             <span>Continue Shopping</span>
-            <span aria-hidden>→</span>
+            <span aria-hidden>{"->"}</span>
           </Link>
         </div>
 
@@ -160,7 +189,7 @@ export function CartPageClient() {
               }}
               type="button"
             >
-              <span className="t-label text-[color:var(--bg)]">Checkout →</span>
+              <span className="t-label text-[color:var(--bg)]">{"Checkout ->"}</span>
             </button>
 
             <div className="t-label text-[color:var(--text-muted)]">Secure checkout via Shopify</div>

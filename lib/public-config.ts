@@ -1,7 +1,1 @@
-import { readEnv } from "@/lib/env";
-
-export const PUBLIC_SHOPIFY_DOMAIN = readEnv("NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN");
-export const PUBLIC_SHOPIFY_TOKEN = readEnv("NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN");
-export const STOREFRONT_API_VERSION = "2026-04";
-
-export const IS_SHOPIFY_PUBLIC_READY = Boolean(PUBLIC_SHOPIFY_DOMAIN && PUBLIC_SHOPIFY_TOKEN);
+export { STOREFRONT_API_VERSION } from "@/lib/shopify-config";

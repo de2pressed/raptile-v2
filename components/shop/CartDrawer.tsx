@@ -53,7 +53,11 @@ export function CartDrawer() {
                         Added to cart
                       </div>
                     </div>
-                    <button className="t-ui text-[color:var(--text-muted)]" onClick={() => setCartOpen(false)} type="button">
+                    <button
+                      className="font-display text-[0.75rem] font-semibold tracking-[0.08em] text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--text)]"
+                      onClick={() => setCartOpen(false)}
+                      type="button"
+                    >
                       Close
                     </button>
                   </div>

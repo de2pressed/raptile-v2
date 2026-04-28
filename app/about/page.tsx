@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { BrandLogo } from "@/components/layout/BrandLogo";
 import { ScrollNarrative } from "@/components/story/ScrollNarrative";
 import { getFeaturedCollection } from "@/lib/collection";
+import { fabricSignals, storyBeats } from "@/lib/story-content";
 import { shopifyImageUrl } from "@/lib/utils/shopifyImage";
 
 const FALLBACK_ABOUT_COPY =
@@ -14,38 +14,10 @@ export default async function AboutPage() {
   const products = collection?.products ?? [];
   const heroImage = products[0]?.images[0] ?? products[1]?.images[0] ?? null;
 
-  const narrativeItems = [
-    {
-      eyebrow: "01 / Material",
-      title: "Dense cloth, softer hand.",
-      body:
-        "The collection is built around 240gsm fabric that keeps its shape, then softened with a double bio wash so the garment wears in instead of wearing out.",
-      image: products[0]?.images[0] ?? heroImage,
-      note: "The surface should feel steady, not flimsy.",
-    },
-    {
-      eyebrow: "02 / Release",
-      title: "Short runs keep the point of view intact.",
-      body:
-        "Small batches let us stay close to fit, print, and finish. It keeps the line narrow and the attention on the piece instead of the inventory.",
-      image: products[1]?.images[0] ?? products[0]?.images[1] ?? heroImage,
-      note: "Less volume, more control.",
-    },
-    {
-      eyebrow: "03 / Support",
-      title: "The service layer stays direct.",
-      body:
-        "Sizing help, shipping questions, and product support should remain easy to find and calm to use. The brand voice stays measured even when a customer needs fast answers.",
-      image: products[2]?.images[0] ?? products[1]?.images[0] ?? heroImage,
-      note: "No unnecessary detours.",
-    },
-  ];
-
   return (
     <div className="mx-auto w-full max-w-[1440px] py-8 md:py-12">
       <section className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-end">
         <div className="space-y-6">
-          <BrandLogo size="lg" />
           <div className="space-y-4">
             <div className="t-label text-[color:var(--text-muted)]">About Raptile Studio</div>
             <h1 className="t-hero max-w-[10ch] text-[color:var(--text)]">Made for repeat wear, not repeat noise.</h1>
@@ -61,15 +33,19 @@ export default async function AboutPage() {
             </Link>
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            {["240gsm", "Double bio washed", "Short run", "India based"].map((item) => (
-              <div
-                key={item}
-                className="noise-surface rounded-full border border-[color:var(--glass-border)] bg-[color:var(--bg-soft)] px-4 py-2"
-              >
-                <span className="t-label relative z-[1] text-[color:var(--text-muted)]">{item}</span>
-              </div>
-            ))}
+          <div className="space-y-4 border-t border-[color:var(--glass-border)] pt-5">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[color:var(--text-muted)]">
+              {fabricSignals.map((item, index) => (
+                <div key={item} className="flex items-center gap-3">
+                  <span className="t-ui">{item}</span>
+                  {index < fabricSignals.length - 1 ? (
+                    <span aria-hidden className="text-[color:var(--text-subtle)]">
+                      /
+                    </span>
+                  ) : null}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -97,7 +73,7 @@ export default async function AboutPage() {
                 <div className="t-label text-[color:var(--text-muted)]">Editorial / measured / tactile</div>
               </div>
 
-              <div className="space-y-3 self-end text-right">
+              <div className="hidden space-y-3 self-end text-right md:block">
                 <div className="t-label text-[color:var(--text-muted)]">Core principle</div>
                 <div className="font-display text-3xl font-bold tracking-[-0.04em] text-[color:var(--text)] md:text-4xl">
                   Garment first, interface second.
@@ -117,22 +93,15 @@ export default async function AboutPage() {
           intro="The story is short on purpose. Every detail points back to weight, wash, fit, and the way the clothes hold presence in a room."
           label="Studio story"
           title="A slower release rhythm keeps the point of view intact."
-          items={narrativeItems}
+          items={storyBeats}
         />
       </section>
 
       <section className="pt-16 md:pt-20">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[color:var(--glass-border)] pt-8">
-          <div className="t-ui max-w-[30rem] text-[color:var(--text-muted)]">
-            Built for people who read the product before they read the pitch.
-          </div>
-          <div className="flex flex-wrap gap-5">
-            <Link className="t-label text-[color:var(--text)] transition-colors duration-200 hover:text-[color:var(--accent)]" href="/collection">
-              View collection
-            </Link>
-            <Link className="t-label text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--text)]" href="/contact">
-              Contact
-            </Link>
+        <div className="border-t border-[color:var(--glass-border)] pt-8">
+          <div className="t-ui max-w-[38rem] text-[color:var(--text-muted)]">
+            Built for people who read the product before they read the pitch. The navigation already holds the transactional
+            work, so the page can stay with the story.
           </div>
         </div>
       </section>

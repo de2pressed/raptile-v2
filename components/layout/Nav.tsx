@@ -53,7 +53,7 @@ export function Nav() {
           <button
             aria-expanded={menuOpen}
             aria-label="Toggle navigation menu"
-            className="inline-flex min-w-[4.75rem] items-center justify-center rounded-full border border-[color:var(--glass-border)] px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--text)] transition-colors duration-200 hover:border-[color:var(--accent)] md:hidden"
+            className="inline-flex min-w-[4.75rem] items-center justify-center rounded-full border border-[color:var(--glass-border)] px-4 py-2 font-display text-[0.75rem] font-semibold tracking-[0.08em] text-[color:var(--text)] transition-colors duration-200 hover:border-[color:var(--accent)] md:hidden"
             onClick={() => setMenuOpen((open) => !open)}
             type="button"
           >
@@ -87,7 +87,7 @@ export function Nav() {
                 <div className="t-label text-[color:var(--text-muted)]">Raptile Navigation</div>
                 <button
                   aria-label="Close navigation"
-                  className="inline-flex items-center justify-center rounded-full border border-[color:var(--glass-border)] px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--text)]"
+                  className="inline-flex items-center justify-center rounded-full border border-[color:var(--glass-border)] px-4 py-2 font-display text-[0.75rem] font-semibold tracking-[0.08em] text-[color:var(--text)]"
                   onClick={() => setMenuOpen(false)}
                   type="button"
                 >

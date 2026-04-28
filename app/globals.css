@@ -59,6 +59,9 @@
   --glass-highlight: oklch(0.96 0.01 80 / 0.04);
   --glass-tint-a: oklch(0.3 0.025 42 / 0.18);
   --glass-tint-b: oklch(0.26 0.02 54 / 0.14);
+  --shader-warm: oklch(0.67 0.085 48);
+  --shader-mid: oklch(0.34 0.065 248);
+  --shader-deep: oklch(0.1 0.03 252);
   --glass-shadow: oklch(0 0 0 / 0.16);
   --font-display: "Cabinet Grotesk", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
@@ -113,7 +116,7 @@ body::before {
   background:
     linear-gradient(120deg, color-mix(in oklch, var(--accent-subtle) 55%, transparent), transparent 28%),
     linear-gradient(220deg, color-mix(in oklch, var(--glass-tint-b) 60%, transparent), transparent 42%);
-  opacity: 0.18;
+  opacity: 0.14;
   pointer-events: none;
   z-index: 0;
 }
@@ -229,11 +232,13 @@ button {
   border-radius: inherit;
   background-image: url("/noise.png");
   background-repeat: repeat;
-  background-size: 180px 180px;
-  opacity: 0.055;
+  background-size: 220px 220px;
+  opacity: 0.032;
   mix-blend-mode: soft-light;
   pointer-events: none;
   z-index: 0;
+  animation: noiseDrift 18s linear infinite;
+  will-change: background-position, transform;
 }
 
 .noise-surface {
@@ -305,6 +310,16 @@ button {
   border-color: var(--accent);
   color: var(--text);
   background: color-mix(in oklch, var(--glass-fill) 94%, var(--bg-soft));
+}
+
+.btn-primary .t-label,
+.ghost-button .t-label {
+  font-family: var(--font-display);
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-transform: none;
 }
 
 .footer-link {
@@ -487,6 +502,23 @@ button {
 
   50% {
     opacity: 1;
+  }
+}
+
+@keyframes noiseDrift {
+  0% {
+    background-position: 0 0;
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    background-position: 120px -80px;
+    transform: translate3d(-0.4%, 0.3%, 0);
+  }
+
+  100% {
+    background-position: 240px -160px;
+    transform: translate3d(0, 0, 0);
   }
 }
 

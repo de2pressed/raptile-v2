@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 2000" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="2000" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#060912" />
+      <stop offset="0.42" stop-color="#17131a" />
+      <stop offset="1" stop-color="#b56a33" />
+    </linearGradient>
+    <linearGradient id="warmFold" x1="240" y1="520" x2="1240" y2="1460" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f0c48d" stop-opacity="0.9" />
+      <stop offset="0.25" stop-color="#b96d37" stop-opacity="0.92" />
+      <stop offset="0.7" stop-color="#37262a" stop-opacity="0.96" />
+      <stop offset="1" stop-color="#0a0d16" stop-opacity="0.98" />
+    </linearGradient>
+    <linearGradient id="coolFold" x1="220" y1="360" x2="1380" y2="1640" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3f6fb7" stop-opacity="0.92" />
+      <stop offset="0.28" stop-color="#1b2f5f" stop-opacity="0.92" />
+      <stop offset="0.72" stop-color="#17111d" stop-opacity="0.98" />
+      <stop offset="1" stop-color="#060912" stop-opacity="1" />
+    </linearGradient>
+    <linearGradient id="threadLine" x1="320" y1="760" x2="1240" y2="1020" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f6ddb6" stop-opacity="0.0" />
+      <stop offset="0.35" stop-color="#f6ddb6" stop-opacity="0.55" />
+      <stop offset="0.62" stop-color="#d99354" stop-opacity="0.45" />
+      <stop offset="1" stop-color="#d99354" stop-opacity="0.0" />
+    </linearGradient>
+    <radialGradient id="lightA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(420 580) rotate(18) scale(420 520)">
+      <stop offset="0" stop-color="#ffe4bf" stop-opacity="0.55" />
+      <stop offset="0.48" stop-color="#c27d49" stop-opacity="0.16" />
+      <stop offset="1" stop-color="#060912" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="lightB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1180 1180) rotate(-14) scale(520 640)">
+      <stop offset="0" stop-color="#476eb7" stop-opacity="0.58" />
+      <stop offset="0.55" stop-color="#1c2f63" stop-opacity="0.18" />
+      <stop offset="1" stop-color="#060912" stop-opacity="0" />
+    </radialGradient>
+    <pattern id="weave" width="22" height="22" patternUnits="userSpaceOnUse">
+      <path d="M0 11H22" stroke="#f2dbc0" stroke-opacity="0.12" stroke-width="1.1" />
+      <path d="M11 0V22" stroke="#f2dbc0" stroke-opacity="0.09" stroke-width="1.1" />
+      <path d="M0 0L22 22" stroke="#0e1628" stroke-opacity="0.05" stroke-width="0.9" />
+    </pattern>
+    <filter id="grain" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="21" />
+      <feColorMatrix values="0 0 0 0 0
+                             0 0 0 0 0
+                             0 0 0 0 0
+                             0 0 0 .22 0" />
+    </filter>
+  </defs>
+
+  <rect width="1600" height="2000" fill="url(#bg)" />
+  <ellipse cx="420" cy="560" rx="430" ry="540" fill="url(#lightA)" />
+  <ellipse cx="1180" cy="1180" rx="540" ry="660" fill="url(#lightB)" />
+
+  <path
+    d="M-120 560C130 446 318 452 476 546C628 638 744 780 948 812C1110 838 1310 760 1720 532L1720 1178C1342 1344 1112 1378 908 1328C704 1278 610 1128 450 1082C278 1034 106 1094 -120 1200Z"
+    fill="url(#coolFold)"
+    opacity="0.88"
+  />
+  <path
+    d="M-160 830C62 744 252 744 414 814C596 890 678 1032 872 1088C1052 1140 1310 1108 1760 900L1760 1600H-160Z"
+    fill="url(#warmFold)"
+    opacity="0.94"
+  />
+  <path
+    d="M160 760C300 706 442 722 558 806C678 892 770 1028 940 1082C1090 1130 1230 1116 1400 1044"
+    stroke="url(#threadLine)"
+    stroke-width="18"
+    stroke-linecap="round"
+    opacity="0.86"
+  />
+  <path
+    d="M118 980C298 932 438 940 572 1008C722 1088 818 1210 1000 1258C1140 1294 1286 1284 1440 1230"
+    stroke="#f8e2c8"
+    stroke-opacity="0.18"
+    stroke-width="7"
+    stroke-linecap="round"
+  />
+  <path
+    d="M68 1140C276 1090 462 1098 614 1160C786 1230 916 1366 1120 1406C1264 1434 1390 1420 1518 1370"
+    stroke="#2a3360"
+    stroke-opacity="0.22"
+    stroke-width="5"
+    stroke-linecap="round"
+  />
+
+  <path
+    d="M-60 700C180 620 356 626 528 708C710 796 840 936 1018 986C1160 1026 1320 1018 1660 850"
+    stroke="#f7d7ad"
+    stroke-opacity="0.12"
+    stroke-width="2"
+    stroke-linecap="round"
+  />
+  <path
+    d="M-40 920C212 850 390 852 548 918C726 992 842 1132 1042 1180C1188 1216 1350 1206 1660 1092"
+    stroke="#0c1425"
+    stroke-opacity="0.2"
+    stroke-width="2"
+    stroke-linecap="round"
+  />
+
+  <rect width="1600" height="2000" fill="url(#weave)" opacity="0.32" />
+  <rect width="1600" height="2000" filter="url(#grain)" opacity="0.28" />
+</svg>

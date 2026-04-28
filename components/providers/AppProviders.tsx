@@ -17,6 +17,7 @@ import {
   STOREFRONT_API_VERSION,
 } from "@/lib/public-config";
 import { useRaptileStore } from "@/lib/store";
+import { TimeAccentBridge } from "@/components/providers/TimeAccentBridge";
 
 function RuntimeBridge() {
   const lenisRef = useRef<Lenis | null>(null);
@@ -101,6 +102,7 @@ export function AppProviders({ children }: PropsWithChildren) {
       storefrontToken={PUBLIC_SHOPIFY_TOKEN || "placeholder"}
     >
       <CartProvider countryCode="IN" languageCode="EN">
+        <TimeAccentBridge />
         <RuntimeBridge />
         <CartBridge />
         <div className="relative z-10 flex min-h-screen flex-col">
@@ -110,7 +112,7 @@ export function AppProviders({ children }: PropsWithChildren) {
         </div>
         <CartDrawer />
         {!IS_SHOPIFY_PUBLIC_READY ? (
-          <div className="pointer-events-none fixed bottom-6 left-1/2 z-[120] -translate-x-1/2 px-4">
+          <div className="pointer-events-none fixed bottom-4 right-4 z-[120] hidden max-w-[min(18rem,calc(100vw-2rem))] px-0 md:block md:bottom-6 md:right-6">
             <div className="glass-panel rounded-full px-4 py-2 before:rounded-full">
               <div className="t-ui relative z-[1] text-[color:var(--text-muted)]">
                 Storefront offline. Add Shopify env vars to activate commerce.

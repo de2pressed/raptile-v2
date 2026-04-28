@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 2000" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="2000" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#08101d" />
+      <stop offset="0.45" stop-color="#13213a" />
+      <stop offset="1" stop-color="#d0ad8b" />
+    </linearGradient>
+    <linearGradient id="sheet" x1="280" y1="280" x2="1340" y2="1700" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d9d8d5" stop-opacity="0.98" />
+      <stop offset="0.26" stop-color="#9fb4d6" stop-opacity="0.88" />
+      <stop offset="0.62" stop-color="#334c7b" stop-opacity="0.84" />
+      <stop offset="1" stop-color="#0b1220" stop-opacity="0.98" />
+    </linearGradient>
+    <linearGradient id="wash" x1="220" y1="520" x2="1320" y2="1560" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f4f0e8" stop-opacity="0.8" />
+      <stop offset="0.28" stop-color="#c9d6e9" stop-opacity="0.72" />
+      <stop offset="0.72" stop-color="#6e87bc" stop-opacity="0.58" />
+      <stop offset="1" stop-color="#0d1320" stop-opacity="0.95" />
+    </linearGradient>
+    <radialGradient id="lightA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(430 540) rotate(16) scale(390 500)">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.5" />
+      <stop offset="0.48" stop-color="#d5e5ff" stop-opacity="0.18" />
+      <stop offset="1" stop-color="#08101d" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="lightB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1110 1270) rotate(-8) scale(560 700)">
+      <stop offset="0" stop-color="#7f9bd1" stop-opacity="0.4" />
+      <stop offset="0.52" stop-color="#2d4b7f" stop-opacity="0.2" />
+      <stop offset="1" stop-color="#08101d" stop-opacity="0" />
+    </radialGradient>
+    <filter id="grain" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="2" seed="11" />
+      <feColorMatrix values="0 0 0 0 0
+                             0 0 0 0 0
+                             0 0 0 0 0
+                             0 0 0 .2 0" />
+    </filter>
+  </defs>
+
+  <rect width="1600" height="2000" fill="url(#bg)" />
+  <ellipse cx="430" cy="540" rx="430" ry="540" fill="url(#lightA)" />
+  <ellipse cx="1110" cy="1270" rx="560" ry="700" fill="url(#lightB)" />
+
+  <path
+    d="M-120 490C98 414 292 430 470 522C652 618 770 766 960 814C1120 854 1274 820 1720 628L1720 1230C1360 1396 1120 1450 900 1410C682 1370 574 1228 390 1186C200 1144 40 1202 -120 1286Z"
+    fill="url(#sheet)"
+    opacity="0.88"
+  />
+  <path
+    d="M-120 900C90 830 260 832 408 890C586 960 706 1100 882 1156C1040 1206 1238 1198 1720 992L1720 1600H-120Z"
+    fill="url(#wash)"
+    opacity="0.94"
+  />
+
+  <path
+    d="M192 720C342 654 480 664 610 744C742 826 840 952 996 1000C1128 1040 1276 1038 1448 974"
+    stroke="#f6f1ea"
+    stroke-opacity="0.22"
+    stroke-width="9"
+    stroke-linecap="round"
+  />
+  <path
+    d="M156 914C318 862 452 870 582 938C716 1008 822 1124 986 1172C1122 1214 1278 1210 1458 1148"
+    stroke="#dce6f8"
+    stroke-opacity="0.16"
+    stroke-width="6"
+    stroke-linecap="round"
+  />
+  <path
+    d="M280 616C416 652 514 742 644 826C780 916 920 952 1084 924"
+    stroke="#ffffff"
+    stroke-opacity="0.12"
+    stroke-width="2.5"
+    stroke-linecap="round"
+  />
+  <path
+    d="M246 1210C410 1148 560 1150 688 1214C846 1294 942 1430 1134 1466C1268 1490 1378 1478 1498 1432"
+    stroke="#0f1730"
+    stroke-opacity="0.24"
+    stroke-width="7"
+    stroke-linecap="round"
+  />
+
+  <rect width="1600" height="2000" fill="url(#grain)" opacity="0.28" />
+</svg>

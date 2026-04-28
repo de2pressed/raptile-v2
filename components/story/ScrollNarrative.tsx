@@ -6,15 +6,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import type { ProductImage } from "@/lib/commerce";
 import { cn } from "@/lib/utils";
-import { shopifyImageUrl } from "@/lib/utils/shopifyImage";
+import type { StoryVisual } from "@/lib/story-content";
 
 export interface ScrollNarrativeItem {
   eyebrow: string;
   title: string;
   body: string;
-  image?: ProductImage | null;
+  image?: StoryVisual | null;
   note?: string;
   stat?: string;
 }
@@ -76,7 +75,7 @@ export function ScrollNarrative({ label, title, intro, items, cta, className }: 
   }
 
   return (
-    <section className={cn("grid gap-8 lg:grid-cols-[minmax(280px,0.92fr)_minmax(0,1.08fr)]", className)}>
+    <section className={cn("grid gap-8 lg:grid-cols-[minmax(280px,0.92fr)_minmax(0,1.08fr)] lg:gap-10", className)}>
       <div className="space-y-6 lg:sticky lg:top-24 lg:self-start">
         <div className="space-y-3">
           <div className="t-label text-[color:var(--text-muted)]">{label}</div>
@@ -88,7 +87,7 @@ export function ScrollNarrative({ label, title, intro, items, cta, className }: 
           <AnimatePresence mode="wait">
             <motion.div
               key={`${activeIndex}-${activeItem.title}`}
-              className="relative min-h-[28rem]"
+              className="relative min-h-[26rem] md:min-h-[32rem]"
               initial={{ opacity: 0, y: reducedMotion ? 0 : 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: reducedMotion ? 0 : -12 }}
@@ -96,12 +95,13 @@ export function ScrollNarrative({ label, title, intro, items, cta, className }: 
             >
               {activeItem.image ? (
                 <Image
-                  alt={activeItem.image.altText ?? activeItem.title}
+                  alt={activeItem.image.alt}
                   className="z-[1] h-full w-full object-cover"
                   fill
                   priority={activeIndex === 0}
+                  unoptimized
                   sizes="(min-width: 1280px) 34vw, 100vw"
-                  src={shopifyImageUrl(activeItem.image.url, { width: 1200 })}
+                  src={activeItem.image.src}
                 />
               ) : (
                 <div className="absolute inset-0 image-skeleton" />
@@ -116,7 +116,7 @@ export function ScrollNarrative({ label, title, intro, items, cta, className }: 
                     {String(activeIndex + 1).padStart(2, "0")} / {String(items.length).padStart(2, "0")}
                   </div>
                 </div>
-                <div className="mt-4 max-w-[18rem] space-y-2">
+                <div className="mt-4 max-w-[20rem] space-y-2">
                   <div className="font-display text-3xl font-bold tracking-[-0.04em] text-[color:var(--text)]">
                     {activeItem.title}
                   </div>
@@ -147,7 +147,7 @@ export function ScrollNarrative({ label, title, intro, items, cta, className }: 
             }}
             data-index={index}
             className={cn(
-              "group min-h-[68vh] border-t border-[color:var(--glass-border)] py-8 md:py-12 transition-opacity duration-300",
+              "group border-t border-[color:var(--glass-border)] py-8 transition-opacity duration-300 md:py-10",
               index === activeIndex ? "opacity-100" : "opacity-65",
             )}
           >

@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { getFeaturedCollection } from "@/lib/collection";
 
 export async function CollectionHeader() {
@@ -24,19 +22,8 @@ export async function CollectionHeader() {
           <p className="editorial-copy">
             Heavyweight tees, small runs, and a slower approach to graphics-led essentials built to hold shape over time.
           </p>
-          <div className="flex flex-wrap gap-5">
-            <Link
-              className="t-label text-[color:var(--text)] transition-colors duration-200 hover:text-[color:var(--accent)]"
-              href="/about"
-            >
-              About Us
-            </Link>
-            <Link
-              className="t-label text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--text)]"
-              href="/contact"
-            >
-              Contact
-            </Link>
+          <div className="t-ui text-[color:var(--text-muted)]">
+            The point is to keep the edit short and the read immediate.
           </div>
         </div>
       </div>

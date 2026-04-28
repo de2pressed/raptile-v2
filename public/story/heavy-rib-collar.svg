@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 2000" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="2000" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#050814" />
+      <stop offset="0.43" stop-color="#111a2f" />
+      <stop offset="1" stop-color="#9f642f" />
+    </linearGradient>
+    <radialGradient id="halo" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(820 860) rotate(90) scale(460 520)">
+      <stop offset="0" stop-color="#f6e9d7" stop-opacity="0.62" />
+      <stop offset="0.46" stop-color="#b67a42" stop-opacity="0.18" />
+      <stop offset="1" stop-color="#050814" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="collar" x1="520" y1="500" x2="1100" y2="1260" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f3e5d1" stop-opacity="0.95" />
+      <stop offset="0.26" stop-color="#d2b08d" stop-opacity="0.9" />
+      <stop offset="0.64" stop-color="#54404f" stop-opacity="0.95" />
+      <stop offset="1" stop-color="#0d1220" stop-opacity="0.99" />
+    </linearGradient>
+    <linearGradient id="stitch" x1="640" y1="560" x2="980" y2="1220" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f8ead6" stop-opacity="0.75" />
+      <stop offset="1" stop-color="#f8ead6" stop-opacity="0.05" />
+    </linearGradient>
+    <filter id="grain" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.88" numOctaves="2" seed="7" />
+      <feColorMatrix values="0 0 0 0 0
+                             0 0 0 0 0
+                             0 0 0 0 0
+                             0 0 0 .18 0" />
+    </filter>
+  </defs>
+
+  <rect width="1600" height="2000" fill="url(#bg)" />
+  <ellipse cx="820" cy="860" rx="460" ry="520" fill="url(#halo)" />
+
+  <path
+    d="M290 540C418 420 592 372 800 372C1006 372 1180 420 1308 540C1388 616 1440 712 1460 826C1374 800 1288 796 1200 816C1110 836 1028 882 960 958C894 1032 846 1138 820 1278C796 1140 750 1034 684 958C616 882 536 836 448 816C360 796 274 800 190 826C210 712 262 616 290 540Z"
+    fill="url(#collar)"
+    opacity="0.94"
+  />
+
+  <path
+    d="M506 624C600 532 700 490 800 490C900 490 1000 532 1094 624C1042 682 998 742 964 808C928 876 884 986 840 1150C814 1078 770 972 732 904C694 838 650 778 602 724C560 674 528 646 506 624Z"
+    fill="#0b1324"
+    fill-opacity="0.98"
+  />
+
+  <path
+    d="M472 622C578 520 682 472 800 472C918 472 1022 520 1128 622"
+    stroke="url(#stitch)"
+    stroke-width="16"
+    stroke-linecap="round"
+    stroke-dasharray="10 18"
+    opacity="0.86"
+  />
+  <path
+    d="M536 706C612 646 700 614 800 614C900 614 988 646 1064 706"
+    stroke="#f9eddc"
+    stroke-opacity="0.22"
+    stroke-width="4.5"
+    stroke-linecap="round"
+  />
+  <path
+    d="M540 768C616 726 704 704 800 704C896 704 984 726 1060 768"
+    stroke="#ffffff"
+    stroke-opacity="0.1"
+    stroke-width="3.4"
+    stroke-linecap="round"
+  />
+  <path
+    d="M578 826C650 800 724 788 800 788C876 788 950 800 1022 826"
+    stroke="#f9eddc"
+    stroke-opacity="0.1"
+    stroke-width="3"
+    stroke-linecap="round"
+  />
+
+  <path
+    d="M402 1110C546 1048 664 1038 800 1038C936 1038 1054 1048 1198 1110"
+    stroke="#c18d56"
+    stroke-opacity="0.22"
+    stroke-width="7"
+    stroke-linecap="round"
+  />
+  <path
+    d="M486 1180C600 1142 694 1122 800 1122C906 1122 1000 1142 1114 1180"
+    stroke="#22325d"
+    stroke-opacity="0.28"
+    stroke-width="5"
+    stroke-linecap="round"
+  />
+
+  <rect width="1600" height="2000" fill="url(#grain)" opacity="0.26" />
+</svg>

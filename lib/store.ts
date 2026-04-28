@@ -4,6 +4,7 @@ export interface CartLine {
   id: string;
   quantity: number;
   title: string;
+  handle: string;
   variantTitle: string;
   merchandiseId: string;
   price: string;
@@ -18,6 +19,8 @@ interface RaptileStore {
   isCartOpen: boolean;
   setCartOpen: (open: boolean) => void;
   setCartData: (payload: { cartId: string | null; cartLines: CartLine[]; cartTotal: string }) => void;
+  lastAddedMerchandiseId: string | null;
+  setLastAddedMerchandiseId: (id: string | null) => void;
   isSpecDrawerOpen: boolean;
   setSpecDrawerOpen: (open: boolean) => void;
   selectedVariantId: string | null;
@@ -27,10 +30,12 @@ interface RaptileStore {
 export const useRaptileStore = create<RaptileStore>((set) => ({
   cartId: null,
   cartLines: [],
-  cartTotal: "₹0",
+  cartTotal: "INR 0",
   isCartOpen: false,
   setCartOpen: (open) => set({ isCartOpen: open }),
   setCartData: ({ cartId, cartLines, cartTotal }) => set({ cartId, cartLines, cartTotal }),
+  lastAddedMerchandiseId: null,
+  setLastAddedMerchandiseId: (id) => set({ lastAddedMerchandiseId: id }),
   isSpecDrawerOpen: false,
   setSpecDrawerOpen: (open) => set({ isSpecDrawerOpen: open }),
   selectedVariantId: null,

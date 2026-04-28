@@ -32,37 +32,57 @@ export function SpecDrawer({ product }: SpecDrawerProps) {
           <>
             <motion.button
               aria-label="Close product details"
-              className="fixed inset-0 z-[145] bg-black/40"
+              className="fixed inset-0 z-[145] bg-black/56"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSpecDrawerOpen(false)}
+              type="button"
             />
             <motion.section
-              className="fixed inset-x-0 bottom-0 z-[150] px-3 pb-3 md:px-6 md:pb-6"
+              className="fixed inset-0 z-[150] md:inset-x-6 md:bottom-6 md:top-auto md:h-[60vh]"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 26, stiffness: 240 }}
+              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div className="glass-panel glass-panel-heavy mx-auto h-[75vh] w-full max-w-[1440px] rounded-[34px] px-5 py-5 md:h-[60vh] md:px-8 md:py-8">
+              <div className="glass-panel glass-panel-heavy h-full rounded-none px-5 py-5 md:rounded-[34px] md:px-8 md:py-8">
                 <div className="relative z-[1] flex h-full flex-col">
                   <div className="flex items-center justify-between gap-4">
-                    <div className="t-label">{`PRODUCT DETAILS - ${product.handle.toUpperCase()}`}</div>
-                    <button className="t-label" onClick={() => setSpecDrawerOpen(false)} type="button">
+                    <div>
+                      <div className="t-label text-[color:var(--text-muted)]">Product Details</div>
+                      <div className="mt-2 font-display text-2xl font-bold tracking-[-0.04em] text-[color:var(--text)]">
+                        {product.title}
+                      </div>
+                    </div>
+                    <button className="t-label text-[color:var(--text-muted)] hover:text-[color:var(--text)]" onClick={() => setSpecDrawerOpen(false)} type="button">
                       Close
                     </button>
                   </div>
-                  <div className="mono-rule mt-3">--------------------------------</div>
-                  <div className="mt-6 flex-1 space-y-3 overflow-y-auto pr-1">
-                    {specs.map(([key, value]) => (
-                      <div key={key} className="t-ui">
-                        {`${toTechnicalLabel(key).padEnd(14, ".")}${(value ?? "Available on request").toUpperCase()}`}
-                      </div>
-                    ))}
-                  </div>
+
                   <div className="mono-rule mt-4">--------------------------------</div>
-                  <div className="t-ui mt-4">{`STATUS: ${status.toUpperCase()}`}</div>
+
+                  <div className="mt-6 flex-1 overflow-y-auto pr-1">
+                    <div className="grid gap-4">
+                      {specs.map(([key, value]) => (
+                        <div key={key} className="flex items-start justify-between gap-4 border-b border-[color:var(--glass-border)] pb-4">
+                          <div className="t-label text-[color:var(--text-muted)]">{toTechnicalLabel(key)}</div>
+                          <div className="t-ui max-w-[30ch] text-right text-[color:var(--text)]">
+                            {(value ?? "Available on request").toUpperCase()}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {product.description ? (
+                      <div className="mt-8 max-w-[65ch] text-sm leading-7 text-[color:var(--text-muted)] md:text-base">
+                        {product.description}
+                      </div>
+                    ) : null}
+                  </div>
+
+                  <div className="mono-rule mt-4">--------------------------------</div>
+                  <div className="t-ui mt-4 text-[color:var(--text-muted)]">{`Status: ${status}`}</div>
                 </div>
               </div>
             </motion.section>

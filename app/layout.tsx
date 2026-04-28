@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { AppProviders } from "@/components/providers/AppProviders";
 import { ShaderBackgroundMount } from "@/components/background/ShaderBackgroundMount";
-import { RouteTransitionOverlay } from "@/components/ui/RouteTransition";
+import PageTransition from "@/components/ui/PageTransition";
 
 import "./globals.css";
 
@@ -16,8 +16,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body>
         <ShaderBackgroundMount />
-        <AppProviders>{children}</AppProviders>
-        <RouteTransitionOverlay />
+        <AppProviders>
+          <PageTransition>{children}</PageTransition>
+        </AppProviders>
       </body>
     </html>
   );

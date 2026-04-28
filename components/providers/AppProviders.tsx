@@ -2,15 +2,14 @@
 
 import { CartProvider, ShopifyProvider, useCart } from "@shopify/hydrogen-react";
 import Lenis from "@studio-freight/lenis";
+import { useAnimationFrame } from "framer-motion";
 import type { PropsWithChildren } from "react";
 import { useEffect, useRef } from "react";
-import { useAnimationFrame } from "framer-motion";
 
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
 import { CartDrawer } from "@/components/shop/CartDrawer";
 import { NoiseOverlay } from "@/components/ui/NoiseOverlay";
-import { PageContentTransition } from "@/components/ui/RouteTransition";
 import { formatPrice } from "@/lib/commerce";
 import {
   IS_SHOPIFY_PUBLIC_READY,
@@ -69,6 +68,7 @@ function CartBridge() {
             id: line.id,
             quantity: line.quantity ?? 1,
             title,
+            handle: variant?.product?.handle ?? "",
             variantTitle: selectedOptions,
             merchandiseId: variant?.id ?? "",
             price: formatPrice(line.cost?.totalAmount?.amount ?? 0),
@@ -103,9 +103,7 @@ export function AppProviders({ children }: PropsWithChildren) {
         <NoiseOverlay />
         <div className="relative z-10 min-h-screen">
           <Nav />
-          <PageContentTransition>
-            <main className="min-h-[calc(100vh-5rem)] px-4 md:px-6">{children}</main>
-          </PageContentTransition>
+          <main className="min-h-[calc(100vh-60px)] px-4 md:px-6">{children}</main>
           <Footer />
         </div>
         <CartDrawer />

@@ -10,9 +10,12 @@ const config: Config = {
         "bg-elevated": "var(--bg-elevated)",
         text: "var(--text)",
         "text-muted": "var(--text-muted)",
+        "text-subtle": "var(--text-subtle)",
         accent: "var(--accent)",
         "accent-strong": "var(--accent-strong)",
         "accent-glow": "var(--accent-glow)",
+        "accent-subtle": "var(--accent-subtle)",
+        "sold-out": "var(--sold-out)",
       },
       fontFamily: {
         display: "var(--font-display)",

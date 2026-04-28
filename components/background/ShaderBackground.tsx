@@ -14,13 +14,12 @@ precision highp float;
 
 uniform float u_time;
 uniform vec2 u_resolution;
-uniform vec2 u_mouse;
 uniform float u_scroll;
 
-vec3 colorDark = vec3(0.090, 0.070, 0.050);
-vec3 colorMid = vec3(0.280, 0.180, 0.060);
-vec3 colorPeak = vec3(0.380, 0.240, 0.060);
-vec3 colorHot = vec3(0.500, 0.300, 0.070);
+vec3 colorBase = vec3(0.070, 0.055, 0.042);
+vec3 colorMid = vec3(0.160, 0.100, 0.038);
+vec3 colorPeak = vec3(0.260, 0.155, 0.042);
+vec3 colorCyan = vec3(0.040, 0.120, 0.140);
 
 float hash(vec2 p) {
   return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -44,7 +43,7 @@ float fbm(vec2 p) {
   for (int i = 0; i < 6; i++) {
     value += amplitude * smoothNoise(p * frequency);
     amplitude *= 0.5;
-    frequency *= 2.0;
+    frequency *= 2.1;
   }
   return value;
 }
@@ -53,31 +52,39 @@ void main() {
   vec2 uv = gl_FragCoord.xy / u_resolution;
   uv.y = 1.0 - uv.y;
 
-  float t = u_time * 0.045;
-  float scrollShift = u_scroll * 0.4;
-  vec2 mouseWarp = (u_mouse - 0.5) * 0.18;
+  float t = u_time * 0.042;
+  float breathe = sin(u_time * 0.52) * 0.06 + 1.0;
+  float scrollShift = u_scroll * 0.5;
 
-  vec2 p1 = uv * 2.2 + vec2(t * 0.3, t * 0.15) + mouseWarp + vec2(scrollShift);
-  vec2 p2 = uv * 3.8 - vec2(t * 0.2, t * 0.25) - mouseWarp * 0.6 + vec2(scrollShift * 0.7);
+  vec2 p1 = uv * 2.0 * breathe + vec2(t * 0.28, t * 0.14) + vec2(scrollShift);
+  vec2 p2 = uv * 3.5 * breathe - vec2(t * 0.18, t * 0.22) + vec2(scrollShift * 0.6);
 
   float field1 = fbm(p1);
-  float field2 = fbm(p2 + vec2(field1 * 0.8, field1 * 0.6));
-  float combined = fbm(vec2(field1, field2) * 2.5 + t * 0.1);
+  float field2 = fbm(p2 + vec2(field1 * 0.85, field1 * 0.55));
+  float combined = fbm(vec2(field1, field2) * 2.4 + vec2(t * 0.09));
 
-  vec2 vigUV = uv - vec2(0.5, 0.65);
-  float vignette = 1.0 - dot(vigUV * vec2(1.0, 0.8), vigUV * vec2(1.0, 0.8)) * 1.8;
+  vec2 vigUV = uv - vec2(0.5, 0.70);
+  float vignette = 1.0 - dot(vigUV * vec2(1.0, 0.75), vigUV * vec2(1.0, 0.75)) * 2.0;
   vignette = clamp(vignette, 0.0, 1.0);
-
   combined = clamp(combined * vignette, 0.0, 1.0);
 
   vec3 color;
-  if (combined < 0.25) {
-    color = mix(colorDark, colorMid, combined / 0.25);
-  } else if (combined < 0.55) {
-    color = mix(colorMid, colorPeak, (combined - 0.25) / 0.30);
+  if (combined < 0.30) {
+    color = mix(colorBase, colorMid, combined / 0.30);
+  } else if (combined < 0.65) {
+    color = mix(colorMid, colorPeak, (combined - 0.30) / 0.35);
   } else {
-    color = mix(colorPeak, colorHot, (combined - 0.55) / 0.45);
+    float cyanBlend = smoothstep(0.65, 1.0, combined) * 0.25;
+    color = mix(colorPeak, colorCyan, cyanBlend);
   }
+
+  float scanlineY = mod(u_time * 0.2, 1.0);
+  float scanlineDist = abs(uv.y - scanlineY);
+  float scanlineGlow = exp(-scanlineDist * 800.0) * 0.06;
+  color += vec3(scanlineGlow * 0.8, scanlineGlow * 0.5, scanlineGlow * 0.2);
+
+  float band1 = step(0.997, fract(sin(floor(uv.y * 40.0) + u_time * 0.7) * 43758.5));
+  color += vec3(0.04, 0.025, 0.008) * band1 * 0.3;
 
   gl_FragColor = vec4(color, 1.0);
 }
@@ -173,7 +180,6 @@ export function ShaderBackground() {
     const positionLocation = gl.getAttribLocation(program, "position");
     const timeLocation = gl.getUniformLocation(program, "u_time");
     const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
-    const mouseLocation = gl.getUniformLocation(program, "u_mouse");
     const scrollLocation = gl.getUniformLocation(program, "u_scroll");
 
     gl.enableVertexAttribArray(positionLocation);
@@ -181,16 +187,7 @@ export function ShaderBackground() {
 
     let frameId = 0;
     let sizeObserver: ResizeObserver | null = null;
-    let viewportWidth = 1;
-    let viewportHeight = 1;
-    let pointerU = 0.5;
-    let pointerV = 0.5;
     let scrollProgress = 0;
-
-    const updateMouse = (event: MouseEvent) => {
-      pointerU = event.clientX / Math.max(window.innerWidth, 1);
-      pointerV = event.clientY / Math.max(window.innerHeight, 1);
-    };
 
     const updateScroll = () => {
       const doc = document.documentElement;
@@ -199,10 +196,19 @@ export function ShaderBackground() {
     };
 
     const updateSize = () => {
-      const mobileScale = window.innerWidth < 768 ? 0.5 : 1;
+      const mobile = window.innerWidth < 768;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      viewportWidth = Math.max(1, Math.floor(canvas.clientWidth * dpr * mobileScale));
-      viewportHeight = Math.max(1, Math.floor(canvas.clientHeight * dpr * mobileScale));
+      const cssWidth = mobile ? window.innerWidth * 0.4 : window.innerWidth;
+      const cssHeight = mobile ? window.innerHeight * 0.4 : window.innerHeight;
+
+      canvas.style.width = mobile ? "40vw" : "100vw";
+      canvas.style.height = mobile ? "40vh" : "100vh";
+      canvas.style.transform = mobile ? "scale(2.5) translateZ(0)" : "translateZ(0)";
+      canvas.style.transformOrigin = "top left";
+
+      const viewportWidth = Math.max(1, Math.floor(cssWidth * dpr));
+      const viewportHeight = Math.max(1, Math.floor(cssHeight * dpr));
+
       canvas.width = viewportWidth;
       canvas.height = viewportHeight;
       gl.viewport(0, 0, viewportWidth, viewportHeight);
@@ -211,7 +217,6 @@ export function ShaderBackground() {
 
     const render = () => {
       gl.uniform1f(timeLocation, performance.now() / 1000);
-      gl.uniform2f(mouseLocation, pointerU, pointerV);
       gl.uniform1f(scrollLocation, scrollProgress);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
       frameId = window.requestAnimationFrame(render);
@@ -220,7 +225,6 @@ export function ShaderBackground() {
     updateScroll();
     updateSize();
 
-    window.addEventListener("mousemove", updateMouse, { passive: true });
     window.addEventListener("scroll", updateScroll, { passive: true });
     window.addEventListener("resize", updateSize, { passive: true });
 
@@ -231,7 +235,6 @@ export function ShaderBackground() {
 
     return () => {
       window.cancelAnimationFrame(frameId);
-      window.removeEventListener("mousemove", updateMouse);
       window.removeEventListener("scroll", updateScroll);
       window.removeEventListener("resize", updateSize);
       sizeObserver?.disconnect();
@@ -243,11 +246,5 @@ export function ShaderBackground() {
     };
   }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      aria-hidden
-      className="fixed inset-0 z-0 h-screen w-screen will-change-transform"
-    />
-  );
+  return <canvas ref={canvasRef} aria-hidden className="fixed inset-0 z-0 will-change-transform" />;
 }

@@ -24,19 +24,19 @@ export function AddToCartButton({
 }: AddToCartButtonProps) {
   const cart = useCart();
   const fallbackVariantId = useRaptileStore((state) => state.selectedVariantId);
-  const setCartOpen = useRaptileStore((state) => state.setCartOpen);
+  const setLastAddedMerchandiseId = useRaptileStore((state) => state.setLastAddedMerchandiseId);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const timeoutRef = useRef<number | null>(null);
+  const successTimeoutRef = useRef<number | null>(null);
+  const closeDrawerTimeoutRef = useRef<number | null>(null);
   const resolvedVariantId = variantId ?? fallbackVariantId;
   const isSoldOut = soldOut || !IS_SHOPIFY_PUBLIC_READY;
   const isDisabled = isLoading || isSoldOut || !resolvedVariantId;
 
   useEffect(() => {
     return () => {
-      if (timeoutRef.current !== null) {
-        window.clearTimeout(timeoutRef.current);
-      }
+      if (successTimeoutRef.current !== null) window.clearTimeout(successTimeoutRef.current);
+      if (closeDrawerTimeoutRef.current !== null) window.clearTimeout(closeDrawerTimeoutRef.current);
     };
   }, []);
 
@@ -50,8 +50,16 @@ export function AddToCartButton({
     try {
       await cart.linesAdd([{ merchandiseId: resolvedVariantId, quantity: 1 }]);
       setIsSuccess(true);
-      setCartOpen(true);
-      timeoutRef.current = window.setTimeout(() => setIsSuccess(false), 1000);
+      setLastAddedMerchandiseId(resolvedVariantId);
+      useRaptileStore.getState().setCartOpen(true);
+
+      if (successTimeoutRef.current !== null) window.clearTimeout(successTimeoutRef.current);
+      if (closeDrawerTimeoutRef.current !== null) window.clearTimeout(closeDrawerTimeoutRef.current);
+
+      successTimeoutRef.current = window.setTimeout(() => setIsSuccess(false), 1200);
+      closeDrawerTimeoutRef.current = window.setTimeout(() => {
+        useRaptileStore.getState().setCartOpen(false);
+      }, 2200);
     } catch (error) {
       console.error("Cart error:", error);
     } finally {
@@ -70,9 +78,9 @@ export function AddToCartButton({
   return (
     <button
       className={cn(
-        "glass-panel group relative isolate overflow-hidden rounded-full border border-[color:var(--glass-border)] px-5 py-3 text-left transition duration-200 before:rounded-full",
+        "btn-primary group relative isolate flex items-center justify-center overflow-hidden rounded-full px-5 py-3.5 text-center transition duration-200",
         compact ? "min-w-[12rem]" : "w-full",
-        isDisabled ? "cursor-not-allowed opacity-45" : "hover:amber-border",
+        isDisabled ? "cursor-not-allowed opacity-45" : "shadow-[0_0_24px_color-mix(in_oklch,var(--accent-glow)_18%,transparent)]",
         isLoading ? "cursor-wait" : "",
         className,
       )}
@@ -88,7 +96,7 @@ export function AddToCartButton({
             <span className="loading-dot animation-delay-300" />
           </span>
         ) : (
-          <span className="t-label">{label}</span>
+          <span className="t-label text-[color:var(--bg)]">{label}</span>
         )}
       </span>
     </button>

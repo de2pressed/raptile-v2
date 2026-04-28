@@ -6,83 +6,34 @@ import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 
 import { AddToCartButton } from "@/components/shop/AddToCartButton";
+import { NotifyMeForm } from "@/components/shop/NotifyMeForm";
 import { SpecDrawer } from "@/components/shop/SpecDrawer";
-import { StatusBar } from "@/components/shop/StatusBar";
-import { GlassPanel } from "@/components/ui/GlassPanel";
-import type { ProductImage, ProductVariant, ShopifyProduct } from "@/lib/commerce";
+import type { ProductVariant, ShopifyProduct } from "@/lib/commerce";
 import { formatPrice } from "@/lib/commerce";
 import { getColorHex } from "@/lib/colorMap";
-import { getFirstAvailableColor, getOptionValue, getProductColors, getProductSizes, matchesColor } from "@/lib/product-options";
+import { getFirstAvailableColor, getOptionValue, getProductColors, getProductSizes } from "@/lib/product-options";
 import { useRaptileStore } from "@/lib/store";
+import { filterImagesByColor, normalizeColorName } from "@/lib/utils/imageFilter";
 import { cn } from "@/lib/utils";
+import { shopifyImageUrl } from "@/lib/utils/shopifyImage";
 
 const BLUR_DATA_URL =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWPQy7P9HwAFnwJ+m8dK8QAAAABJRU5ErkJggg==";
-
-const imageLayouts = [
-  "aspect-[3/4] w-full",
-  "aspect-[4/5] w-full md:ml-auto md:w-[70%]",
-  "aspect-[4/5] w-full md:w-[70%]",
-  "aspect-[3/4] w-full",
-];
 
 interface ProductDetailClientProps {
   product: ShopifyProduct;
 }
 
-function ImageFigure({
-  image,
-  title,
-  index,
-}: {
-  image: ProductImage | null;
-  title: string;
-  index: number;
-}) {
-  const reducedMotion = useReducedMotion();
-  const [loaded, setLoaded] = useState(false);
+function formatAltBreakdown(images: ShopifyProduct["images"]) {
+  const counts = new Map<string, number>();
 
-  useEffect(() => {
-    setLoaded(false);
-  }, [image?.url]);
+  images.forEach((image) => {
+    const key = normalizeColorName(image.altText);
+    if (!key) return;
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  });
 
-  return (
-    <motion.div
-      className={imageLayouts[index] ?? imageLayouts[imageLayouts.length - 1]}
-      initial={{ opacity: 0, y: reducedMotion ? 0 : 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{
-        duration: 0.6,
-        ease: [0.16, 1, 0.3, 1],
-      }}
-    >
-      <div className={cn("relative h-full overflow-hidden rounded-[32px] bg-[color:var(--bg-soft)]", !loaded && "image-skeleton")}>
-        {image ? (
-          <Image
-            alt={image.altText ?? title}
-            blurDataURL={BLUR_DATA_URL}
-            className={cn(
-              "h-full w-full object-cover transition-opacity duration-300",
-              loaded ? "opacity-100" : "opacity-0",
-            )}
-            fill
-            loading={index === 0 ? undefined : "lazy"}
-            onLoad={() => setLoaded(true)}
-            placeholder="blur"
-            priority={index === 0}
-            sizes={index === 0 ? "100vw" : "(max-width: 767px) 100vw, 70vw"}
-            src={image.url}
-          />
-        ) : (
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,141,64,0.2),_transparent_46%),linear-gradient(180deg,_rgba(33,25,22,0.9),_rgba(17,12,10,1))]">
-            <div className="t-label absolute left-5 top-5 text-[color:var(--text-muted)]">IMAGE COMING SOON</div>
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
-      </div>
-    </motion.div>
-  );
+  return [...counts.entries()].map(([name, count]) => `"${name}" (${count})`).join(", ");
 }
 
 export function ProductDetailClient({ product }: ProductDetailClientProps) {
@@ -110,7 +61,10 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const hasColorOptions = colors.length > 0;
   const hasSizeOptions = sizes.length > 0;
   const [selectedColor, setSelectedColor] = useState<string | null>(() => getFirstAvailableColor(product));
-  const [selectedSize, setSelectedSize] = useState<string | null>(() => getOptionValue(defaultVariant, "Size"));
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+  const [pointerStartX, setPointerStartX] = useState<number | null>(null);
   const setSelectedVariantId = useRaptileStore((state) => state.setSelectedVariant);
   const setSpecDrawerOpen = useRaptileStore((state) => state.setSpecDrawerOpen);
 
@@ -122,17 +76,41 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
     setSelectedColor(getFirstAvailableColor(product) ?? colors[0] ?? null);
   }, [colors, hasColorOptions, product, selectedColor]);
 
+  const displayImages = useMemo(() => {
+    if (!product.images.length) {
+      return [];
+    }
+
+    if (!selectedColor) {
+      return product.images;
+    }
+
+    return filterImagesByColor(product.images, selectedColor);
+  }, [product.images, selectedColor]);
+
+  useEffect(() => {
+    setSelectedImageIndex(0);
+  }, [selectedColor]);
+
+  useEffect(() => {
+    setSelectedImageIndex((current) => Math.min(current, Math.max(displayImages.length - 1, 0)));
+  }, [displayImages.length]);
+
+  const normalizedSelectedColor = selectedColor ? normalizeColorName(selectedColor) : "";
+
   const availableSizesForColor = useMemo(
     () =>
       sizes.filter((size) =>
-        variants.some(
-          (variant) =>
-            variant.availableForSale &&
-            (!hasColorOptions || getOptionValue(variant, "Color") === selectedColor) &&
-            getOptionValue(variant, "Size") === size,
-        ),
+        variants.some((variant) => {
+          const color = getOptionValue(variant, "Color");
+          const variantSize = getOptionValue(variant, "Size");
+          const colorMatch =
+            !hasColorOptions || !normalizedSelectedColor || normalizeColorName(color) === normalizedSelectedColor;
+
+          return colorMatch && variant.availableForSale && variantSize === size;
+        }),
       ),
-    [hasColorOptions, selectedColor, sizes, variants],
+    [hasColorOptions, normalizedSelectedColor, sizes, variants],
   );
 
   useEffect(() => {
@@ -141,21 +119,20 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
       return;
     }
 
-    setSelectedSize((current) => {
-      if (current && availableSizesForColor.includes(current)) {
-        return current;
-      }
-
-      return availableSizesForColor[0] ?? null;
-    });
+    setSelectedSize((current) => (current && availableSizesForColor.includes(current) ? current : null));
   }, [availableSizesForColor, hasSizeOptions]);
 
   const selectedVariant = useMemo(() => {
+    if (hasSizeOptions && !selectedSize) {
+      return null;
+    }
+
     const variant =
       variants.find((candidate) => {
         const color = getOptionValue(candidate, "Color");
         const size = getOptionValue(candidate, "Size");
-        const colorMatch = !hasColorOptions || color === selectedColor;
+        const colorMatch =
+          !hasColorOptions || !normalizedSelectedColor || normalizeColorName(color) === normalizedSelectedColor;
         const sizeMatch = !hasSizeOptions || size === selectedSize;
         return colorMatch && sizeMatch;
       }) ?? null;
@@ -165,19 +142,13 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
     }
 
     return !hasColorOptions && !hasSizeOptions ? defaultVariant : null;
-  }, [defaultVariant, hasColorOptions, hasSizeOptions, selectedColor, selectedSize, variants]);
+  }, [defaultVariant, hasColorOptions, hasSizeOptions, normalizedSelectedColor, selectedSize, variants]);
 
-  const displayImages = useMemo(() => {
-    if (!selectedColor) {
-      return product.images.length ? product.images : [null];
-    }
-
-    const visibleImages = product.images.filter((image) => matchesColor(image, selectedColor));
-    return visibleImages.length > 0 ? visibleImages : product.images.length ? product.images : [null];
-  }, [product.images, selectedColor]);
-
-  const soldOut = !product.availableForSale || (selectedVariant ? !selectedVariant.availableForSale : hasSizeOptions);
+  const selectedImage = displayImages[selectedImageIndex] ?? displayImages[0] ?? null;
+  const soldOut = !product.availableForSale || (selectedVariant ? !selectedVariant.availableForSale : false);
   const emptySelectionLabel = hasSizeOptions ? "Select a size" : "Add to Cart";
+  const matchedImageCount = selectedColor ? filterImagesByColor(product.images, selectedColor).length : product.images.length;
+  const altBreakdown = useMemo(() => formatAltBreakdown(product.images), [product.images]);
 
   useEffect(() => {
     setSelectedVariantId(selectedVariant?.id ?? null);
@@ -189,72 +160,160 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
     };
   }, [selectedVariant?.id, setSelectedVariantId, setSpecDrawerOpen]);
 
+  const changeImage = (direction: 1 | -1) => {
+    if (displayImages.length < 2) return;
+
+    setSelectedImageIndex((current) => {
+      const next = current + direction;
+      if (next < 0) return displayImages.length - 1;
+      if (next >= displayImages.length) return 0;
+      return next;
+    });
+  };
+
+  const description = product.description.trim();
+  const truncatedDescriptionStyle = descriptionExpanded
+    ? undefined
+    : ({
+        display: "-webkit-box",
+        WebkitLineClamp: 3,
+        WebkitBoxOrient: "vertical",
+        overflow: "hidden",
+      } as const);
+
   return (
     <LazyMotion features={domAnimation}>
-      <div className="pb-32 md:pb-36">
-        <div className="mx-auto max-w-[1440px] space-y-8 pb-10 pt-4 md:space-y-10">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={selectedColor ?? "all"}
-              className="space-y-8 md:space-y-10"
-              initial={{ opacity: 0, y: reducedMotion ? 0 : -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: reducedMotion ? 0 : -8 }}
-              transition={{ duration: reducedMotion ? 0.18 : 0.2, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {displayImages.slice(0, 4).map((image, index) => (
-                <ImageFigure
-                  key={`${selectedColor ?? "all"}-${image?.url ?? "fallback"}-${index}`}
-                  image={image}
-                  index={index}
-                  title={product.title}
-                />
-              ))}
-            </motion.div>
-          </AnimatePresence>
-        </div>
+      <section className="py-4 md:py-6 lg:py-0">
+        <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_380px] lg:h-[calc(100vh-60px)] lg:grid-cols-[80px_minmax(0,1fr)_420px]">
+          <div className={cn("hide-scrollbar hidden lg:flex lg:flex-col lg:gap-2 lg:overflow-y-auto lg:py-2", displayImages.length <= 1 && "lg:hidden")}>
+            {displayImages.map((image, index) => {
+              const active = index === selectedImageIndex;
 
-        <div className="mx-auto max-w-[960px]">
-          <GlassPanel className="rounded-[34px] p-8 md:p-10">
-            <div className="grid gap-8">
-              <div>
-                <div className="t-display">{product.title}</div>
-                <div className="t-price mt-4">{formatPrice(selectedVariant?.price.amount ?? product.priceRange.minVariantPrice.amount)}</div>
-                <div className="mt-4 max-w-[42rem] text-sm leading-7 text-[color:var(--text-muted)] md:text-base">
-                  {product.description ||
-                    "A measured garment study with a refined silhouette, a restrained palette, and a focus on material clarity."}
+              return (
+                <button
+                  key={`${image.url}-${index}`}
+                  className={cn(
+                    "relative h-[68px] w-[68px] overflow-hidden rounded-[18px] border bg-[color:var(--bg)] transition duration-200",
+                    active
+                      ? "border-[color:var(--accent)] bg-[color:var(--glass-fill)]"
+                      : "border-[color:var(--glass-border)] hover:border-[color:var(--accent)]",
+                  )}
+                  onClick={() => setSelectedImageIndex(index)}
+                  type="button"
+                >
+                  <Image
+                    alt={image.altText ?? product.title}
+                    className="h-full w-full object-cover"
+                    fill
+                    sizes="68px"
+                    src={shopifyImageUrl(image.url, { width: 136, height: 136, crop: "center" })}
+                  />
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex min-w-0 flex-col">
+            <div
+              className="relative flex-1 overflow-hidden rounded-[28px] border border-[color:var(--glass-border)] bg-[color:var(--bg)]"
+              onPointerDown={(event) => {
+                if (displayImages.length < 2) return;
+                setPointerStartX(event.clientX);
+              }}
+              onPointerUp={(event) => {
+                if (pointerStartX === null || displayImages.length < 2) {
+                  setPointerStartX(null);
+                  return;
+                }
+
+                const delta = event.clientX - pointerStartX;
+                setPointerStartX(null);
+
+                if (Math.abs(delta) < 40) return;
+                changeImage(delta < 0 ? 1 : -1);
+              }}
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={selectedImage?.url ?? "fallback"}
+                  className="relative aspect-[3/4] min-h-[24rem] w-full lg:h-full lg:min-h-0"
+                  initial={{ opacity: 0, scale: reducedMotion ? 1 : 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: reducedMotion ? 1 : 0.98 }}
+                  transition={{ duration: reducedMotion ? 0.01 : 0.2, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  {selectedImage ? (
+                    <Image
+                      alt={selectedImage.altText ?? product.title}
+                      blurDataURL={BLUR_DATA_URL}
+                      className="h-full w-full object-contain"
+                      fill
+                      placeholder="blur"
+                      priority
+                      sizes="(min-width: 1024px) calc(100vw - 500px), 100vw"
+                      src={shopifyImageUrl(selectedImage.url, { width: 900, height: 1125, crop: "center" })}
+                    />
+                  ) : (
+                    <div className="absolute inset-0 image-skeleton" />
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {displayImages.length > 1 ? (
+              <div className="mt-4 flex items-center justify-center gap-2 lg:hidden">
+                {displayImages.map((image, index) => (
+                  <button
+                    key={`dot-${image.url}-${index}`}
+                    aria-label={`View image ${index + 1}`}
+                    className={cn(
+                      "h-2.5 rounded-full transition-all duration-200",
+                      index === selectedImageIndex ? "w-6 bg-[color:var(--accent)]" : "w-2.5 bg-[color:var(--glass-border)]",
+                    )}
+                    onClick={() => setSelectedImageIndex(index)}
+                    type="button"
+                  />
+                ))}
+              </div>
+            ) : null}
+          </div>
+
+          <div className="glass-panel hide-scrollbar rounded-[28px] p-6 md:p-8 lg:sticky lg:top-[60px] lg:h-[calc(100vh-60px)] lg:overflow-y-auto">
+            <div className="relative z-[1] grid gap-6">
+              <div className="grid gap-3">
+                <div className="t-label text-[color:var(--text-muted)]">{`Collection / ${product.title}`}</div>
+                <div className="t-display text-[color:var(--text)]">{product.title}</div>
+                <div className="flex items-center gap-3">
+                  <div className="t-price text-[color:var(--text)]">
+                    {formatPrice(selectedVariant?.price.amount ?? product.priceRange.minVariantPrice.amount)}
+                  </div>
+                  {soldOut ? <div className="t-label text-[color:var(--sold-out)]">Sold Out</div> : null}
                 </div>
               </div>
 
+              <div className="h-px w-full bg-[color:var(--glass-border)]" />
+
               {hasColorOptions ? (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="t-label">Color</div>
-                    <div className="t-ui text-[color:var(--text-muted)]">{selectedColor}</div>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
+                <div className="grid gap-3">
+                  <div className="t-label text-[color:var(--text-muted)]">Color</div>
+                  <div className="flex flex-wrap gap-3">
                     {colors.map((color) => {
-                      const selected = color === selectedColor;
+                      const active = normalizeColorName(color) === normalizedSelectedColor;
 
                       return (
-                        <div key={color} className="group relative">
-                          <button
-                            aria-label={color}
-                            className={cn(
-                              "h-7 w-7 rounded-full border-2 transition duration-200",
-                              selected
-                                ? "border-[color:var(--accent)] shadow-[0_0_0_1px_var(--accent)]"
-                                : "border-transparent hover:border-[color:var(--glass-border)]",
-                            )}
-                            onClick={() => setSelectedColor(color)}
-                            style={{ backgroundColor: getColorHex(color) }}
-                            title={color}
-                            type="button"
-                          />
-                          <span className="pointer-events-none absolute left-1/2 top-[calc(100%+4px)] -translate-x-1/2 whitespace-nowrap opacity-0 transition duration-150 group-hover:opacity-100">
-                            <span className="t-label text-[color:var(--text-muted)]">{color}</span>
-                          </span>
-                        </div>
+                        <button
+                          key={color}
+                          aria-label={color}
+                          className={cn(
+                            "relative h-7 w-7 rounded-full border transition duration-200",
+                            active
+                              ? "border-[color:var(--accent)] shadow-[0_0_0_3px_var(--accent-subtle)]"
+                              : "border-[color:var(--glass-border)] hover:border-[color:var(--accent)]",
+                          )}
+                          onClick={() => setSelectedColor(color)}
+                          style={{ backgroundColor: getColorHex(color) }}
+                          type="button"
+                        />
                       );
                     })}
                   </div>
@@ -262,64 +321,93 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               ) : null}
 
               {hasSizeOptions ? (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="t-label">Size</div>
-                    <div className="t-ui text-[color:var(--text-muted)]">{selectedSize ?? "Select a size"}</div>
-                  </div>
+                <div className="grid gap-3">
+                  <div className="t-label text-[color:var(--text-muted)]">Size</div>
                   <div className="flex flex-wrap gap-2">
                     {sizes.map((size) => {
-                      const selected = size === selectedSize;
+                      const active = size === selectedSize;
                       const available = availableSizesForColor.includes(size);
 
                       return (
                         <button
                           key={size}
                           className={cn(
-                            "glass-panel rounded-full border px-4 py-2 before:rounded-full",
-                            selected
-                              ? "border-[color:var(--accent)] text-[color:var(--accent)]"
-                              : "border-[color:var(--glass-border)] text-[color:var(--text-muted)]",
-                            !available && "cursor-not-allowed opacity-30 line-through hover:border-[color:var(--glass-border)]",
+                            "rounded-full border px-4 py-2 transition duration-200",
+                            active
+                              ? "border-[color:var(--accent)] text-[color:var(--text)]"
+                              : "border-[color:var(--glass-border)] text-[color:var(--text-muted)] hover:border-[color:var(--accent)] hover:text-[color:var(--text)]",
+                            !available && "cursor-not-allowed border-[color:var(--glass-border)] opacity-35 line-through",
                           )}
                           disabled={!available}
                           onClick={() => setSelectedSize(size)}
                           type="button"
                         >
-                          <span className="t-label relative z-[1]">{size}</span>
+                          <span className="t-label">{size}</span>
                         </button>
                       );
                     })}
                   </div>
+                  {!selectedSize ? (
+                    <div className="t-label italic text-[color:var(--text-muted)]">Select a size</div>
+                  ) : null}
                 </div>
               ) : null}
 
-              <div className="space-y-4">
+              <div className="h-px w-full bg-[color:var(--glass-border)]" />
+
+              {soldOut ? (
+                <NotifyMeForm productHandle={product.handle} variantId={selectedVariant?.id ?? null} />
+              ) : (
                 <AddToCartButton
                   emptySelectionLabel={emptySelectionLabel}
                   soldOut={soldOut}
                   variantId={selectedVariant?.id ?? null}
                 />
-                <button
-                  className="t-label text-left text-[color:var(--text-muted)] transition duration-200 hover:text-[color:var(--accent-strong)]"
-                  onClick={() => setSpecDrawerOpen(true)}
-                  type="button"
-                >
-                  View Details -&gt;
-                </button>
-              </div>
+              )}
+
+              <button
+                className="ghost-button rounded-full px-5 py-3 text-left"
+                onClick={() => setSpecDrawerOpen(true)}
+                type="button"
+              >
+                <span className="t-label flex items-center justify-between">
+                  <span>View Details</span>
+                  <span aria-hidden>↓</span>
+                </span>
+              </button>
+
+              <div className="h-px w-full bg-[color:var(--glass-border)]" />
+
+              {description ? (
+                <div className="grid gap-3">
+                  <div className="text-sm leading-7 text-[color:var(--text-muted)] md:text-base" style={truncatedDescriptionStyle}>
+                    {description}
+                  </div>
+                  {description.length > 180 ? (
+                    <button
+                      className="t-label w-fit text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--text)]"
+                      onClick={() => setDescriptionExpanded((value) => !value)}
+                      type="button"
+                    >
+                      {descriptionExpanded ? "Show Less" : "Read More"}
+                    </button>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
-          </GlassPanel>
+          </div>
         </div>
 
+        {process.env.NODE_ENV === "development" ? (
+          <div className="pointer-events-none fixed bottom-4 left-4 z-[9998] bg-black/80 p-2 font-mono text-[10px] text-[#00ff00]">
+            <div>{`[DEV] Images: ${product.images.length} total`}</div>
+            <div>{`Alt texts detected: ${altBreakdown || "none"}`}</div>
+            <div>{`Selected color: "${normalizeColorName(selectedColor)}" -> ${matchedImageCount} images matched`}</div>
+          </div>
+        ) : null}
+
         <SpecDrawer product={product} />
-        <StatusBar
-          emptySelectionLabel={emptySelectionLabel}
-          product={product}
-          soldOut={soldOut}
-          variantId={selectedVariant?.id ?? null}
-        />
-      </div>
+      </section>
     </LazyMotion>
   );
 }

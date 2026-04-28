@@ -87,7 +87,7 @@ const COLLECTION_QUERY = /* GraphQL */ `
               currencyCode
             }
           }
-          images(first: 4) {
+          images(first: 12) {
             nodes {
               url
               altText
@@ -140,7 +140,7 @@ const PRODUCT_QUERY = /* GraphQL */ `
           currencyCode
         }
       }
-      images(first: 4) {
+      images(first: 12) {
         nodes {
           url
           altText

@@ -6,105 +6,117 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-import { GlassPanel } from "@/components/ui/GlassPanel";
 import { useRaptileStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: "/", label: "COLLECTION" },
-  { href: "/contact", label: "CONTACT" },
+  { href: "/", label: "Collection" },
+  { href: "/contact", label: "Contact" },
+  { href: "/cart", label: "Cart" },
 ];
 
 export function Nav() {
   const pathname = usePathname();
-  const setCartOpen = useRaptileStore((state) => state.setCartOpen);
-  const cartCount = useRaptileStore((state) =>
-    state.cartLines.reduce((total, line) => total + line.quantity, 0),
-  );
+  const cartCount = useRaptileStore((state) => state.cartLines.reduce((total, line) => total + line.quantity, 0));
   const [menuOpen, setMenuOpen] = useState(false);
-
-  if (pathname.startsWith("/products/")) {
-    return null;
-  }
 
   return (
     <LazyMotion features={domAnimation}>
-      <nav className="sticky top-0 z-[100] px-4 pb-4 pt-5 md:px-6">
-        <GlassPanel className="mx-auto max-w-[1440px] rounded-[26px] px-4 py-4 md:px-6">
-          <div className="flex items-center justify-between gap-6">
-            <Link href="/" className="font-display text-xl font-bold tracking-[-0.04em] md:text-2xl">
-              RAPTILE STUDIO
-            </Link>
-            <div className="hidden items-center gap-5 md:flex">
-              {navLinks.map((link) => (
+      <nav
+        className="sticky top-0 z-[100] border-b border-[color:var(--glass-border)] bg-[color:var(--bg-soft)]/90 backdrop-blur-[20px]"
+        style={{ height: 60 }}
+      >
+        <div className="mx-auto flex h-[60px] max-w-[1400px] items-center justify-between gap-6 px-4 md:px-6">
+          <Link href="/" className="font-display text-xl font-bold tracking-[-0.04em] text-[color:var(--text)] md:text-2xl">
+            RAPTILE STUDIO
+          </Link>
+          <div className="hidden items-center gap-5 md:flex">
+            {navLinks.map((link) => {
+              const label = link.href === "/cart" ? `Cart (${cartCount})` : link.label;
+              const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+
+              return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="t-label transition-colors duration-200 hover:text-[color:var(--accent-strong)]"
+                  className={cn(
+                    "t-label transition-colors duration-200",
+                    active ? "text-[color:var(--text)]" : "text-[color:var(--text-muted)] hover:text-[color:var(--text)]",
+                  )}
                 >
-                  {link.label}
+                  {label}
                 </Link>
-              ))}
-              <button
-                className="t-label transition-colors duration-200 hover:text-[color:var(--accent-strong)]"
-                onClick={() => setCartOpen(true)}
-                type="button"
-              >
-                CART({cartCount})
-              </button>
-            </div>
-            <button
-              className="t-label md:hidden"
-              onClick={() => setMenuOpen((open) => !open)}
-              type="button"
-            >
-              [MENU]
-            </button>
+              );
+            })}
           </div>
-        </GlassPanel>
+          <button
+            aria-expanded={menuOpen}
+            aria-label="Toggle navigation menu"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--glass-border)] text-xl text-[color:var(--text)] transition-colors duration-200 hover:border-[color:var(--accent)] md:hidden"
+            onClick={() => setMenuOpen((open) => !open)}
+            type="button"
+          >
+            <span aria-hidden>☰</span>
+          </button>
+        </div>
       </nav>
+
       <AnimatePresence>
         {menuOpen ? (
           <motion.div
-            className="fixed inset-0 z-[130] px-4 py-5 md:hidden"
+            className="fixed inset-0 z-[130] md:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <GlassPanel className="glass-panel-heavy flex h-full flex-col justify-between rounded-[34px] px-6 py-6">
+            <button
+              aria-label="Close navigation menu"
+              className="absolute inset-0 bg-black/72"
+              onClick={() => setMenuOpen(false)}
+              type="button"
+            />
+            <motion.div
+              className="absolute inset-x-4 top-4 rounded-[32px] border border-[color:var(--glass-border)] bg-[color:var(--bg-soft)]/95 p-6 shadow-[0_24px_64px_var(--glass-shadow)] backdrop-blur-[24px]"
+              initial={{ y: -24, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -16, opacity: 0 }}
+              transition={{ duration: 0.26, ease: [0.16, 1, 0.3, 1] }}
+            >
               <div className="flex items-center justify-between">
-                <div className="t-label text-[color:var(--text-muted)]">RAPTILE NAV</div>
-                <button className="t-label" onClick={() => setMenuOpen(false)} type="button">
-                  [CLOSE]
-                </button>
-              </div>
-              <div className="flex flex-col gap-5">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={cn("font-display text-3xl font-bold tracking-[-0.04em]")}
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                <div className="t-label text-[color:var(--text-muted)]">Raptile Navigation</div>
                 <button
-                  className="font-display text-left text-3xl font-bold tracking-[-0.04em]"
-                  onClick={() => {
-                    setCartOpen(true);
-                    setMenuOpen(false);
-                  }}
+                  aria-label="Close navigation"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--glass-border)] text-2xl text-[color:var(--text)]"
+                  onClick={() => setMenuOpen(false)}
                   type="button"
                 >
-                  CART({cartCount})
+                  <span aria-hidden>×</span>
                 </button>
               </div>
-              <p className="t-ui max-w-[20rem] text-[color:var(--text-muted)]">
-                Spatial editorial commerce with material-led silhouettes, grounded palettes, and slow release
-                cycles.
+              <div className="mt-10 flex flex-col gap-5">
+                {navLinks.map((link) => {
+                  const label = link.href === "/cart" ? `Cart (${cartCount})` : link.label;
+                  const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={cn(
+                        "font-display text-3xl font-bold tracking-[-0.04em]",
+                        active ? "text-[color:var(--text)]" : "text-[color:var(--text-muted)]",
+                      )}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      {label}
+                    </Link>
+                  );
+                })}
+              </div>
+              <p className="t-ui mt-12 max-w-[22rem] text-[color:var(--text-muted)]">
+                Quiet editorial commerce, grounded materials, and a storefront that lets the garments do the talking.
               </p>
-            </GlassPanel>
+            </motion.div>
           </motion.div>
         ) : null}
       </AnimatePresence>

@@ -1,29 +1,28 @@
-import { InfoTerminalPage } from "@/components/layout/InfoTerminalPage";
+import { SupportPageFrame } from "@/components/layout/SupportPageFrame";
 
 export default function ShippingPage() {
   return (
-    <InfoTerminalPage
-      eyebrow="LOGISTICS PROTOCOL"
-      lead="Raptile shipments move in tightly controlled release windows. Each parcel is checked for finishing, size validation, and packing integrity before dispatch."
-      sections={[
-        {
-          label: "Dispatch Window",
-          body: "Core collection orders dispatch within 3 to 5 business days. Limited capsules and vaulted archive pulls may require additional inspection time before handoff.",
-        },
-        {
-          label: "Domestic Transit",
-          body: "India shipments typically arrive within 2 to 6 business days after dispatch, with live tracking issued as soon as the label is activated.",
-        },
-        {
-          label: "International",
-          body: "International orders are quoted case by case based on destination, import requirements, and release batch timing. Duties may apply on arrival.",
-        },
-        {
-          label: "Packaging",
-          body: "Every piece ships in low-gloss archival packaging designed to protect structure, surface print, and presentation during transit.",
-        },
-      ]}
-      title="Shipping Policy"
-    />
+    <SupportPageFrame title="Shipping">
+      <div className="support-stack">
+        <section>
+          <h2 className="support-heading">Processing Time</h2>
+          <p>
+            Orders are prepared within 2 to 4 business days. Each piece is checked for finish, sizing, and
+            packing before it leaves the studio.
+          </p>
+        </section>
+        <section>
+          <h2 className="support-heading">Domestic Shipping</h2>
+          <p>
+            India orders usually arrive in 4 to 7 business days after dispatch. Shipping is free on domestic
+            orders above ₹2,999.
+          </p>
+        </section>
+        <section>
+          <h2 className="support-heading">International</h2>
+          <p>International shipping is currently unavailable while we refine packaging and customs handling.</p>
+        </section>
+      </div>
+    </SupportPageFrame>
   );
 }

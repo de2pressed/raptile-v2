@@ -1,29 +1,47 @@
-import { InfoTerminalPage } from "@/components/layout/InfoTerminalPage";
+import { SupportPageFrame } from "@/components/layout/SupportPageFrame";
+
+const sizes = [
+  { size: "XS", chest: 116, length: 69, shoulder: 55 },
+  { size: "S", chest: 120, length: 71, shoulder: 57 },
+  { size: "M", chest: 124, length: 73, shoulder: 59 },
+  { size: "L", chest: 128, length: 75, shoulder: 61 },
+  { size: "XL", chest: 132, length: 77, shoulder: 63 },
+];
 
 export default function SizeGuidePage() {
   return (
-    <InfoTerminalPage
-      eyebrow="FIT MATRIX"
-      lead="Raptile silhouettes are intentionally shape-driven. Read each cut note closely before acquisition, especially on oversized and dropped-shoulder builds."
-      sections={[
-        {
-          label: "Core Rule",
-          body: "Use your everyday size for the intended silhouette. Size down only if you prefer a cleaner line through the body and sleeve.",
-        },
-        {
-          label: "Measurement Logic",
-          body: "Chest width, body length, and shoulder drop are the primary indicators. Compare them against a garment you already own rather than body measurements alone.",
-        },
-        {
-          label: "Oversized Cuts",
-          body: "Pieces labeled oversized architecture or boxy fit are drafted with extra room in the chest and shoulder. That volume is intentional, not a grading error.",
-        },
-        {
-          label: "Help Channel",
-          body: "If you need sizing support, use the studio inquiry route with your height, weight, and preferred fit reference. The team will recommend the correct size profile.",
-        },
-      ]}
-      title="Size Guide"
-    />
+    <SupportPageFrame title="Size Guide">
+      <div className="support-stack">
+        <section>
+          <h2 className="support-heading">Oversized Tee Measurements</h2>
+          <p>
+            Use a tee you already own as a reference and compare the measurements below for the closest fit.
+          </p>
+        </section>
+
+        <div className="overflow-x-auto">
+          <table className="size-table">
+            <thead>
+              <tr>
+                <th>Size</th>
+                <th>Chest (cm)</th>
+                <th>Length (cm)</th>
+                <th>Shoulder (cm)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sizes.map((row) => (
+                <tr key={row.size}>
+                  <td>{row.size}</td>
+                  <td>{row.chest}</td>
+                  <td>{row.length}</td>
+                  <td>{row.shoulder}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </SupportPageFrame>
   );
 }

@@ -14,7 +14,7 @@ interface ProductGridProps {
 
 type GridCell =
   | { type: "product"; product: ShopifyProduct; index: number }
-  | { type: "void"; id: string };
+  | { type: "info"; id: string };
 
 const spans = [
   "lg:col-span-7 md:col-span-3",
@@ -25,7 +25,7 @@ const spans = [
   "lg:col-span-7 md:col-span-3",
 ];
 
-function TelemetryCell() {
+function EditorialCell() {
   const [coordinates, setCoordinates] = useState(["023.441", "-08.209", "114.330"]);
 
   useEffect(() => {
@@ -43,7 +43,7 @@ function TelemetryCell() {
   return (
     <GlassPanel className="tech-card hidden aspect-[4/5] rounded-[30px] md:flex md:items-end md:p-5">
       <div className="space-y-2">
-        <div className="t-label text-[color:var(--text-muted)]">VOID // TUNNEL NODE</div>
+        <div className="t-label text-[color:var(--text-muted)]">COLLECTION GRID</div>
         <div className="t-ui text-[color:var(--text-muted)]">X: {coordinates[0]}</div>
         <div className="t-ui text-[color:var(--text-muted)]">Y: {coordinates[1]}</div>
         <div className="t-ui text-[color:var(--text-muted)]">Z: {coordinates[2]}</div>
@@ -62,7 +62,7 @@ export function ProductGrid({ products }: ProductGridProps) {
       cellCount += 1;
 
       if (cellCount % 4 === 0) {
-        result.push({ type: "void", id: `void-${index}` });
+        result.push({ type: "info", id: `info-${index}` });
         cellCount += 1;
       }
     });
@@ -73,9 +73,9 @@ export function ProductGrid({ products }: ProductGridProps) {
   if (products.length === 0) {
     return (
       <GlassPanel className="mx-auto max-w-3xl rounded-[34px] px-6 py-8 md:px-8 md:py-10">
-        <div className="t-label text-[color:var(--accent-strong)]">STOREFRONT SIGNAL INCOMPLETE</div>
+        <div className="t-label text-[color:var(--accent-strong)]">COLLECTION READY</div>
         <div className="mt-4 font-display text-3xl font-bold tracking-[-0.04em] md:text-4xl">
-          Add Shopify credentials and assign products to the collection handle to populate the editorial grid.
+          Add products to the selected Shopify collection to populate the editorial grid.
         </div>
       </GlassPanel>
     );
@@ -85,16 +85,16 @@ export function ProductGrid({ products }: ProductGridProps) {
     <LazyMotion features={domAnimation}>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-6 md:gap-5 lg:grid-cols-12 lg:gap-6">
         {cells.map((cell, order) => {
-          if (cell.type === "void") {
+          if (cell.type === "info") {
             return (
-            <motion.div
-              key={cell.id}
-              className="hidden md:col-span-3 md:block lg:col-span-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: order * 0.06, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+              <motion.div
+                key={cell.id}
+                className="hidden md:col-span-3 md:block lg:col-span-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: order * 0.06, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
               >
-                <TelemetryCell />
+                <EditorialCell />
               </motion.div>
             );
           }

@@ -12,15 +12,15 @@ export function NoiseOverlay() {
       return;
     }
 
-    const frequencies = ["0.65 0.68", "0.7 0.72", "0.72 0.75", "0.67 0.7"];
+    const frequencies = ["0.60 0.64", "0.67 0.71", "0.74 0.78", "0.80 0.76"];
     let raf = 0;
     let frame = 0;
 
     const tick = () => {
       frame += 1;
 
-      if (frame % 3 === 0) {
-        node.setAttribute("baseFrequency", frequencies[Math.floor(frame / 3) % frequencies.length]);
+      if (frame % 2 === 0) {
+        node.setAttribute("baseFrequency", frequencies[Math.floor(frame / 2) % frequencies.length]);
       }
 
       raf = window.requestAnimationFrame(tick);
@@ -34,7 +34,7 @@ export function NoiseOverlay() {
   return (
     <svg
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-[50] h-full w-full opacity-[0.045] mix-blend-screen"
+      className="pointer-events-none fixed inset-0 z-[50] h-full w-full opacity-[0.08] mix-blend-screen"
       preserveAspectRatio="none"
     >
       <filter id="noise">
@@ -42,15 +42,15 @@ export function NoiseOverlay() {
           ref={turbulenceRef}
           type="fractalNoise"
           baseFrequency="0.70 0.73"
-          numOctaves={4}
+          numOctaves={6}
           stitchTiles="stitch"
         />
         <feColorMatrix
           type="matrix"
-          values="0.3 0.2 0.1 0 0.05
-                  0.2 0.15 0.05 0 0.02
-                  0.1 0.1 0.05 0 0
-                  0 0 0 0 0.045"
+          values="0.4 0.25 0.12 0 0.07
+                  0.25 0.18 0.07 0 0.03
+                  0.12 0.12 0.07 0 0.01
+                  0 0 0 0 0.08"
         />
       </filter>
       <rect width="100%" height="100%" filter="url(#noise)" />

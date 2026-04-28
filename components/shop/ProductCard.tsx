@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import type { ShopifyProduct } from "@/lib/commerce";
 import { formatPrice } from "@/lib/commerce";
+import { getFirstAvailableColor, matchesColor } from "@/lib/product-options";
 import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
@@ -13,8 +14,10 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, className }: ProductCardProps) {
-  const primaryImage = product.images[0];
-  const isVaulted = !product.availableForSale;
+  const firstAvailableColor = getFirstAvailableColor(product);
+  const thumbnail =
+    product.images.find((image) => matchesColor(image, firstAvailableColor)) ?? product.images[0];
+  const soldOut = !product.availableForSale;
 
   return (
     <Link
@@ -25,26 +28,28 @@ export function ProductCard({ product, className }: ProductCardProps) {
       href={`/products/${product.handle}`}
     >
       <div className="absolute inset-0">
-        {primaryImage ? (
+        {thumbnail ? (
           <Image
-            alt={primaryImage.altText ?? product.title}
+            alt={thumbnail.altText ?? product.title}
             className={cn(
               "h-full w-full object-cover transition duration-500 ease-[var(--ease-out-expo)] group-hover:scale-[1.04]",
-              isVaulted ? "grayscale-[0.7] brightness-[0.6]" : "",
+              soldOut ? "grayscale-[0.35] brightness-[0.7]" : "",
             )}
             fill
             sizes="(max-width: 767px) 50vw, (max-width: 1024px) 50vw, 33vw"
-            src={primaryImage.url}
+            src={thumbnail.url}
           />
         ) : (
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,141,64,0.2),_transparent_46%),linear-gradient(180deg,_rgba(33,25,22,0.9),_rgba(17,12,10,1))]">
-            <div className="t-label absolute left-5 top-5 text-[color:var(--text-muted)]">SIGNAL LOCK / PENDING MEDIA</div>
+            <div className="t-label absolute left-5 top-5 text-[color:var(--text-muted)]">IMAGE COMING SOON</div>
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-        {isVaulted ? (
-          <div className="t-vaulted absolute inset-0 z-[2] flex items-center justify-center text-sm tracking-[0.35em]">
-            VAULTED
+        {soldOut ? (
+          <div className="absolute inset-0 z-[2] flex items-center justify-center">
+            <span className="t-label rounded-full border border-[color:var(--glass-border)] bg-black/30 px-4 py-2 backdrop-blur-md">
+              Sold Out
+            </span>
           </div>
         ) : null}
       </div>

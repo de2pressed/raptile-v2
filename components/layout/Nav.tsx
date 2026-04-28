@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 const navLinks = [
   { href: "/", label: "COLLECTION" },
-  { href: "/studio-inquiry", label: "STUDIO INQUIRY" },
+  { href: "/contact", label: "CONTACT" },
 ];
 
 export function Nav() {
@@ -101,8 +101,8 @@ export function Nav() {
                 </button>
               </div>
               <p className="t-ui max-w-[20rem] text-[color:var(--text-muted)]">
-                Spatial editorial commerce. Material-led silhouettes, vaulted archives, and terminal-grade
-                controls.
+                Spatial editorial commerce with material-led silhouettes, grounded palettes, and slow release
+                cycles.
               </p>
             </GlassPanel>
           </motion.div>

@@ -1,5 +1,5 @@
-import { NotFoundTerminal } from "@/components/layout/NotFoundTerminal";
+import { NotFoundPanel } from "@/components/layout/NotFoundPanel";
 
 export default function NotFoundPage() {
-  return <NotFoundTerminal />;
+  return <NotFoundPanel />;
 }

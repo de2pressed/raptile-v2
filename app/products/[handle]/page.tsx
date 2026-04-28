@@ -26,7 +26,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <GlassPanel className="rounded-[36px] px-6 py-8 md:px-8 md:py-10">
           <div className="t-label text-[color:var(--accent-strong)]">STOREFRONT OFFLINE</div>
           <div className="mt-4 font-display text-4xl font-bold tracking-[-0.04em]">
-            Shopify credentials are required to render the material inspector.
+            Shopify credentials are required to render product details.
           </div>
         </GlassPanel>
       </div>

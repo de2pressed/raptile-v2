@@ -1,29 +1,32 @@
-import { InfoTerminalPage } from "@/components/layout/InfoTerminalPage";
+import { SupportPageFrame } from "@/components/layout/SupportPageFrame";
 
 export default function ReturnsPage() {
   return (
-    <InfoTerminalPage
-      eyebrow="RETURN CHANNEL"
-      lead="Returns are assessed as part of the garment's condition log. Pieces must arrive back unworn, unwashed, and in their original packaging state."
-      sections={[
-        {
-          label: "Return Window",
-          body: "Eligible domestic orders can be requested within 7 calendar days of delivery. Archive, made-to-order, and marked final-sale pieces are non-returnable.",
-        },
-        {
-          label: "Condition Check",
-          body: "Returned items must retain original tags, packaging components, and surface finish. Items showing wear, scent, or wash exposure cannot be accepted.",
-        },
-        {
-          label: "Refund Timeline",
-          body: "Approved returns are processed to the original payment method within 5 to 7 business days after warehouse inspection completes.",
-        },
-        {
-          label: "Exchange Flow",
-          body: "Size exchanges depend on live stock at the moment the returned unit clears inspection. If replacement stock is unavailable, a refund is issued instead.",
-        },
-      ]}
-      title="Returns"
-    />
+    <SupportPageFrame title="Returns">
+      <div className="support-stack">
+        <section>
+          <h2 className="support-heading">Return Window</h2>
+          <p>Return requests must be made within 7 days from the delivery date.</p>
+        </section>
+        <section>
+          <h2 className="support-heading">Conditions</h2>
+          <p>
+            Items must be unworn, unwashed, and returned with original tags attached, including all original
+            packaging.
+          </p>
+        </section>
+        <section>
+          <h2 className="support-heading">Process</h2>
+          <p>
+            Email us with your order number and reason for return. We will share the next steps once the request
+            is reviewed.
+          </p>
+        </section>
+        <section>
+          <h2 className="support-heading">Non-returnable</h2>
+          <p>Sale items, worn items, and products returned without their original packaging are not eligible.</p>
+        </section>
+      </div>
+    </SupportPageFrame>
   );
 }

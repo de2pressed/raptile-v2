@@ -36,17 +36,18 @@ export function CartDrawer() {
             >
               <GlassPanel className="glass-panel-heavy flex h-full flex-col rounded-[30px] px-5 py-5 md:px-6">
                 <div className="flex items-center justify-between">
-                  <div className="t-label">CART TERMINAL_</div>
-                  <button className="t-label" onClick={() => setCartOpen(false)} type="button">
-                    [× CLOSE]
+                  <div className="font-display text-2xl font-bold tracking-[-0.04em]">Cart</div>
+                  <button className="t-ui text-[color:var(--text-muted)]" onClick={() => setCartOpen(false)} type="button">
+                    Close
                   </button>
                 </div>
-                <div className="terminal-rule mt-3">────────────────────────────────</div>
+                <div className="mono-rule mt-3">--------------------------------</div>
                 <div className="scrollbar-thin mt-5 flex-1 overflow-y-auto pr-1">
                   {cartLines.length === 0 ? (
-                    <div className="t-ui py-8 text-[color:var(--text-muted)]">
-                      <div>&gt; NO ITEMS ACQUIRED_</div>
-                      <div className="animate-blink">_</div>
+                    <div className="py-10 text-[color:var(--text-muted)]">
+                      <span className="t-ui">
+                        Your cart is empty<span className="cart-empty-dot">.</span>
+                      </span>
                     </div>
                   ) : (
                     <div className="space-y-3">
@@ -56,16 +57,15 @@ export function CartDrawer() {
                           className="glass-panel rounded-[22px] px-4 py-4 before:rounded-[22px]"
                         >
                           <div className="relative z-[1]">
-                            <div className="t-ui flex items-start justify-between gap-4">
-                              <div className="min-w-0">
-                                <div>{`QTY:${String(line.quantity).padStart(2, "0")}  ${line.title}`}</div>
-                                <div className="mt-1 text-[color:var(--text-muted)]">{line.variantTitle}</div>
-                              </div>
-                              <div className="shrink-0">{line.price}</div>
+                            <div className="t-ui flex items-start justify-between gap-4 text-[color:var(--text-muted)]">
+                              <div className="min-w-0">{line.variantTitle}</div>
+                              <div className="shrink-0 text-[color:var(--text)]">{line.price}</div>
                             </div>
-                            <div className="t-ui mt-4 flex items-center justify-between">
-                              <div className="flex items-center gap-4">
+                            <div className="t-product mt-2 truncate">{line.title}</div>
+                            <div className="mt-4 flex items-center justify-between gap-4">
+                              <div className="flex items-center gap-2">
                                 <button
+                                  className="glass-panel h-8 w-8 rounded-full text-sm before:rounded-full"
                                   onClick={() => {
                                     if (line.quantity <= 1) {
                                       cart.linesRemove([line.id]);
@@ -76,17 +76,23 @@ export function CartDrawer() {
                                   }}
                                   type="button"
                                 >
-                                  [−]
+                                  -
                                 </button>
+                                <div className="t-ui min-w-[3rem] text-center text-[color:var(--text)]">{`x${line.quantity}`}</div>
                                 <button
+                                  className="glass-panel h-8 w-8 rounded-full text-sm before:rounded-full"
                                   onClick={() => cart.linesUpdate([{ id: line.id, quantity: line.quantity + 1 }])}
                                   type="button"
                                 >
-                                  [+]
+                                  +
                                 </button>
                               </div>
-                              <button onClick={() => cart.linesRemove([line.id])} type="button">
-                                [REMOVE]
+                              <button
+                                className="t-ui text-[color:var(--text-muted)] transition duration-200 hover:text-[color:var(--accent-strong)]"
+                                onClick={() => cart.linesRemove([line.id])}
+                                type="button"
+                              >
+                                Remove
                               </button>
                             </div>
                           </div>
@@ -95,14 +101,13 @@ export function CartDrawer() {
                     </div>
                   )}
                 </div>
-                <div className="terminal-rule mt-4">────────────────────────────────</div>
+                <div className="mono-rule mt-4">--------------------------------</div>
                 <div className="t-ui mt-4 flex items-center justify-between">
-                  <span>TOTAL:</span>
+                  <span>Subtotal</span>
                   <span>{cartTotal}</span>
                 </div>
-                <div className="terminal-rule mt-4">────────────────────────────────</div>
                 <button
-                  className="mt-5 rounded-full bg-[color:var(--accent)] px-5 py-4 text-center font-display text-base font-bold text-[#140c09] transition duration-200 hover:bg-[color:var(--accent-strong)] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="mt-5 rounded-full bg-[color:var(--accent)] px-5 py-4 text-center font-display text-base font-bold text-[color:var(--bg)] transition duration-200 hover:bg-[color:var(--accent-strong)] disabled:cursor-not-allowed disabled:opacity-40"
                   disabled={!cart.checkoutUrl || cartLines.length === 0}
                   onClick={() => {
                     if (cart.checkoutUrl) {
@@ -111,7 +116,7 @@ export function CartDrawer() {
                   }}
                   type="button"
                 >
-                  EXECUTE ORDER
+                  Checkout
                 </button>
               </GlassPanel>
             </motion.aside>

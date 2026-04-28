@@ -23,7 +23,7 @@ export function SpecDrawer({ product }: SpecDrawerProps) {
     ["print", null],
     ["care", null],
   ] as const;
-  const status = product.availableForSale ? "AVAILABLE / STOCK ACTIVE" : "VAULTED / OUT OF INVENTORY";
+  const status = product.availableForSale ? "Available to order" : "Currently unavailable";
 
   return (
     <LazyMotion features={domAnimation}>
@@ -31,7 +31,7 @@ export function SpecDrawer({ product }: SpecDrawerProps) {
         {isOpen ? (
           <>
             <motion.button
-              aria-label="Close specifications"
+              aria-label="Close product details"
               className="fixed inset-0 z-[145] bg-black/40"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -48,21 +48,21 @@ export function SpecDrawer({ product }: SpecDrawerProps) {
               <div className="glass-panel glass-panel-heavy mx-auto h-[75vh] w-full max-w-[1440px] rounded-[34px] px-5 py-5 md:h-[60vh] md:px-8 md:py-8">
                 <div className="relative z-[1] flex h-full flex-col">
                   <div className="flex items-center justify-between gap-4">
-                    <div className="t-label">{`MATERIAL INSPECTOR — ${product.handle.toUpperCase()}`}</div>
+                    <div className="t-label">{`PRODUCT DETAILS - ${product.handle.toUpperCase()}`}</div>
                     <button className="t-label" onClick={() => setSpecDrawerOpen(false)} type="button">
-                      [CLOSE]
+                      Close
                     </button>
                   </div>
-                  <div className="terminal-rule mt-3">────────────────────────────────</div>
+                  <div className="mono-rule mt-3">--------------------------------</div>
                   <div className="mt-6 flex-1 space-y-3 overflow-y-auto pr-1">
                     {specs.map(([key, value]) => (
                       <div key={key} className="t-ui">
-                        {`> ${toTechnicalLabel(key).padEnd(14, ".")}${(value ?? "DATA UNAVAILABLE").toUpperCase()}`}
+                        {`${toTechnicalLabel(key).padEnd(14, ".")}${(value ?? "Available on request").toUpperCase()}`}
                       </div>
                     ))}
                   </div>
-                  <div className="terminal-rule mt-4">────────────────────────────────</div>
-                  <div className="t-ui mt-4">{`STATUS: ${status}`}</div>
+                  <div className="mono-rule mt-4">--------------------------------</div>
+                  <div className="t-ui mt-4">{`STATUS: ${status.toUpperCase()}`}</div>
                 </div>
               </div>
             </motion.section>

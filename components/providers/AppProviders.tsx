@@ -23,6 +23,10 @@ function RuntimeBridge() {
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
+    if (window.matchMedia("(max-width: 767px)").matches) {
+      return;
+    }
+
     const lenis = new Lenis({
       duration: 1.4,
       easing: (t) => Math.min(1, 1.001 - 2 ** (-10 * t)),
@@ -101,9 +105,9 @@ export function AppProviders({ children }: PropsWithChildren) {
         <RuntimeBridge />
         <CartBridge />
         <NoiseOverlay />
-        <div className="relative z-10 min-h-screen">
+        <div className="relative z-10 flex min-h-screen flex-col">
           <Nav />
-          <main className="min-h-[calc(100vh-60px)] px-4 md:px-6">{children}</main>
+          <main className="flex-1 px-4 md:px-6">{children}</main>
           <Footer />
         </div>
         <CartDrawer />

@@ -30,7 +30,7 @@ export function CartDrawer() {
           <>
             <motion.button
               aria-label="Close cart confirmation"
-              className="fixed inset-0 z-[135] bg-black/60"
+              className="fixed inset-0 z-[135] bg-[color:var(--bg)]/74"
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.6 }}
               exit={{ opacity: 0 }}

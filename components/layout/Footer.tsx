@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 const infoLinks = [
+  { href: "/about", label: "About" },
   { href: "/shipping", label: "Shipping" },
   { href: "/returns", label: "Returns" },
   { href: "/size-guide", label: "Size Guide" },
@@ -38,7 +39,7 @@ export function Footer() {
             <div className="t-label text-[color:var(--text-muted)]">Contact</div>
             <div className="flex flex-col gap-3">
               <Link href="/contact" className="footer-link t-ui">
-                Contact Us
+                Contact
               </Link>
             </div>
           </div>

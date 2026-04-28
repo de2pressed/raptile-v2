@@ -145,6 +145,8 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   }, [defaultVariant, hasColorOptions, hasSizeOptions, normalizedSelectedColor, selectedSize, variants]);
 
   const selectedImage = displayImages[selectedImageIndex] ?? displayImages[0] ?? null;
+  const selectedImageWidth = selectedImage?.width ?? 1200;
+  const selectedImageHeight = selectedImage?.height ?? 1200;
   const soldOut = !product.availableForSale || (selectedVariant ? !selectedVariant.availableForSale : false);
   const emptySelectionLabel = hasSizeOptions ? "Select a size" : "Add to Cart";
   const matchedImageCount = selectedColor ? filterImagesByColor(product.images, selectedColor).length : product.images.length;
@@ -183,9 +185,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
   return (
     <LazyMotion features={domAnimation}>
-      <section className="py-4 md:py-6 lg:py-0">
-        <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_380px] lg:h-[calc(100vh-60px)] lg:grid-cols-[80px_minmax(0,1fr)_420px]">
-          <div className={cn("hide-scrollbar hidden lg:flex lg:flex-col lg:gap-2 lg:overflow-y-auto lg:py-2", displayImages.length <= 1 && "lg:hidden")}>
+      <section className="py-6 md:py-8 lg:py-10">
+        <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_380px] lg:grid-cols-[88px_minmax(0,1fr)_400px] lg:items-start xl:grid-cols-[88px_minmax(0,1fr)_420px]">
+          <div className={cn("hide-scrollbar hidden lg:sticky lg:top-24 lg:flex lg:max-h-[calc(100vh-7rem)] lg:flex-col lg:gap-2 lg:overflow-y-auto", displayImages.length <= 1 && "lg:hidden")}>
             {displayImages.map((image, index) => {
               const active = index === selectedImageIndex;
 
@@ -213,9 +215,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             })}
           </div>
 
-          <div className="flex min-w-0 flex-col">
+          <div className="min-w-0">
             <div
-              className="relative flex-1 overflow-hidden rounded-[28px] border border-[color:var(--glass-border)] bg-[color:var(--bg)]"
+              className="relative grid min-h-[22rem] place-items-center overflow-hidden rounded-[28px] border border-[color:var(--glass-border)] bg-[color:color-mix(in_oklch,var(--bg-elevated)_92%,transparent)] p-4 md:min-h-[30rem] md:p-6 lg:min-h-[calc(100vh-10rem)] lg:p-8"
               onPointerDown={(event) => {
                 if (displayImages.length < 2) return;
                 setPointerStartX(event.clientX);
@@ -236,7 +238,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={selectedImage?.url ?? "fallback"}
-                  className="relative aspect-[3/4] min-h-[24rem] w-full lg:h-full lg:min-h-0"
+                  className="flex items-center justify-center"
                   initial={{ opacity: 0, scale: reducedMotion ? 1 : 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: reducedMotion ? 1 : 0.98 }}
@@ -246,15 +248,16 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                     <Image
                       alt={selectedImage.altText ?? product.title}
                       blurDataURL={BLUR_DATA_URL}
-                      className="h-full w-full object-contain"
-                      fill
+                      className="h-auto max-h-[calc(100vh-12rem)] w-auto max-w-full object-contain"
+                      height={selectedImageHeight}
                       placeholder="blur"
                       priority
-                      sizes="(min-width: 1024px) calc(100vw - 500px), 100vw"
-                      src={shopifyImageUrl(selectedImage.url, { width: 900, height: 1125, crop: "center" })}
+                      sizes="(min-width: 1280px) 760px, (min-width: 1024px) calc(100vw - 560px), 100vw"
+                      src={shopifyImageUrl(selectedImage.url, { width: 1400 })}
+                      width={selectedImageWidth}
                     />
                   ) : (
-                    <div className="absolute inset-0 image-skeleton" />
+                    <div className="h-full w-full image-skeleton" />
                   )}
                 </motion.div>
               </AnimatePresence>
@@ -278,7 +281,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             ) : null}
           </div>
 
-          <div className="glass-panel hide-scrollbar rounded-[28px] p-6 md:p-8 lg:sticky lg:top-[60px] lg:h-[calc(100vh-60px)] lg:overflow-y-auto">
+          <div className="glass-panel hide-scrollbar rounded-[28px] p-6 md:p-8 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">
             <div className="relative z-[1] grid gap-6">
               <div className="grid gap-3">
                 <div className="t-label text-[color:var(--text-muted)]">{`Collection / ${product.title}`}</div>

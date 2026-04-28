@@ -43,23 +43,23 @@
 }
 
 :root {
-  --bg: oklch(0.1 0.012 40);
-  --bg-soft: oklch(0.14 0.015 38);
-  --bg-elevated: oklch(0.18 0.018 40);
-  --text: oklch(0.9 0.015 80);
-  --text-muted: oklch(0.5 0.02 70);
-  --text-subtle: oklch(0.32 0.015 60);
-  --accent: oklch(0.68 0.14 48);
-  --accent-strong: oklch(0.76 0.11 52);
-  --accent-glow: oklch(0.58 0.16 44);
-  --accent-subtle: oklch(0.68 0.14 48 / 0.15);
+  --bg: oklch(0.11 0.012 40);
+  --bg-soft: oklch(0.145 0.015 38);
+  --bg-elevated: oklch(0.18 0.016 40);
+  --text: oklch(0.92 0.012 78);
+  --text-muted: oklch(0.68 0.018 72);
+  --text-subtle: oklch(0.46 0.015 62);
+  --accent: oklch(0.69 0.085 48);
+  --accent-strong: oklch(0.75 0.08 50);
+  --accent-glow: oklch(0.64 0.09 46);
+  --accent-subtle: oklch(0.69 0.085 48 / 0.12);
   --sold-out: oklch(0.38 0.04 40);
-  --glass-fill: oklch(1 0 0 / 0.05);
-  --glass-border: oklch(1 0 0 / 0.1);
-  --glass-highlight: oklch(1 0 0 / 0.12);
-  --glass-tint-a: oklch(0.55 0.1 38 / 0.07);
-  --glass-tint-b: oklch(0.65 0.08 60 / 0.05);
-  --glass-shadow: oklch(0 0 0 / 0.25);
+  --glass-fill: oklch(0.17 0.02 40 / 0.84);
+  --glass-border: oklch(0.92 0.012 80 / 0.1);
+  --glass-highlight: oklch(0.96 0.01 80 / 0.04);
+  --glass-tint-a: oklch(0.3 0.025 42 / 0.18);
+  --glass-tint-b: oklch(0.26 0.02 54 / 0.14);
+  --glass-shadow: oklch(0 0 0 / 0.16);
   --font-display: "Cabinet Grotesk", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
   --space-1: 4px;
@@ -113,7 +113,7 @@ body::before {
   background:
     linear-gradient(120deg, color-mix(in oklch, var(--accent-subtle) 55%, transparent), transparent 28%),
     linear-gradient(220deg, color-mix(in oklch, var(--glass-tint-b) 60%, transparent), transparent 42%);
-  opacity: 0.32;
+  opacity: 0.18;
   pointer-events: none;
   z-index: 0;
 }
@@ -184,18 +184,29 @@ button {
   font-size: 0.9rem;
 }
 
+.editorial-copy {
+  max-width: 38ch;
+  font-size: clamp(1rem, 1.35vw, 1.1rem);
+  line-height: 1.8;
+  color: var(--text-muted);
+}
+
 .glass-panel {
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  background: var(--glass-fill);
+  backdrop-filter: blur(10px) saturate(118%);
+  -webkit-backdrop-filter: blur(10px) saturate(118%);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklch, var(--glass-fill) 92%, transparent) 0%,
+      color-mix(in oklch, var(--glass-fill) 100%, var(--bg-soft)) 100%
+    );
   border: 1px solid var(--glass-border);
   box-shadow:
     inset 0 1px 0 var(--glass-highlight),
-    0 8px 32px var(--glass-shadow);
+    0 18px 48px color-mix(in oklch, var(--glass-shadow) 80%, transparent);
   isolation: isolate;
-  will-change: backdrop-filter;
 }
 
 .glass-panel::before {
@@ -203,14 +214,16 @@ button {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(135deg, var(--glass-tint-a) 0%, transparent 42%, var(--glass-tint-b) 100%);
+  background:
+    linear-gradient(160deg, color-mix(in oklch, var(--glass-tint-a) 75%, transparent) 0%, transparent 46%),
+    linear-gradient(210deg, transparent 0%, color-mix(in oklch, var(--glass-tint-b) 70%, transparent) 100%);
   pointer-events: none;
   z-index: 0;
 }
 
 .glass-panel-heavy {
-  backdrop-filter: blur(32px) saturate(200%);
-  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  backdrop-filter: blur(14px) saturate(124%);
+  -webkit-backdrop-filter: blur(14px) saturate(124%);
 }
 
 .mono-rule {
@@ -225,7 +238,7 @@ button {
   border-color: var(--accent);
   box-shadow:
     inset 0 1px 0 color-mix(in oklch, var(--accent-strong) 24%, transparent),
-    0 0 24px color-mix(in oklch, var(--accent-glow) 18%, transparent);
+    0 10px 24px color-mix(in oklch, var(--accent-glow) 12%, transparent);
 }
 
 .tech-card {
@@ -249,6 +262,7 @@ button {
 
 .btn-primary:hover {
   background: var(--accent-strong);
+  transform: translateY(-1px);
 }
 
 .btn-primary:focus-visible {
@@ -258,7 +272,7 @@ button {
 
 .ghost-button {
   border: 1px solid var(--glass-border);
-  background: color-mix(in oklch, var(--glass-fill) 100%, transparent);
+  background: color-mix(in oklch, var(--glass-fill) 78%, var(--bg));
   color: var(--text-muted);
   transition:
     border-color var(--duration-base) var(--ease-out-expo),
@@ -269,6 +283,7 @@ button {
 .ghost-button:hover {
   border-color: var(--accent);
   color: var(--text);
+  background: color-mix(in oklch, var(--glass-fill) 94%, var(--bg-soft));
 }
 
 .footer-link {
@@ -355,12 +370,12 @@ button {
 
 .support-stack {
   display: grid;
-  gap: var(--space-6);
+  gap: var(--space-8);
 }
 
 .support-stack > * + * {
   border-top: 1px solid var(--glass-border);
-  padding-top: var(--space-6);
+  padding-top: var(--space-8);
 }
 
 .support-heading {
@@ -374,10 +389,9 @@ button {
 .support-stack p,
 .size-table,
 .contact-form {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  line-height: 1.8;
-  color: var(--text);
+  font-size: 0.98rem;
+  line-height: 1.85;
+  color: var(--text-muted);
 }
 
 .size-table {
@@ -399,17 +413,21 @@ button {
 
 .contact-input {
   width: 100%;
-  border-radius: 22px;
+  border-radius: 20px;
   border: 1px solid var(--glass-border);
-  background: color-mix(in oklch, var(--glass-fill) 100%, transparent);
+  background: color-mix(in oklch, var(--glass-fill) 70%, var(--bg));
   color: var(--text);
-  font-family: var(--font-mono);
+  font-size: 0.95rem;
   padding: 0.95rem 1rem;
   outline: none;
   transition:
     border-color var(--duration-base) var(--ease-in-out),
     box-shadow var(--duration-base) var(--ease-in-out),
     background var(--duration-base) var(--ease-in-out);
+}
+
+.contact-input::placeholder {
+  color: var(--text-subtle);
 }
 
 .contact-input:focus {
@@ -481,13 +499,13 @@ button {
   }
 
   .glass-panel {
-    backdrop-filter: blur(12px) saturate(140%);
-    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    backdrop-filter: blur(8px) saturate(112%);
+    -webkit-backdrop-filter: blur(8px) saturate(112%);
   }
 
   .glass-panel-heavy {
-    backdrop-filter: blur(20px) saturate(165%);
-    -webkit-backdrop-filter: blur(20px) saturate(165%);
+    backdrop-filter: blur(12px) saturate(118%);
+    -webkit-backdrop-filter: blur(12px) saturate(118%);
   }
 }
 

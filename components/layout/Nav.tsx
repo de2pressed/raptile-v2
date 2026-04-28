@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 
 const navLinks = [
   { href: "/", label: "Collection" },
+  { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
   { href: "/cart", label: "Cart" },
 ];
@@ -71,12 +72,12 @@ export function Nav() {
           >
             <button
               aria-label="Close navigation menu"
-              className="absolute inset-0 bg-black/72"
+              className="absolute inset-0 bg-[color:var(--bg)]/84"
               onClick={() => setMenuOpen(false)}
               type="button"
             />
             <motion.div
-              className="absolute inset-x-4 top-4 rounded-[32px] border border-[color:var(--glass-border)] bg-[color:var(--bg-soft)]/95 p-6 shadow-[0_24px_64px_var(--glass-shadow)] backdrop-blur-[24px]"
+              className="absolute inset-x-4 top-4 rounded-[32px] border border-[color:var(--glass-border)] bg-[color:var(--glass-fill)] p-6 shadow-[0_24px_64px_var(--glass-shadow)] backdrop-blur-[14px]"
               initial={{ y: -24, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -16, opacity: 0 }}
@@ -114,7 +115,7 @@ export function Nav() {
                 })}
               </div>
               <p className="t-ui mt-12 max-w-[22rem] text-[color:var(--text-muted)]">
-                Quiet editorial commerce, grounded materials, and a storefront that lets the garments do the talking.
+                Heavyweight essentials, restrained graphics, and a storefront that stays out of the way.
               </p>
             </motion.div>
           </motion.div>

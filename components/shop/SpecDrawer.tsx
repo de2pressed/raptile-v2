@@ -32,7 +32,7 @@ export function SpecDrawer({ product }: SpecDrawerProps) {
           <>
             <motion.button
               aria-label="Close product details"
-              className="fixed inset-0 z-[145] bg-black/56"
+              className="fixed inset-0 z-[145] bg-[color:var(--bg)]/72"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

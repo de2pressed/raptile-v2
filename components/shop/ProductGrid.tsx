@@ -4,8 +4,8 @@ import { LazyMotion, domAnimation } from "framer-motion";
 import * as motion from "framer-motion/client";
 
 import { ProductCard } from "@/components/shop/ProductCard";
-import { getGridPattern } from "@/components/shop/productGridPattern";
 import type { ShopifyProduct } from "@/lib/commerce";
+import { cn } from "@/lib/utils";
 
 interface ProductGridProps {
   products: ShopifyProduct[];
@@ -23,22 +23,27 @@ export function ProductGrid({ products }: ProductGridProps) {
     );
   }
 
+  const gridColumns =
+    products.length === 1
+      ? "grid-cols-1"
+      : products.length <= 4
+        ? "grid-cols-2"
+        : "grid-cols-2 xl:grid-cols-3";
+
   return (
     <LazyMotion features={domAnimation}>
-      <div className="grid grid-cols-2 gap-[2px] md:grid-cols-6 lg:grid-cols-12">
+      <div className={cn("grid gap-x-4 gap-y-8 md:gap-x-6 md:gap-y-12", gridColumns)}>
         {products.map((product, index) => {
-          const pattern = getGridPattern(index);
-
           return (
             <motion.div
               key={product.id}
-              className={`col-span-1 ${pattern.tabletSpan} ${pattern.desktopSpan}`}
+              className="min-w-0"
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.5, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
             >
-              <ProductCard aspectRatioClass={pattern.aspectRatioClass} product={product} />
+              <ProductCard product={product} />
             </motion.div>
           );
         })}

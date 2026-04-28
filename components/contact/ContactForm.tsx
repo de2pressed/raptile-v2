@@ -94,7 +94,7 @@ export function ContactForm() {
 
       <div className="flex flex-col items-start gap-3">
         <button
-          className="glass-panel group relative isolate overflow-hidden rounded-full border border-[color:var(--glass-border)] px-5 py-3 text-left transition duration-200 before:rounded-full hover:amber-border disabled:cursor-wait disabled:opacity-55"
+          className="btn-primary rounded-full px-5 py-3 text-left disabled:cursor-wait disabled:opacity-55"
           disabled={status === "loading"}
           type="submit"
         >
@@ -106,7 +106,7 @@ export function ContactForm() {
                 <span className="loading-dot animation-delay-300" />
               </span>
             ) : (
-              <span className="t-label">Send Message</span>
+              <span className="t-label text-[color:var(--bg)]">Send Message</span>
             )}
           </span>
         </button>

@@ -13,19 +13,20 @@ const infoLinks = [
 
 export function Footer() {
   return (
-    <footer className="relative z-10 mt-16 w-full border-t border-[color:var(--glass-border)] bg-[color:var(--bg-soft)] px-4 pb-8 pt-12 md:mt-20 md:px-6 md:pt-16">
+    <footer className="relative z-10 mt-16 w-full border-t border-[color:var(--glass-border)] bg-[color:var(--bg-soft)] px-4 pb-8 pt-10 md:mt-20 md:px-6 md:pt-12">
       <div className="mx-auto max-w-[1400px]">
-        <div className="grid gap-10 md:grid-cols-3 md:gap-8">
-          <div className="space-y-3">
+        <div className="grid gap-10 md:grid-cols-[minmax(0,1.3fr)_repeat(2,minmax(0,220px))] md:gap-8">
+          <div className="max-w-[28rem] space-y-3">
             <Link href="/" className="font-display text-2xl font-bold tracking-[-0.04em] text-[color:var(--text)] md:text-3xl">
               RAPTILE STUDIO
             </Link>
-            <div className="t-ui text-[color:var(--text-muted)]">© 2026</div>
-            <div className="t-ui text-[color:var(--text-muted)]">Based in India</div>
+            <p className="t-ui max-w-[22rem] leading-6 text-[color:var(--text-muted)]">
+              Minimal essentials from India. Heavyweight fits, reduced graphics, slower drops.
+            </p>
           </div>
 
           <div className="space-y-4">
-            <div className="t-label text-[color:var(--text-muted)]">Info</div>
+            <div className="t-label text-[color:var(--text-muted)]">Studio</div>
             <div className="flex flex-col gap-3">
               {infoLinks.map((item) => (
                 <Link key={item.href} href={item.href} className="footer-link t-ui">
@@ -41,6 +42,7 @@ export function Footer() {
               <Link href="/contact" className="footer-link t-ui">
                 Contact
               </Link>
+              <div className="t-ui text-[color:var(--text-muted)]">Based in India</div>
             </div>
           </div>
         </div>

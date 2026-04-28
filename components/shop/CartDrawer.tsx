@@ -50,7 +50,7 @@ export function CartDrawer() {
                     <div>
                       <div className="t-label text-[color:var(--text-muted)]">Cart Confirmation</div>
                       <div className="mt-2 font-display text-2xl font-bold tracking-[-0.04em] text-[color:var(--text)]">
-                        Added to cart ✓
+                        Added to cart
                       </div>
                     </div>
                     <button className="t-ui text-[color:var(--text-muted)]" onClick={() => setCartOpen(false)} type="button">
@@ -64,14 +64,14 @@ export function CartDrawer() {
                     {addedLine ? (
                       <div className="grid gap-4 rounded-[26px] border border-[color:var(--glass-border)] bg-[color:var(--glass-fill)] p-4">
                         <div className="grid grid-cols-[80px_1fr] gap-4">
-                          <div className="relative aspect-[4/5] overflow-hidden rounded-[18px] bg-[color:var(--bg-elevated)]">
+                          <div className="relative aspect-square overflow-hidden rounded-[18px] bg-[color:var(--bg-elevated)]">
                             {addedLine.imageUrl ? (
                               <Image
                                 alt={addedLine.imageAlt ?? addedLine.title}
                                 className="h-full w-full object-cover"
                                 fill
                                 sizes="80px"
-                                src={shopifyImageUrl(addedLine.imageUrl, { width: 160, height: 200, crop: "center" })}
+                                src={shopifyImageUrl(addedLine.imageUrl, { width: 160 })}
                               />
                             ) : null}
                           </div>
@@ -95,7 +95,7 @@ export function CartDrawer() {
                     onClick={() => setCartOpen(false)}
                   >
                     <span>View Cart</span>
-                    <span aria-hidden>→</span>
+                    <span aria-hidden>Open</span>
                   </Link>
                 </div>
               </div>

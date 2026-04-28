@@ -80,7 +80,7 @@ export function AddToCartButton({
       className={cn(
         "btn-primary group relative isolate flex items-center justify-center overflow-hidden rounded-full px-5 py-3.5 text-center transition duration-200",
         compact ? "min-w-[12rem]" : "w-full",
-        isDisabled ? "cursor-not-allowed opacity-45" : "shadow-[0_12px_28px_color-mix(in_oklch,var(--glass-shadow)_55%,transparent)]",
+        isDisabled ? "cursor-not-allowed opacity-45" : "shadow-[0_14px_34px_rgba(0,0,0,0.18)]",
         isLoading ? "cursor-wait" : "",
         className,
       )}

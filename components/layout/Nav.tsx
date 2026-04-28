@@ -24,7 +24,7 @@ export function Nav() {
   return (
     <LazyMotion features={domAnimation}>
       <nav
-        className="sticky top-0 z-[100] border-b border-[color:var(--glass-border)] bg-[color:var(--bg-soft)]/90 backdrop-blur-[20px]"
+        className="sticky top-0 z-[100] border-b border-[color:var(--glass-border)] bg-[color:var(--bg-soft)]/92 backdrop-blur-[16px]"
         style={{ height: 60 }}
       >
         <div className="mx-auto flex h-[60px] max-w-[1400px] items-center justify-between gap-6 px-4 md:px-6">
@@ -53,11 +53,11 @@ export function Nav() {
           <button
             aria-expanded={menuOpen}
             aria-label="Toggle navigation menu"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--glass-border)] text-xl text-[color:var(--text)] transition-colors duration-200 hover:border-[color:var(--accent)] md:hidden"
+            className="inline-flex min-w-[4.75rem] items-center justify-center rounded-full border border-[color:var(--glass-border)] px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--text)] transition-colors duration-200 hover:border-[color:var(--accent)] md:hidden"
             onClick={() => setMenuOpen((open) => !open)}
             type="button"
           >
-            <span aria-hidden>☰</span>
+            Menu
           </button>
         </div>
       </nav>
@@ -77,7 +77,7 @@ export function Nav() {
               type="button"
             />
             <motion.div
-              className="absolute inset-x-4 top-4 rounded-[32px] border border-[color:var(--glass-border)] bg-[color:var(--glass-fill)] p-6 shadow-[0_24px_64px_var(--glass-shadow)] backdrop-blur-[14px]"
+              className="absolute inset-x-4 top-4 rounded-[28px] border border-[color:var(--glass-border)] bg-[color:var(--bg-soft)] p-6 shadow-[0_20px_52px_rgba(0,0,0,0.22)]"
               initial={{ y: -24, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -16, opacity: 0 }}
@@ -87,14 +87,14 @@ export function Nav() {
                 <div className="t-label text-[color:var(--text-muted)]">Raptile Navigation</div>
                 <button
                   aria-label="Close navigation"
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--glass-border)] text-2xl text-[color:var(--text)]"
+                  className="inline-flex items-center justify-center rounded-full border border-[color:var(--glass-border)] px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--text)]"
                   onClick={() => setMenuOpen(false)}
                   type="button"
                 >
-                  <span aria-hidden>×</span>
+                  Close
                 </button>
               </div>
-              <div className="mt-10 flex flex-col gap-5">
+              <div className="mt-8 flex flex-col gap-5">
                 {navLinks.map((link) => {
                   const label = link.href === "/cart" ? `Cart (${cartCount})` : link.label;
                   const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
@@ -104,7 +104,7 @@ export function Nav() {
                       key={link.href}
                       href={link.href}
                       className={cn(
-                        "font-display text-3xl font-bold tracking-[-0.04em]",
+                        "font-display text-[2rem] font-bold tracking-[-0.04em]",
                         active ? "text-[color:var(--text)]" : "text-[color:var(--text-muted)]",
                       )}
                       onClick={() => setMenuOpen(false)}
@@ -114,8 +114,8 @@ export function Nav() {
                   );
                 })}
               </div>
-              <p className="t-ui mt-12 max-w-[22rem] text-[color:var(--text-muted)]">
-                Heavyweight essentials, restrained graphics, and a storefront that stays out of the way.
+              <p className="t-ui mt-10 max-w-[22rem] leading-6 text-[color:var(--text-muted)]">
+                Utility first. Quiet editorial framing. The product stays in front.
               </p>
             </motion.div>
           </motion.div>

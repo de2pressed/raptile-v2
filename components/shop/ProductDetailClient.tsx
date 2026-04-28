@@ -186,8 +186,13 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   return (
     <LazyMotion features={domAnimation}>
       <section className="py-6 md:py-8 lg:py-10">
-        <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_380px] lg:grid-cols-[88px_minmax(0,1fr)_400px] lg:items-start xl:grid-cols-[88px_minmax(0,1fr)_420px]">
-          <div className={cn("hide-scrollbar hidden lg:sticky lg:top-24 lg:flex lg:max-h-[calc(100vh-7rem)] lg:flex-col lg:gap-2 lg:overflow-y-auto", displayImages.length <= 1 && "lg:hidden")}>
+        <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_380px] lg:min-h-[calc(100vh-120px)] lg:grid-cols-[88px_minmax(0,1fr)_400px] lg:items-start xl:grid-cols-[88px_minmax(0,1fr)_420px]">
+          <div
+            className={cn(
+              "hide-scrollbar hidden lg:sticky lg:top-24 lg:flex lg:max-h-[calc(100vh-7rem)] lg:flex-col lg:gap-2 lg:overflow-y-auto",
+              displayImages.length <= 1 && "lg:hidden",
+            )}
+          >
             {displayImages.map((image, index) => {
               const active = index === selectedImageIndex;
 
@@ -208,7 +213,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                     className="h-full w-full object-cover"
                     fill
                     sizes="68px"
-                    src={shopifyImageUrl(image.url, { width: 136, height: 136, crop: "center" })}
+                    src={shopifyImageUrl(image.url, { width: 136 })}
                   />
                 </button>
               );
@@ -217,7 +222,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
           <div className="min-w-0">
             <div
-              className="relative grid min-h-[22rem] place-items-center overflow-hidden rounded-[28px] border border-[color:var(--glass-border)] bg-[color:color-mix(in_oklch,var(--bg-elevated)_92%,transparent)] p-4 md:min-h-[30rem] md:p-6 lg:min-h-[calc(100vh-10rem)] lg:p-8"
+              className="relative grid aspect-square min-h-[22rem] place-items-center overflow-hidden rounded-[28px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] p-4 md:min-h-[30rem] md:p-6 lg:min-h-0 lg:p-8"
               onPointerDown={(event) => {
                 if (displayImages.length < 2) return;
                 setPointerStartX(event.clientX);
@@ -238,7 +243,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={selectedImage?.url ?? "fallback"}
-                  className="flex items-center justify-center"
+                  className="flex h-full w-full items-center justify-center"
                   initial={{ opacity: 0, scale: reducedMotion ? 1 : 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: reducedMotion ? 1 : 0.98 }}
@@ -374,8 +379,8 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 type="button"
               >
                 <span className="t-label flex items-center justify-between">
-                  <span>View Details</span>
-                  <span aria-hidden>↓</span>
+                  <span>Open details</span>
+                  <span aria-hidden>Info</span>
                 </span>
               </button>
 

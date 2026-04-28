@@ -23,7 +23,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
   return (
     <Link className={cn("group block h-full", className)} href={`/products/${product.handle}`}>
       <article className="grid gap-4">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-[28px] bg-[color:var(--bg-elevated)]">
+        <div className="relative aspect-square overflow-hidden rounded-[28px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)]">
           {thumbnail ? (
             <Image
               alt={thumbnail.altText ?? product.title}
@@ -50,8 +50,9 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
         <div className="grid gap-2">
           <div className="t-product max-w-[18ch] text-[color:var(--text)]">{product.title}</div>
-          <div className="t-price text-[color:var(--text-muted)]">
-            {formatPrice(product.priceRange.minVariantPrice.amount)}
+          <div className="flex items-center justify-between gap-3">
+            <div className="t-price text-[color:var(--text-muted)]">{formatPrice(product.priceRange.minVariantPrice.amount)}</div>
+            <div className="t-ui text-[color:var(--text-subtle)]">{soldOut ? "Unavailable" : "Ready"}</div>
           </div>
         </div>
       </article>

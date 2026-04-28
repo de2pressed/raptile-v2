@@ -23,7 +23,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
   return (
     <Link className={cn("group block h-full", className)} href={`/products/${product.handle}`}>
       <article className="grid gap-4">
-        <div className="relative aspect-square overflow-hidden rounded-[28px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)]">
+        <div className="relative aspect-square overflow-hidden rounded-[24px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] md:rounded-[28px]">
           {thumbnail ? (
             <Image
               alt={thumbnail.altText ?? product.title}
@@ -32,7 +32,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
                 soldOut ? "grayscale-[0.18] brightness-[0.9]" : "group-hover:scale-[1.015]",
               )}
               fill
-              sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, (max-width: 1279px) 33vw, 25vw"
+              sizes="(max-width: 767px) 50vw, (max-width: 1023px) 50vw, (max-width: 1279px) 33vw, 25vw"
               src={shopifyImageUrl(thumbnail.url, { width: 720 })}
               quality={82}
             />

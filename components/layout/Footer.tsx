@@ -17,7 +17,7 @@ const infoLinks = [
 
 export function Footer() {
   return (
-    <footer className="noise-surface relative z-10 mt-16 w-full border-t border-[color:var(--glass-border)] bg-[color:var(--bg-soft)] px-4 pb-8 pt-10 md:mt-20 md:px-6 md:pt-12">
+    <footer className="footer-shell noise-surface relative z-10 mt-16 w-full border-t border-[color:var(--glass-border)] px-4 pb-8 pt-10 md:mt-20 md:px-6 md:pt-12">
       <div className="relative z-[1] mx-auto max-w-[1440px]">
         <div className="grid gap-10 md:grid-cols-[minmax(0,1.3fr)_repeat(2,minmax(0,220px))] md:gap-8">
           <div className="max-w-[28rem] space-y-3">

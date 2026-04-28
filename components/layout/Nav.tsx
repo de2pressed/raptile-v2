@@ -4,7 +4,7 @@ import { AnimatePresence, LazyMotion, domAnimation } from "framer-motion";
 import * as motion from "framer-motion/client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { BrandLogo } from "@/components/layout/BrandLogo";
 import { useRaptileStore } from "@/lib/store";
@@ -22,16 +22,28 @@ export function Nav() {
   const pathname = usePathname();
   const cartCount = useRaptileStore((state) => state.cartLines.reduce((total, line) => total + line.quantity, 0));
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const updateHeaderState = () => {
+      setScrolled(window.scrollY > 28);
+    };
+
+    updateHeaderState();
+    window.addEventListener("scroll", updateHeaderState, { passive: true });
+
+    return () => window.removeEventListener("scroll", updateHeaderState);
+  }, []);
 
   return (
     <LazyMotion features={domAnimation}>
       <nav
-        className="noise-surface sticky top-0 z-[100] border-b border-[color:var(--glass-border)] bg-[color:var(--bg-soft)]/92 backdrop-blur-[16px]"
-        style={{ minHeight: 84 }}
+        className="site-header noise-surface sticky top-0 z-[100] border-b border-[color:var(--glass-border)] backdrop-blur-[16px]"
+        data-scrolled={scrolled}
       >
-        <div className="relative z-[1] mx-auto flex min-h-[84px] max-w-[1440px] items-center justify-between gap-6 px-4 py-4 md:px-6">
-          <BrandLogo size="sm" className="shrink-0" />
-          <div className="hidden items-center gap-5 md:flex">
+        <div className="site-header-inner relative z-[1] mx-auto flex max-w-[1440px] items-center justify-between gap-6 px-4 py-3 md:px-6">
+          <BrandLogo size="sm" className="site-header-logo absolute left-4 shrink-0 md:left-6" />
+          <div className="site-header-links ml-auto hidden items-center gap-5 md:flex">
             {navLinks.map((link) => {
               const label = link.href === "/cart" ? `Cart (${cartCount})` : link.label;
               const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
@@ -53,11 +65,11 @@ export function Nav() {
           <button
             aria-expanded={menuOpen}
             aria-label="Toggle navigation menu"
-            className="inline-flex min-w-[4.75rem] items-center justify-center rounded-full border border-[color:var(--glass-border)] px-4 py-2 font-display text-[0.75rem] font-semibold tracking-[0.08em] text-[color:var(--text)] transition-colors duration-200 hover:border-[color:var(--accent)] md:hidden"
+            className="ghost-button ml-auto inline-flex min-h-11 min-w-[4.75rem] items-center justify-center rounded-full px-4 py-2 font-display text-[0.75rem] font-semibold tracking-[0.08em] text-[color:var(--text)] md:hidden"
             onClick={() => setMenuOpen((open) => !open)}
             type="button"
           >
-            Menu
+            <span className="relative z-[1]">Menu</span>
           </button>
         </div>
       </nav>

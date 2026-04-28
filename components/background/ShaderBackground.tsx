@@ -21,6 +21,7 @@ uniform vec3 u_warm;
 uniform vec3 u_mid;
 uniform vec3 u_deep;
 uniform vec3 u_accent;
+uniform float u_mobile;
 
 float hash(vec2 p) {
   return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -55,12 +56,12 @@ void main() {
   vec2 uv = gl_FragCoord.xy / u_resolution;
   uv.y = 1.0 - uv.y;
 
-  float t = u_time * 0.035;
+  float t = u_time * mix(0.035, 0.056, u_mobile);
   float scroll = u_scroll * 0.55;
-  float breathe = 1.0 + sin(u_time * 0.22) * 0.045;
+  float breathe = 1.0 + sin(u_time * mix(0.22, 0.38, u_mobile)) * mix(0.045, 0.08, u_mobile);
 
-  vec2 flowA = uv * 2.3 * breathe + vec2(t * 0.24, -t * 0.16) + vec2(scroll * 0.35, scroll * 0.15);
-  vec2 flowB = uv * 3.9 * breathe - vec2(t * 0.16, t * 0.2) - vec2(scroll * 0.2, scroll * 0.08);
+  vec2 flowA = uv * mix(2.3, 2.85, u_mobile) * breathe + vec2(t * 0.24, -t * 0.16) + vec2(scroll * 0.35, scroll * 0.15);
+  vec2 flowB = uv * mix(3.9, 4.7, u_mobile) * breathe - vec2(t * 0.16, t * 0.2) - vec2(scroll * 0.2, scroll * 0.08);
 
   float fieldA = fbm(flowA);
   float fieldB = fbm(flowB + vec2(fieldA * 0.75, fieldA * 0.5));
@@ -73,12 +74,12 @@ void main() {
   float combined = clamp(mix(fieldA, fieldC, 0.45) * vignette, 0.0, 1.0);
   vec3 color = mix(u_deep, u_mid, smoothstep(0.08, 0.82, combined));
   color = mix(color, u_warm, smoothstep(0.35, 0.92, fieldA) * 0.42);
-  color += u_accent * exp(-abs(uv.y - mod(t * 0.18, 1.0)) * 140.0) * 0.18;
-  color += u_warm * exp(-abs(uv.x - 0.52) * 7.0) * combined * 0.08;
+  color += u_accent * exp(-abs(uv.y - mod(t * mix(0.18, 0.32, u_mobile), 1.0)) * mix(140.0, 92.0, u_mobile)) * mix(0.18, 0.25, u_mobile);
+  color += u_warm * exp(-abs(uv.x - 0.52) * mix(7.0, 5.6, u_mobile)) * combined * mix(0.08, 0.13, u_mobile);
   color += u_mid * exp(-abs(uv.x - 0.5) * 4.5) * fieldB * 0.03;
 
-  float grain = smoothNoise(gl_FragCoord.xy * 0.9 + vec2(t * 48.0, -t * 33.0));
-  color += vec3(grain * 0.025);
+  float grain = smoothNoise(gl_FragCoord.xy * mix(0.9, 1.15, u_mobile) + vec2(t * 48.0, -t * 33.0));
+  color += vec3(grain * mix(0.025, 0.035, u_mobile));
 
   gl_FragColor = vec4(color, 1.0);
 }
@@ -207,6 +208,7 @@ export function ShaderBackground() {
     const midLocation = gl.getUniformLocation(program, "u_mid");
     const deepLocation = gl.getUniformLocation(program, "u_deep");
     const accentLocation = gl.getUniformLocation(program, "u_accent");
+    const mobileLocation = gl.getUniformLocation(program, "u_mobile");
 
     gl.enableVertexAttribArray(positionLocation);
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
@@ -257,6 +259,9 @@ export function ShaderBackground() {
       canvas.height = viewportHeight;
       gl.viewport(0, 0, viewportWidth, viewportHeight);
       gl.uniform2f(resolutionLocation, viewportWidth, viewportHeight);
+      if (mobileLocation) {
+        gl.uniform1f(mobileLocation, mobile ? 1 : 0);
+      }
     };
 
     const render = () => {

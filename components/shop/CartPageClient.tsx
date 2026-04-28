@@ -79,7 +79,7 @@ function CartPageClientConnected() {
 
           <div className="grid gap-4">
             {cartLines.map((line) => (
-              <article key={line.id} className="glass-panel rounded-[28px] p-4 md:p-6">
+              <article key={line.id} className="glass-panel cart-noise-panel rounded-[28px] p-4 md:p-6">
                 <div className="relative z-[1] grid gap-4 md:grid-cols-[80px_minmax(0,1fr)_auto] md:items-center">
                   <div className="relative aspect-[4/5] w-[80px] overflow-hidden rounded-[18px] bg-[color:var(--bg-elevated)]">
                     {line.imageUrl ? (
@@ -152,7 +152,7 @@ function CartPageClientConnected() {
           </Link>
         </div>
 
-        <aside className="glass-panel h-fit rounded-[28px] p-6 md:sticky md:top-[80px] md:p-8">
+        <aside className="glass-panel cart-noise-panel h-fit rounded-[28px] p-6 md:sticky md:top-[80px] md:p-8">
           <div className="relative z-[1] grid gap-5">
             <div className="font-display text-2xl font-bold tracking-[-0.04em] text-[color:var(--text)]">Order Summary</div>
             <div className="grid gap-3">

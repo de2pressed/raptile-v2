@@ -264,7 +264,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             ) : null}
           </div>
 
-          <div className="glass-panel hide-scrollbar rounded-[28px] p-6 md:p-8 lg:sticky lg:top-[82px]">
+          <div className="glass-panel sticky-glass hide-scrollbar rounded-[28px] p-6 md:p-8 lg:top-[82px]">
             <div className="relative z-[1] grid gap-6">
               <div className="grid gap-3">
                 <div className="t-label text-[color:var(--text-muted)]">{`Collection / ${product.title}`}</div>

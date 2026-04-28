@@ -152,7 +152,7 @@ function CartPageClientConnected() {
           </Link>
         </div>
 
-        <aside className="glass-panel cart-noise-panel h-fit rounded-[28px] p-6 md:sticky md:top-[80px] md:p-8">
+        <aside className="glass-panel sticky-glass cart-noise-panel h-fit rounded-[28px] p-6 md:top-[80px] md:p-8">
           <div className="relative z-[1] grid gap-5">
             <div className="font-display text-2xl font-bold tracking-[-0.04em] text-[color:var(--text)]">Order Summary</div>
             <div className="grid gap-3">

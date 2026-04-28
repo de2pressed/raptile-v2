@@ -27,7 +27,7 @@ export function ProductGrid({ products }: ProductGridProps) {
 
   return (
     <LazyMotion features={domAnimation}>
-      <div className={cn("grid gap-x-3 gap-y-7 md:gap-x-5 md:gap-y-10", gridColumns)}>
+      <div className={cn("mobile-product-grid grid gap-x-3 gap-y-7 md:gap-x-5 md:gap-y-10", gridColumns)}>
         {products.map((product, index) => {
           return (
             <motion.div

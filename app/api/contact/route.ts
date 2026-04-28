@@ -1,12 +1,14 @@
 import nodemailer from "nodemailer";
 import { NextResponse } from "next/server";
 
-const SMTP_HOST = process.env.SMTP_HOST;
-const SMTP_PORT = process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : undefined;
-const SMTP_USER = process.env.SMTP_USER;
-const SMTP_PASS = process.env.SMTP_PASS;
-const CONTACT_TO_EMAIL = process.env.CONTACT_TO_EMAIL;
-const CONTACT_FROM_EMAIL = process.env.CONTACT_FROM_EMAIL;
+import { readEnv, readEnvNumber } from "@/lib/env";
+
+const SMTP_HOST = readEnv("SMTP_HOST");
+const SMTP_PORT = readEnvNumber("SMTP_PORT");
+const SMTP_USER = readEnv("SMTP_USER");
+const SMTP_PASS = readEnv("SMTP_PASS");
+const CONTACT_TO_EMAIL = readEnv("CONTACT_TO_EMAIL");
+const CONTACT_FROM_EMAIL = readEnv("CONTACT_FROM_EMAIL");
 
 export async function POST(request: Request) {
   const body = (await request.json()) as {

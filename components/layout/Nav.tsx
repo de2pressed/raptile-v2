@@ -6,11 +6,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
+import { BrandLogo } from "@/components/layout/BrandLogo";
 import { useRaptileStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: "/", label: "Collection" },
+  { href: "/", label: "Home" },
+  { href: "/collection", label: "Collection" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
   { href: "/cart", label: "Cart" },
@@ -24,13 +26,11 @@ export function Nav() {
   return (
     <LazyMotion features={domAnimation}>
       <nav
-        className="sticky top-0 z-[100] border-b border-[color:var(--glass-border)] bg-[color:var(--bg-soft)]/92 backdrop-blur-[16px]"
-        style={{ height: 60 }}
+        className="noise-surface sticky top-0 z-[100] border-b border-[color:var(--glass-border)] bg-[color:var(--bg-soft)]/92 backdrop-blur-[16px]"
+        style={{ minHeight: 84 }}
       >
-        <div className="mx-auto flex h-[60px] max-w-[1400px] items-center justify-between gap-6 px-4 md:px-6">
-          <Link href="/" className="font-display text-xl font-bold tracking-[-0.04em] text-[color:var(--text)] md:text-2xl">
-            RAPTILE STUDIO
-          </Link>
+        <div className="relative z-[1] mx-auto flex min-h-[84px] max-w-[1440px] items-center justify-between gap-6 px-4 py-4 md:px-6">
+          <BrandLogo size="sm" className="shrink-0" />
           <div className="hidden items-center gap-5 md:flex">
             {navLinks.map((link) => {
               const label = link.href === "/cart" ? `Cart (${cartCount})` : link.label;
@@ -77,13 +77,13 @@ export function Nav() {
               type="button"
             />
             <motion.div
-              className="absolute inset-x-4 top-4 rounded-[28px] border border-[color:var(--glass-border)] bg-[color:var(--bg-soft)] p-6 shadow-[0_20px_52px_rgba(0,0,0,0.22)]"
+              className="noise-surface absolute inset-x-4 top-4 rounded-[28px] border border-[color:var(--glass-border)] bg-[color:var(--bg-soft)] p-6 shadow-[0_20px_52px_rgba(0,0,0,0.22)]"
               initial={{ y: -24, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -16, opacity: 0 }}
               transition={{ duration: 0.26, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div className="flex items-center justify-between">
+              <div className="relative z-[1] flex items-center justify-between">
                 <div className="t-label text-[color:var(--text-muted)]">Raptile Navigation</div>
                 <button
                   aria-label="Close navigation"
@@ -94,7 +94,7 @@ export function Nav() {
                   Close
                 </button>
               </div>
-              <div className="mt-8 flex flex-col gap-5">
+              <div className="relative z-[1] mt-8 flex flex-col gap-5">
                 {navLinks.map((link) => {
                   const label = link.href === "/cart" ? `Cart (${cartCount})` : link.label;
                   const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
@@ -114,7 +114,7 @@ export function Nav() {
                   );
                 })}
               </div>
-              <p className="t-ui mt-10 max-w-[22rem] leading-6 text-[color:var(--text-muted)]">
+              <p className="t-ui relative z-[1] mt-10 max-w-[22rem] leading-6 text-[color:var(--text-muted)]">
                 Utility first. Quiet editorial framing. The product stays in front.
               </p>
             </motion.div>

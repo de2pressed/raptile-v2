@@ -9,7 +9,6 @@ import { useEffect, useRef } from "react";
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
 import { CartDrawer } from "@/components/shop/CartDrawer";
-import { NoiseOverlay } from "@/components/ui/NoiseOverlay";
 import { formatPrice } from "@/lib/commerce";
 import {
   IS_SHOPIFY_PUBLIC_READY,
@@ -104,7 +103,6 @@ export function AppProviders({ children }: PropsWithChildren) {
       <CartProvider countryCode="IN" languageCode="EN">
         <RuntimeBridge />
         <CartBridge />
-        <NoiseOverlay />
         <div className="relative z-10 flex min-h-screen flex-col">
           <Nav />
           <main className="flex-1 px-4 md:px-6">{children}</main>

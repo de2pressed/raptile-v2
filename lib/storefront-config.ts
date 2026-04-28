@@ -1,1 +1,3 @@
-export const SHOPIFY_COLLECTION_HANDLE = process.env.SHOPIFY_COLLECTION_HANDLE?.trim() || "frontpage";
+import { readEnv } from "@/lib/env";
+
+export const SHOPIFY_COLLECTION_HANDLE = readEnv("SHOPIFY_COLLECTION_HANDLE") || "frontpage";

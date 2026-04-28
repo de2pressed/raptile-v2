@@ -63,7 +63,6 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const [selectedColor, setSelectedColor] = useState<string | null>(() => getFirstAvailableColor(product));
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const [pointerStartX, setPointerStartX] = useState<number | null>(null);
   const setSelectedVariantId = useRaptileStore((state) => state.setSelectedVariant);
   const setSpecDrawerOpen = useRaptileStore((state) => state.setSpecDrawerOpen);
@@ -145,8 +144,8 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   }, [defaultVariant, hasColorOptions, hasSizeOptions, normalizedSelectedColor, selectedSize, variants]);
 
   const selectedImage = displayImages[selectedImageIndex] ?? displayImages[0] ?? null;
-  const selectedImageWidth = selectedImage?.width ?? 1200;
-  const selectedImageHeight = selectedImage?.height ?? 1200;
+  const selectedImageWidth = selectedImage?.width ?? 1400;
+  const selectedImageHeight = selectedImage?.height ?? 1600;
   const soldOut = !product.availableForSale || (selectedVariant ? !selectedVariant.availableForSale : false);
   const emptySelectionLabel = hasSizeOptions ? "Select a size" : "Add to Cart";
   const matchedImageCount = selectedColor ? filterImagesByColor(product.images, selectedColor).length : product.images.length;
@@ -174,19 +173,11 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   };
 
   const description = product.description.trim();
-  const truncatedDescriptionStyle = descriptionExpanded
-    ? undefined
-    : ({
-        display: "-webkit-box",
-        WebkitLineClamp: 3,
-        WebkitBoxOrient: "vertical",
-        overflow: "hidden",
-      } as const);
 
   return (
     <LazyMotion features={domAnimation}>
       <section className="py-6 md:py-8 lg:py-10">
-        <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_380px] lg:min-h-[calc(100vh-120px)] lg:grid-cols-[88px_minmax(0,1fr)_400px] lg:items-start xl:grid-cols-[88px_minmax(0,1fr)_420px]">
+        <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_380px] lg:min-h-[calc(100vh-120px)] lg:grid-cols-[88px_minmax(0,1fr)_400px] lg:items-start xl:grid-cols-[88px_minmax(0,1fr)_440px]">
           <div
             className={cn(
               "hide-scrollbar hidden lg:sticky lg:top-24 lg:flex lg:max-h-[calc(100vh-7rem)] lg:flex-col lg:gap-2 lg:overflow-y-auto",
@@ -222,7 +213,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
           <div className="min-w-0">
             <div
-              className="relative grid aspect-square min-h-[22rem] place-items-center overflow-hidden rounded-[28px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] p-4 md:min-h-[30rem] md:p-6 lg:min-h-0 lg:p-8"
+              className="relative grid min-h-[28rem] place-items-center overflow-hidden rounded-[32px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] p-4 md:min-h-[34rem] md:p-6 lg:min-h-[calc(100vh-8rem)] lg:p-8"
               onPointerDown={(event) => {
                 if (displayImages.length < 2) return;
                 setPointerStartX(event.clientX);
@@ -253,11 +244,12 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                     <Image
                       alt={selectedImage.altText ?? product.title}
                       blurDataURL={BLUR_DATA_URL}
-                      className="h-auto max-h-[calc(100vh-12rem)] w-auto max-w-full object-contain"
+                      className="h-full w-full object-contain"
                       height={selectedImageHeight}
                       placeholder="blur"
                       priority
-                      sizes="(min-width: 1280px) 760px, (min-width: 1024px) calc(100vw - 560px), 100vw"
+                      quality={86}
+                      sizes="(min-width: 1536px) 58vw, (min-width: 1280px) 60vw, (min-width: 1024px) calc(100vw - 560px), 100vw"
                       src={shopifyImageUrl(selectedImage.url, { width: 1400 })}
                       width={selectedImageWidth}
                     />
@@ -286,7 +278,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             ) : null}
           </div>
 
-          <div className="glass-panel hide-scrollbar rounded-[28px] p-6 md:p-8 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">
+          <div className="glass-panel hide-scrollbar rounded-[28px] p-6 md:p-8 lg:sticky lg:top-24">
             <div className="relative z-[1] grid gap-6">
               <div className="grid gap-3">
                 <div className="t-label text-[color:var(--text-muted)]">{`Collection / ${product.title}`}</div>
@@ -386,22 +378,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
               <div className="h-px w-full bg-[color:var(--glass-border)]" />
 
-              {description ? (
-                <div className="grid gap-3">
-                  <div className="text-sm leading-7 text-[color:var(--text-muted)] md:text-base" style={truncatedDescriptionStyle}>
-                    {description}
-                  </div>
-                  {description.length > 180 ? (
-                    <button
-                      className="t-label w-fit text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--text)]"
-                      onClick={() => setDescriptionExpanded((value) => !value)}
-                      type="button"
-                    >
-                      {descriptionExpanded ? "Show Less" : "Read More"}
-                    </button>
-                  ) : null}
-                </div>
-              ) : null}
+              {description ? <div className="max-w-[58ch] text-sm leading-8 text-[color:var(--text-muted)] md:text-base">{description}</div> : null}
             </div>
           </div>
         </div>

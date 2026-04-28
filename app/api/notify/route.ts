@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+import { readEnv } from "@/lib/env";
+
 interface NotifyPayload {
   email?: string;
   productHandle?: string;
@@ -31,8 +33,8 @@ export async function POST(request: Request) {
     console.log("[notify]", payload);
   }
 
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_ANON_KEY ?? "";
+  const supabaseUrl = readEnv("SUPABASE_URL");
+  const supabaseKey = readEnv("SUPABASE_SERVICE_ROLE_KEY") || readEnv("SUPABASE_ANON_KEY");
 
   if (supabaseUrl && supabaseKey) {
     try {

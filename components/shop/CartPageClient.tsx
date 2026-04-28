@@ -20,14 +20,14 @@ export function CartPageClient() {
 
   if (cartLines.length === 0) {
     return (
-      <section className="flex min-h-[calc(100vh-60px-16rem)] items-center justify-center py-12">
+      <section className="flex min-h-[calc(100vh-84px-16rem)] items-center justify-center py-12">
         <div className="text-center">
           <div className="font-display text-3xl font-medium tracking-[-0.04em] text-[color:var(--text)] md:text-4xl">
             Your cart is empty.
           </div>
           <Link
             className="t-label mt-6 inline-flex items-center gap-2 text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--accent)]"
-            href="/"
+            href="/collection"
           >
             <span>Browse Collection</span>
             <span aria-hidden>→</span>
@@ -116,7 +116,7 @@ export function CartPageClient() {
 
           <Link
             className="t-label mt-2 inline-flex items-center gap-2 text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--accent)]"
-            href="/"
+            href="/collection"
           >
             <span>Continue Shopping</span>
             <span aria-hidden>→</span>

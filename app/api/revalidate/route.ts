@@ -3,8 +3,10 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { revalidateTag } from "next/cache";
 import { NextResponse, type NextRequest } from "next/server";
 
+import { readEnv } from "@/lib/env";
+
 export async function POST(request: NextRequest) {
-  const secret = process.env.SHOPIFY_REVALIDATION_SECRET;
+  const secret = readEnv("SHOPIFY_REVALIDATION_SECRET");
   const signature = request.headers.get("x-shopify-hmac-sha256");
 
   if (!secret || !signature) {

@@ -7,8 +7,11 @@ import PageTransition from "@/components/ui/PageTransition";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Raptile Studio",
-  description: "High-fashion headless storefront with a living shader backdrop and material-led commerce.",
+  title: {
+    default: "Raptile Studio",
+    template: "%s | Raptile Studio",
+  },
+  description: "Raptile Studio is a headless Shopify storefront for the Onyx collection and heavyweight essentials.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

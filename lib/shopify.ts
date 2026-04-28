@@ -9,10 +9,11 @@ import type {
   ShopifyProduct,
   ShopifyCartLineInput,
 } from "@/lib/commerce";
+import { readEnv } from "@/lib/env";
 import { STOREFRONT_API_VERSION } from "@/lib/public-config";
 
-const SHOPIFY_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
-const SHOPIFY_TOKEN = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN;
+const SHOPIFY_DOMAIN = readEnv("NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN");
+const SHOPIFY_TOKEN = readEnv("NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN");
 
 interface CartLineUpdateInput extends ShopifyCartLineInput {
   id: string;

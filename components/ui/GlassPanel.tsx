@@ -13,7 +13,7 @@ export function GlassPanel({
   ...props
 }: PropsWithChildren<GlassPanelProps>) {
   return (
-    <div className={cn("glass-panel rounded-[28px]", className)} {...props}>
+    <div className={cn("glass-panel noise-surface rounded-[28px]", className)} {...props}>
       <div className={cn("relative z-[1]", innerClassName)}>{children}</div>
     </div>
   );

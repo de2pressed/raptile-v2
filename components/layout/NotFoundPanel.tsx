@@ -22,7 +22,7 @@ export function NotFoundPanel() {
         <div className="mono-rule mt-6">────────────────────────────────</div>
         <Link
           className="t-label mt-6 inline-flex rounded-full border border-[color:var(--glass-border)] px-4 py-3 transition duration-200 hover:text-[color:var(--accent-strong)]"
-          href="/"
+          href="/collection"
         >
           Back to Collection -&gt;
         </Link>

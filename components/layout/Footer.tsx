@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 
+import { BrandLogo } from "@/components/layout/BrandLogo";
+
 const infoLinks = [
+  { href: "/", label: "Home" },
+  { href: "/collection", label: "Collection" },
   { href: "/about", label: "About" },
   { href: "/shipping", label: "Shipping" },
   { href: "/returns", label: "Returns" },
@@ -13,13 +17,11 @@ const infoLinks = [
 
 export function Footer() {
   return (
-    <footer className="relative z-10 mt-16 w-full border-t border-[color:var(--glass-border)] bg-[color:var(--bg-soft)] px-4 pb-8 pt-10 md:mt-20 md:px-6 md:pt-12">
-      <div className="mx-auto max-w-[1400px]">
+    <footer className="noise-surface relative z-10 mt-16 w-full border-t border-[color:var(--glass-border)] bg-[color:var(--bg-soft)] px-4 pb-8 pt-10 md:mt-20 md:px-6 md:pt-12">
+      <div className="relative z-[1] mx-auto max-w-[1440px]">
         <div className="grid gap-10 md:grid-cols-[minmax(0,1.3fr)_repeat(2,minmax(0,220px))] md:gap-8">
           <div className="max-w-[28rem] space-y-3">
-            <Link href="/" className="font-display text-2xl font-bold tracking-[-0.04em] text-[color:var(--text)] md:text-3xl">
-              RAPTILE STUDIO
-            </Link>
+            <BrandLogo />
             <p className="t-ui max-w-[22rem] leading-6 text-[color:var(--text-muted)]">
               Minimal essentials from India. Heavyweight fits, reduced graphics, slower drops.
             </p>

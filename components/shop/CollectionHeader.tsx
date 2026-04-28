@@ -5,6 +5,8 @@ import { getFeaturedCollection } from "@/lib/collection";
 export async function CollectionHeader() {
   const collection = await getFeaturedCollection();
   const productCount = collection?.products.length ?? 0;
+  const rawTitle = collection?.title?.trim();
+  const collectionTitle = rawTitle && rawTitle.toLowerCase() !== "home page" ? rawTitle : "Onyx Collection";
 
   return (
     <section className="pb-10 pt-16 md:pt-24">
@@ -14,7 +16,7 @@ export async function CollectionHeader() {
             className="font-display font-extrabold uppercase tracking-[-0.06em] text-[color:var(--text)]"
             style={{ fontSize: "clamp(3rem, 8vw, 6rem)", lineHeight: 0.92 }}
           >
-            Raptile Studio
+            {collectionTitle}
           </div>
           <div className="t-ui text-[color:var(--text-muted)]">{`Collection, ${productCount} pieces`}</div>
         </div>

@@ -32,8 +32,9 @@ export function ProductCard({ product, className }: ProductCardProps) {
                 soldOut ? "grayscale-[0.18] brightness-[0.9]" : "group-hover:scale-[1.015]",
               )}
               fill
-              sizes="(max-width: 767px) 50vw, (max-width: 1279px) 50vw, 33vw"
-              src={shopifyImageUrl(thumbnail.url, { width: 900 })}
+              sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, (max-width: 1279px) 33vw, 25vw"
+              src={shopifyImageUrl(thumbnail.url, { width: 720 })}
+              quality={82}
             />
           ) : (
             <div className="absolute inset-0 image-skeleton" />

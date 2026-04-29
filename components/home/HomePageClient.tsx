@@ -36,9 +36,9 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
     <div className="mx-auto w-full max-w-[1440px] py-6 md:py-12">
       <section
         ref={heroRef}
-        className="grid min-h-[calc(100svh-var(--header-height))] gap-6 lg:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)] lg:items-end"
+        className="grid gap-6 lg:min-h-[calc(100svh-var(--header-height))] lg:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)] lg:items-end"
       >
-        <div className="order-2 space-y-6 lg:order-1">
+        <div className="order-1 space-y-6 lg:order-1">
           <div className="space-y-4">
             <div className="t-label text-[color:var(--text-muted)]">Onyx Collection</div>
             <h1 className="t-hero max-w-[10ch] text-[color:var(--text)]">
@@ -94,12 +94,12 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
         </div>
 
         <Link
-          className="group order-1 block cursor-pointer overflow-hidden rounded-[28px] md:rounded-[38px] lg:order-2"
+          className="group order-2 block cursor-pointer overflow-hidden rounded-[28px] md:rounded-[38px] lg:order-2"
           href={heroProduct ? `/products/${heroProduct.handle}` : "/collection"}
           aria-label={heroProduct ? `Open ${heroProduct.title}` : "Browse the collection"}
         >
           <motion.div
-            className="noise-surface relative isolate aspect-[4/5] min-h-[26rem] overflow-hidden rounded-[28px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] md:aspect-auto md:min-h-[40rem] md:rounded-[38px]"
+            className="noise-surface relative isolate aspect-[4/5] min-h-[18rem] overflow-hidden rounded-[28px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] md:aspect-auto md:min-h-[40rem] md:rounded-[38px]"
             style={{ y: heroOffset }}
           >
             {heroImage ? (
@@ -119,7 +119,7 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
               <div className="absolute inset-0 image-skeleton" />
             )}
 
-            <div className="relative z-[1] flex h-full min-h-[26rem] flex-col justify-between p-5 md:min-h-[40rem] md:p-8">
+            <div className="relative z-[1] flex h-full min-h-[18rem] flex-col justify-between p-5 md:min-h-[40rem] md:p-8">
               <div className="flex items-center justify-between gap-4">
                 <div className="t-label text-[color:var(--text-muted)]">Featured from the collection</div>
                 <div className="t-label text-[color:var(--text-muted)]">

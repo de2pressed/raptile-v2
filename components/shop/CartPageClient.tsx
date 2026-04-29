@@ -81,7 +81,7 @@ function CartPageClientConnected() {
             {cartLines.map((line) => (
               <article key={line.id} className="glass-panel cart-noise-panel rounded-[28px] p-4 md:p-6">
                 <div className="relative z-[1] grid gap-4 md:grid-cols-[80px_minmax(0,1fr)_auto] md:items-center">
-                  <div className="relative aspect-[4/5] w-[80px] overflow-hidden rounded-[18px] bg-[color:var(--bg-elevated)]">
+                  <div className="relative aspect-square w-[84px] overflow-hidden rounded-[18px] bg-[color:var(--bg-elevated)] md:w-[96px]">
                     {line.imageUrl ? (
                       <Image
                         alt={line.imageAlt ?? line.title}

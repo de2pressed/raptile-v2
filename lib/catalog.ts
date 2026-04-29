@@ -3,9 +3,12 @@ import { formatPrice } from "@/lib/commerce";
 import { getProductSizes } from "@/lib/product-options";
 
 export type CollectionSort = "newest" | "price-asc" | "price-desc" | "bestselling";
+export type CatalogSearchKind = "product" | "collection" | "category";
 
 export interface CatalogSearchResult {
+  kind: CatalogSearchKind;
   title: string;
+  href: string;
   handle: string;
   description: string;
   price: string;
@@ -21,6 +24,37 @@ export interface CatalogFilterState {
   sort: CollectionSort;
   size: string | null;
 }
+
+const CATEGORY_SUGGESTIONS = [
+  {
+    title: "Heavyweight tees",
+    href: "/collection?q=heavyweight",
+    description: "240gsm bodies with a denser drape.",
+    matchLabel: "Category",
+    keywords: ["heavyweight", "gsm", "weight", "tee", "tees", "body"],
+  },
+  {
+    title: "Washed finish",
+    href: "/collection?q=wash",
+    description: "Double bio wash and a softer hand.",
+    matchLabel: "Category",
+    keywords: ["wash", "washed", "bio", "finish", "soft"],
+  },
+  {
+    title: "Structured fit",
+    href: "/collection?q=fit",
+    description: "Sharper shoulders, heavier collar, calmer shape.",
+    matchLabel: "Category",
+    keywords: ["fit", "shape", "cut", "shoulder", "collar"],
+  },
+  {
+    title: "Short-run drops",
+    href: "/collection?q=release",
+    description: "Small release windows and a slower rhythm.",
+    matchLabel: "Category",
+    keywords: ["drop", "release", "collection", "run", "batch"],
+  },
+] as const;
 
 function normalize(value: string) {
   return value
@@ -62,6 +96,29 @@ function buildMatchLabel(product: ShopifyProduct, query: string) {
   }
 
   return "Related";
+}
+
+function scoreText(text: string, query: string) {
+  if (!query) {
+    return 0;
+  }
+
+  const normalizedQuery = normalize(query);
+  const normalizedText = normalize(text);
+
+  if (!normalizedQuery || !normalizedText) {
+    return 0;
+  }
+
+  if (normalizedText === normalizedQuery) {
+    return 60;
+  }
+
+  if (normalizedText.includes(normalizedQuery)) {
+    return 28;
+  }
+
+  return 0;
 }
 
 function scoreProduct(product: ShopifyProduct, query: string) {
@@ -131,7 +188,25 @@ function getExcerpt(product: ShopifyProduct, query: string) {
 
   const start = Math.max(0, index - 32);
   const end = Math.min(description.length, index + normalizedQuery.length + 36);
-  return `${start > 0 ? "…" : ""}${description.slice(start, end).trim()}${end < description.length ? "…" : ""}`;
+  return `${start > 0 ? "..." : ""}${description.slice(start, end).trim()}${end < description.length ? "..." : ""}`;
+}
+
+function getCollectionImage(products: ShopifyProduct[]) {
+  const image = products.flatMap((product) => product.images).find(Boolean);
+
+  return image
+    ? {
+        imageUrl: image.url,
+        imageAlt: image.altText,
+      }
+    : {
+        imageUrl: null,
+        imageAlt: null,
+      };
+}
+
+function buildCollectionExcerpt(title: string, description: string) {
+  return description.trim() || `${title} from the current edit.`;
 }
 
 export function searchCatalogProducts(products: ShopifyProduct[], query: string, limit = 8): CatalogSearchResult[] {
@@ -159,7 +234,9 @@ export function searchCatalogProducts(products: ShopifyProduct[], query: string,
     .slice(0, limit);
 
   return ranked.map(({ product, score }) => ({
+    kind: "product",
     title: product.title,
+    href: `/products/${product.handle}`,
     handle: product.handle,
     description: getExcerpt(product, trimmedQuery),
     price: formatPrice(product.priceRange.minVariantPrice.amount),
@@ -169,6 +246,90 @@ export function searchCatalogProducts(products: ShopifyProduct[], query: string,
     score,
     matchLabel: buildMatchLabel(product, trimmedQuery),
   }));
+}
+
+export function searchCatalogCollections(
+  collection: { title: string; description: string; products: ShopifyProduct[] },
+  query: string,
+): CatalogSearchResult[] {
+  const trimmedQuery = query.trim();
+  const score = trimmedQuery
+    ? Math.max(scoreText(collection.title, trimmedQuery), scoreText(collection.description, trimmedQuery))
+    : 18;
+  const image = getCollectionImage(collection.products);
+
+  return [
+    {
+      kind: "collection",
+      title: collection.title,
+      href: "/collection",
+      handle: "collection",
+      description: buildCollectionExcerpt(collection.title, collection.description),
+      price: "",
+      availableForSale: true,
+      imageUrl: image.imageUrl,
+      imageAlt: image.imageAlt,
+      score,
+      matchLabel: trimmedQuery ? "Collection" : "Featured collection",
+    },
+  ];
+}
+
+export function searchCatalogCategories(query: string): CatalogSearchResult[] {
+  const trimmedQuery = query.trim();
+
+  return CATEGORY_SUGGESTIONS.map((category, index) => {
+    const text = [category.title, category.description, ...category.keywords].join(" ");
+    const score = trimmedQuery
+      ? Math.max(
+          scoreText(text, trimmedQuery),
+          category.keywords.some((keyword) => normalize(keyword).includes(normalize(trimmedQuery))) ? 18 : 0,
+        )
+      : 10 - index;
+
+    return {
+      kind: "category",
+      title: category.title,
+      href: category.href,
+      handle: category.title.toLowerCase().replace(/\s+/g, "-"),
+      description: category.description,
+      price: "",
+      availableForSale: true,
+      imageUrl: null,
+      imageAlt: null,
+      score,
+      matchLabel: category.matchLabel,
+    } satisfies CatalogSearchResult;
+  });
+}
+
+export function searchCatalogEntries(
+  collection: { title: string; description: string; products: ShopifyProduct[] },
+  products: ShopifyProduct[],
+  query: string,
+  limit = 8,
+) {
+  const entries = [...searchCatalogCollections(collection, query), ...searchCatalogCategories(query), ...searchCatalogProducts(products, query, limit)];
+
+  return entries
+    .sort((left, right) => {
+      if (right.score !== left.score) {
+        return right.score - left.score;
+      }
+
+      if (left.kind !== right.kind) {
+        const order: Record<CatalogSearchKind, number> = {
+          collection: 0,
+          category: 1,
+          product: 2,
+        };
+
+        return order[left.kind] - order[right.kind];
+      }
+
+      return left.title.localeCompare(right.title);
+    })
+    .slice(0, limit);
 }
 
 export function filterCatalogProducts(products: ShopifyProduct[], state: CatalogFilterState) {

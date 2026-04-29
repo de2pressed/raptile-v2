@@ -4,7 +4,7 @@ import { AnimatePresence, LazyMotion, domAnimation, useReducedMotion } from "fra
 import * as motion from "framer-motion/client";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { ShopifyProduct } from "@/lib/commerce";
 import { formatPrice } from "@/lib/commerce";
@@ -25,16 +25,29 @@ export function ProductCard({ product, className }: ProductCardProps) {
       return [];
     }
 
-    if (!firstAvailableColor) {
-      return product.images;
-    }
+    const filteredImages = firstAvailableColor
+      ? product.images.filter((image) => matchesColor(image, firstAvailableColor))
+      : product.images;
 
-    const matchedImages = product.images.filter((image) => matchesColor(image, firstAvailableColor));
-    return matchedImages.length > 0 ? matchedImages : product.images;
+    return (filteredImages.length > 0 ? filteredImages : product.images).slice(0, 2);
   }, [firstAvailableColor, product.images]);
   const soldOut = !product.availableForSale;
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [isHoverCapable, setIsHoverCapable] = useState(false);
+  const timerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const media = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const updateHoverCapable = () => setIsHoverCapable(media.matches);
+
+    updateHoverCapable();
+    media.addEventListener("change", updateHoverCapable);
+
+    return () => {
+      media.removeEventListener("change", updateHoverCapable);
+    };
+  }, []);
 
   useEffect(() => {
     setActiveIndex(0);
@@ -42,27 +55,40 @@ export function ProductCard({ product, className }: ProductCardProps) {
   }, [galleryImages.length, product.id]);
 
   useEffect(() => {
-    if (reducedMotion || isHovered || galleryImages.length < 2) {
+    if (reducedMotion || isHoverCapable || galleryImages.length < 2) {
       return;
     }
 
-    const interval = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % galleryImages.length);
-    }, 3000);
+    const scheduleNextFlip = () => {
+      const delay = 2500 + Math.random() * 2000;
+      timerRef.current = window.setTimeout(() => {
+        setActiveIndex((current) => (current === 0 ? 1 : 0));
+        scheduleNextFlip();
+      }, delay);
+    };
 
-    return () => window.clearInterval(interval);
-  }, [galleryImages.length, isHovered, reducedMotion]);
+    scheduleNextFlip();
 
-  const visibleIndex = isHovered && galleryImages.length > 1 ? 1 : activeIndex;
+    return () => {
+      if (timerRef.current !== null) {
+        window.clearTimeout(timerRef.current);
+      }
+    };
+  }, [galleryImages.length, isHoverCapable, reducedMotion]);
+
+  const visibleIndex = isHoverCapable && isHovered && galleryImages.length > 1 ? 1 : activeIndex;
   const visibleImage = galleryImages[visibleIndex] ?? galleryImages[0] ?? null;
 
   return (
     <LazyMotion features={domAnimation}>
       <Link
-        className={cn("group block h-full min-w-0", className)}
+        className={cn(
+          "group block h-full min-w-0 transition-transform duration-300 ease-[var(--ease-out-expo)] hover:-translate-y-1",
+          className,
+        )}
         href={`/products/${product.handle}`}
         onMouseEnter={() => {
-          if (galleryImages.length < 2) {
+          if (!isHoverCapable || galleryImages.length < 2) {
             return;
           }
 
@@ -70,19 +96,24 @@ export function ProductCard({ product, className }: ProductCardProps) {
           setActiveIndex(1);
         }}
         onMouseLeave={() => {
+          if (!isHoverCapable || galleryImages.length < 2) {
+            return;
+          }
+
           setIsHovered(false);
+          setActiveIndex(0);
         }}
       >
         <article className="grid min-w-0 gap-4">
-          <div className="relative aspect-square w-full overflow-hidden rounded-[24px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] md:rounded-[28px]">
+          <div className="relative aspect-square w-full overflow-hidden rounded-[24px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] transition duration-300 ease-[var(--ease-out-expo)] group-hover:border-[color:var(--accent)] group-hover:shadow-[0_20px_48px_rgba(0,0,0,0.18)] md:rounded-[28px]">
             <AnimatePresence mode="wait" initial={false}>
               {visibleImage ? (
                 <motion.div
                   key={`${visibleImage.url}-${visibleIndex}`}
                   className="absolute inset-0"
-                  initial={{ opacity: 0, scale: reducedMotion ? 1 : 0.985 }}
+                  initial={{ opacity: 0, x: reducedMotion ? 0 : 12 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: reducedMotion ? 1 : 1.01 }}
+                  exit={{ opacity: 0, x: reducedMotion ? 0 : -12 }}
                   transition={{ duration: reducedMotion ? 0.01 : 0.2, ease: [0.4, 0, 0.2, 1] }}
                 >
                   <Image

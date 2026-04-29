@@ -10,8 +10,18 @@ export default function PageTransition({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const reducedMotion = useReducedMotion();
   const initialPathRef = useRef(pathname);
+  const hasMountedRef = useRef(false);
   const [displayChildren, setDisplayChildren] = useState(children);
   const [phase, setPhase] = useState<"idle" | "exit" | "enter">("idle");
+
+  useEffect(() => {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+      return;
+    }
+
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   useEffect(() => {
     if (initialPathRef.current === pathname) {

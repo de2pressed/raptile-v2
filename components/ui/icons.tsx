@@ -94,3 +94,11 @@ export function FilterIcon(props: IconProps) {
     </BaseIcon>
   );
 }
+
+export function StarIcon(props: IconProps) {
+  return (
+    <BaseIcon {...props}>
+      <path d="m12 4 2.5 5.1 5.6.8-4 3.9.9 5.5-5-2.6-5 2.6.9-5.5-4-3.9 5.6-.8L12 4Z" />
+    </BaseIcon>
+  );
+}

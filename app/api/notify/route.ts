@@ -15,10 +15,10 @@ function isValidEmail(value: string) {
 export async function POST(request: Request) {
   const body = (await request.json()) as NotifyPayload;
   const email = body.email?.trim() ?? "";
-  const productHandle = body.productHandle?.trim() ?? "";
+  const productHandle = body.productHandle?.trim() || "newsletter";
   const variantId = body.variantId?.trim() ?? null;
 
-  if (!isValidEmail(email) || !productHandle) {
+  if (!isValidEmail(email)) {
     return NextResponse.json({ success: false, message: "Enter a valid email address." }, { status: 400 });
   }
 
@@ -58,6 +58,6 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     success: true,
-    message: "We'll let you know when this is back.",
+    message: productHandle === "newsletter" ? "You're on the list." : "We'll let you know when this is back.",
   });
 }

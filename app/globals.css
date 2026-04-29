@@ -82,8 +82,8 @@
   --noise-header-opacity: 0.04;
   --noise-surface-opacity: var(--noise-header-opacity);
   --noise-background-opacity: 0.04;
-  --header-height: 72px;
-  --header-compact-height: 58px;
+  --header-height: 64px;
+  --header-compact-height: 54px;
   color-scheme: dark;
 }
 

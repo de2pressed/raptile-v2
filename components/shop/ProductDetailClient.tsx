@@ -3,10 +3,12 @@
 import { AnimatePresence, LazyMotion, domAnimation, useReducedMotion } from "framer-motion";
 import * as motion from "framer-motion/client";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { TouchEvent } from "react";
 
 import { AddToCartButton } from "@/components/shop/AddToCartButton";
 import { NotifyMeForm } from "@/components/shop/NotifyMeForm";
+import { ProductReviews } from "@/components/shop/ProductReviews";
 import { SizeChartTable } from "@/components/shop/SizeChartTable";
 import { SpecDrawer } from "@/components/shop/SpecDrawer";
 import { ChevronDownIcon, ChevronUpIcon } from "@/components/ui/icons";
@@ -85,10 +87,11 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   );
   const [selectedSize, setSelectedSize] = useState<string | null>(() => pickDefaultSize(initialAvailableSizes));
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [pointerStartX, setPointerStartX] = useState<number | null>(null);
   const [isSizeChartOpen, setIsSizeChartOpen] = useState(false);
   const setSelectedVariantId = useRaptileStore((state) => state.setSelectedVariant);
   const setSpecDrawerOpen = useRaptileStore((state) => state.setSpecDrawerOpen);
+  const touchStartXRef = useRef<number | null>(null);
+  const touchCurrentXRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!hasColorOptions || selectedColor) {
@@ -117,6 +120,26 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   useEffect(() => {
     setSelectedImageIndex((current) => Math.min(current, Math.max(displayImages.length - 1, 0)));
   }, [displayImages.length]);
+
+  useEffect(() => {
+    if (product.images.length === 0) {
+      return;
+    }
+
+    const preloaders: Array<HTMLImageElement> = [];
+
+    for (const image of product.images) {
+      const preload = new window.Image();
+      preload.decoding = "async";
+      preload.src = shopifyImageUrl(image.url, { width: 1400 });
+      preload.alt = image.altText ?? product.title;
+      preloaders.push(preload);
+    }
+
+    return () => {
+      preloaders.length = 0;
+    };
+  }, [product.images, product.title]);
 
   const normalizedSelectedColor = selectedColor ? normalizeColorName(selectedColor) : "";
 
@@ -190,6 +213,51 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
   const description = product.description.trim();
 
+  const handleTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+    if (displayImages.length < 2) {
+      return;
+    }
+
+    const touch = event.touches[0];
+    if (!touch) {
+      return;
+    }
+
+    touchStartXRef.current = touch.clientX;
+    touchCurrentXRef.current = touch.clientX;
+  };
+
+  const handleTouchMove = (event: TouchEvent<HTMLDivElement>) => {
+    if (touchStartXRef.current === null) {
+      return;
+    }
+
+    const touch = event.touches[0];
+    if (!touch) {
+      return;
+    }
+
+    touchCurrentXRef.current = touch.clientX;
+  };
+
+  const finishTouch = () => {
+    if (touchStartXRef.current === null || touchCurrentXRef.current === null) {
+      touchStartXRef.current = null;
+      touchCurrentXRef.current = null;
+      return;
+    }
+
+    const delta = touchCurrentXRef.current - touchStartXRef.current;
+    touchStartXRef.current = null;
+    touchCurrentXRef.current = null;
+
+    if (Math.abs(delta) < 36) {
+      return;
+    }
+
+    changeImage(delta < 0 ? 1 : -1);
+  };
+
   return (
     <LazyMotion features={domAnimation}>
       <section className="py-6 md:py-8 lg:py-10">
@@ -229,28 +297,17 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
           <div className="min-w-0">
             <div
-              className="relative grid min-h-[min(74svh,42rem)] place-items-center overflow-hidden rounded-[28px] md:min-h-[34rem] md:rounded-[34px] md:border md:border-[color:var(--glass-border)] md:bg-[color:var(--bg-elevated)] md:p-6 lg:min-h-[calc(100vh-7rem)] lg:p-8"
-              onPointerDown={(event) => {
-                if (displayImages.length < 2) return;
-                setPointerStartX(event.clientX);
-              }}
-              onPointerUp={(event) => {
-                if (pointerStartX === null || displayImages.length < 2) {
-                  setPointerStartX(null);
-                  return;
-                }
-
-                const delta = event.clientX - pointerStartX;
-                setPointerStartX(null);
-
-                if (Math.abs(delta) < 40) return;
-                changeImage(delta < 0 ? 1 : -1);
-              }}
+              className="relative aspect-square w-full overflow-hidden md:aspect-auto md:h-[calc(100svh-var(--header-height)-2rem)] md:max-h-[calc(100svh-var(--header-height)-2rem)] lg:h-[calc(100svh-var(--header-height)-2rem)]"
+              onTouchCancel={finishTouch}
+              onTouchEnd={finishTouch}
+              onTouchMove={handleTouchMove}
+              onTouchStart={handleTouchStart}
+              style={{ touchAction: "pan-y" }}
             >
               <AnimatePresence mode="wait">
                 <motion.div
                   key={selectedImage?.url ?? "fallback"}
-                  className="flex h-full w-full items-center justify-center"
+                  className="absolute inset-0 flex h-full w-full items-center justify-center"
                   initial={{ opacity: 0, scale: reducedMotion ? 1 : 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: reducedMotion ? 1 : 0.98 }}
@@ -271,7 +328,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                       width={selectedImageWidth}
                     />
                   ) : (
-                    <div className="h-full w-full image-skeleton" />
+                    <div className="absolute inset-0 image-skeleton" />
                   )}
                 </motion.div>
               </AnimatePresence>
@@ -424,6 +481,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             </div>
           </div>
         </div>
+        <ProductReviews productHandle={product.handle} productTitle={product.title} />
         <SpecDrawer product={product} />
       </section>
     </LazyMotion>

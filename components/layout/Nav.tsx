@@ -56,43 +56,52 @@ function SearchResultsPanel({
   return (
     <div className="grid gap-2">
       {results.length > 0 ? (
-        results.map((result) => (
-          <Link
-            key={result.handle}
-            className="group grid grid-cols-[52px_minmax(0,1fr)] gap-3 rounded-[20px] border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.025)] p-3 transition duration-200 hover:border-[color:var(--accent)] hover:bg-[color:rgba(255,255,255,0.045)]"
-            href={`/products/${result.handle}`}
-            onClick={onNavigate}
-          >
-            <div className="relative aspect-square overflow-hidden rounded-[16px] bg-[color:var(--bg-elevated)]">
-              {result.imageUrl ? (
-                <Image
-                  alt={result.imageAlt ?? result.title}
-                  className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
-                  fill
-                  sizes="52px"
-                  src={shopifyImageUrl(result.imageUrl, { width: 120 })}
-                />
-              ) : null}
-            </div>
-            <div className="min-w-0 space-y-1">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="font-display text-[1rem] font-semibold tracking-[-0.03em] text-[color:var(--text)]">
-                    {result.title}
+        results.map((result) => {
+          const isProduct = result.kind === "product" || result.kind === "collection";
+
+          return (
+            <Link
+              key={`${result.kind}-${result.handle}`}
+              className="group grid grid-cols-[56px_minmax(0,1fr)] gap-3 rounded-[20px] border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.025)] p-3 transition duration-200 hover:-translate-y-0.5 hover:border-[color:var(--accent)] hover:bg-[color:rgba(255,255,255,0.045)]"
+              href={result.href}
+              onClick={onNavigate}
+            >
+              <div className="relative aspect-square overflow-hidden rounded-[16px] bg-[color:var(--bg-elevated)]">
+                {isProduct && result.imageUrl ? (
+                  <Image
+                    alt={result.imageAlt ?? result.title}
+                    className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+                    fill
+                    sizes="56px"
+                    src={shopifyImageUrl(result.imageUrl, { width: 120 })}
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(180deg,color-mix(in_oklch,var(--glass-tint-a)_60%,transparent),transparent)]">
+                    <div className="t-label text-[color:var(--text-subtle)]">{result.kind}</div>
                   </div>
-                  <div className="t-ui mt-1 text-[color:var(--text-subtle)]">{result.matchLabel}</div>
-                </div>
-                <div className="t-price shrink-0 text-[color:var(--text-muted)]">{result.price}</div>
+                )}
               </div>
-              <div className="t-ui max-w-[30ch] text-[color:var(--text-muted)]">{result.description}</div>
-            </div>
-          </Link>
-        ))
+
+              <div className="min-w-0 space-y-1">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="font-display text-[1rem] font-semibold tracking-[-0.03em] text-[color:var(--text)]">
+                      {result.title}
+                    </div>
+                    <div className="t-ui mt-1 text-[color:var(--text-subtle)]">{result.matchLabel}</div>
+                  </div>
+                  {result.price ? <div className="t-price shrink-0 text-[color:var(--text-muted)]">{result.price}</div> : null}
+                </div>
+                <div className="t-ui max-w-[30ch] text-[color:var(--text-muted)]">{result.description}</div>
+              </div>
+            </Link>
+          );
+        })
       ) : loading ? (
         Array.from({ length: 4 }).map((_, index) => (
           <div
             key={`search-skel-${index}`}
-            className="grid grid-cols-[52px_minmax(0,1fr)] gap-3 rounded-[20px] border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] p-3"
+            className="grid grid-cols-[56px_minmax(0,1fr)] gap-3 rounded-[20px] border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] p-3"
           >
             <div className="skeleton-shimmer aspect-square rounded-[16px]" />
             <div className="grid gap-2">
@@ -104,7 +113,7 @@ function SearchResultsPanel({
         ))
       ) : (
         <div className="rounded-[22px] border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] px-4 py-5 text-[color:var(--text-muted)]">
-          No predicted results for &quot;{query || "All products"}&quot;.
+          No predicted results for &quot;{query || "all products"}&quot;.
         </div>
       )}
     </div>
@@ -117,26 +126,24 @@ export function Nav() {
   const cartCount = useRaptileStore((state) => state.cartLines.reduce((total, line) => total + line.quantity, 0));
   const isCollectionSearchVisible = useRaptileStore((state) => state.isCollectionSearchVisible);
   const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileMode, setMobileMode] = useState<"idle" | "search" | "menu">("idle");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<CatalogSearchResult[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
   const desktopInputRef = useRef<HTMLInputElement | null>(null);
   const mobileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const hideSearchTrigger = isCollectionSearchVisible && !desktopSearchOpen && !mobileSearchOpen;
+  const hideSearchTrigger = isCollectionSearchVisible && !desktopSearchOpen && mobileMode !== "search";
 
   useEffect(() => {
     setDesktopSearchOpen(false);
-    setMobileSearchOpen(false);
-    setMenuOpen(false);
+    setMobileMode("idle");
     setSearchQuery("");
     setSearchResults([]);
   }, [pathname]);
 
   useEffect(() => {
-    const active = desktopSearchOpen || mobileSearchOpen;
+    const active = desktopSearchOpen || mobileMode === "search";
     if (!active) {
       return;
     }
@@ -162,13 +169,13 @@ export function Nav() {
       } finally {
         setSearchLoading(false);
       }
-    }, 300);
+    }, 200);
 
     return () => {
       controller.abort();
       window.clearTimeout(timer);
     };
-  }, [desktopSearchOpen, mobileSearchOpen, searchQuery]);
+  }, [desktopSearchOpen, mobileMode, searchQuery]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -177,8 +184,7 @@ export function Nav() {
       }
 
       setDesktopSearchOpen(false);
-      setMobileSearchOpen(false);
-      setMenuOpen(false);
+      setMobileMode("idle");
       setSearchQuery("");
     };
 
@@ -187,7 +193,7 @@ export function Nav() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [desktopSearchOpen, mobileSearchOpen]);
+  }, []);
 
   useEffect(() => {
     if (desktopSearchOpen) {
@@ -196,37 +202,36 @@ export function Nav() {
   }, [desktopSearchOpen]);
 
   useEffect(() => {
-    if (mobileSearchOpen) {
+    if (mobileMode === "search") {
       mobileInputRef.current?.focus();
     }
-  }, [mobileSearchOpen]);
+  }, [mobileMode]);
 
   const openDesktopSearch = () => {
-    setMenuOpen(false);
-    setMobileSearchOpen(false);
+    setMobileMode("idle");
     setDesktopSearchOpen(true);
   };
 
   const openMobileSearch = () => {
-    setMenuOpen(false);
     setDesktopSearchOpen(false);
-    setMobileSearchOpen(true);
+    setMobileMode("search");
+  };
+
+  const openMobileMenu = () => {
+    setDesktopSearchOpen(false);
+    setMobileMode((current) => (current === "menu" ? "idle" : "menu"));
   };
 
   const submitSearch = () => {
     const trimmed = searchQuery.trim();
     setDesktopSearchOpen(false);
-    setMobileSearchOpen(false);
-    setMenuOpen(false);
+    setMobileMode("idle");
     router.push(trimmed ? `/collection?q=${encodeURIComponent(trimmed)}` : "/collection");
   };
 
   const desktopSearch = (
     <form
-      className={cn(
-        "hidden md:flex items-center overflow-hidden rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)]",
-        desktopSearchOpen ? "pointer-events-auto" : "pointer-events-auto",
-      )}
+      className="hidden items-center overflow-hidden rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] md:flex"
       onSubmit={(event) => {
         event.preventDefault();
         submitSearch();
@@ -241,6 +246,7 @@ export function Nav() {
             setSearchQuery("");
             return;
           }
+
           openDesktopSearch();
         }}
         type="button"
@@ -250,10 +256,7 @@ export function Nav() {
       <motion.input
         ref={desktopInputRef}
         aria-label="Search products"
-        className={cn(
-          "h-10 border-0 bg-transparent px-0 text-[0.92rem] text-[color:var(--text)] outline-none placeholder:text-[color:var(--text-subtle)]",
-          desktopSearchOpen ? "pr-4 opacity-100" : "w-0 pr-0 opacity-0",
-        )}
+        className="h-10 border-0 bg-transparent px-0 text-[0.92rem] text-[color:var(--text)] outline-none placeholder:text-[color:var(--text-subtle)]"
         onChange={(event) => setSearchQuery(event.target.value)}
         placeholder="Search products"
         value={searchQuery}
@@ -264,12 +267,58 @@ export function Nav() {
     </form>
   );
 
+  const searchOverlay = (
+    <motion.div
+      className="pointer-events-none absolute left-0 right-0 top-full hidden px-4 md:block md:px-6"
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+    >
+      <div className="mx-auto mt-3 max-w-[1440px]">
+        <div className="pointer-events-auto noise-surface rounded-[28px] border border-[color:var(--glass-border)] bg-[color:rgba(8,12,24,0.92)] p-4 shadow-[0_24px_70px_rgba(0,0,0,0.3)]">
+          <div className="mt-4 grid gap-3">
+            <div className="flex items-center justify-between gap-3">
+              <div className="t-label text-[color:var(--text-muted)]">Predicted results</div>
+              <div className="t-ui text-[color:var(--text-subtle)]">{searchLoading ? "Updating" : `${searchResults.length} matches`}</div>
+            </div>
+
+            <SearchResultsPanel
+              loading={searchLoading}
+              onNavigate={() => {
+                setDesktopSearchOpen(false);
+                setSearchQuery("");
+              }}
+              query={searchQuery.trim()}
+              results={searchResults}
+            />
+
+            <Link
+              className="group flex items-center justify-between rounded-[20px] border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.025)] px-4 py-3 transition duration-200 hover:border-[color:var(--accent)] hover:bg-[color:rgba(255,255,255,0.045)]"
+              href={`/collection${searchQuery.trim() ? `?q=${encodeURIComponent(searchQuery.trim())}` : ""}`}
+              onClick={() => {
+                setDesktopSearchOpen(false);
+                setSearchQuery("");
+              }}
+            >
+              <span className="t-label text-[color:var(--text-muted)]">
+                Search all results for &quot;{searchQuery.trim() || "all products"}&quot;
+              </span>
+              <ArrowRightIcon className="h-4 w-4 text-[color:var(--text-subtle)] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-[color:var(--text)]" />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+
   return (
     <LazyMotion features={domAnimation}>
-      <nav className="site-header noise-surface relative sticky top-0 z-[100] border-b border-[color:var(--glass-border)]">
-        <div className="site-header-inner relative z-[1] mx-auto max-w-[1440px] px-4 py-3 md:px-6">
-          <div className="hidden items-center gap-5 md:flex">
+      <nav className="site-header noise-surface sticky top-0 z-[100] border-b border-[color:var(--glass-border)]">
+        <div className="site-header-inner relative z-[1] mx-auto max-w-[1440px] px-4 py-2.5 md:px-6 md:py-3">
+          <div className="hidden md:grid grid-cols-[auto_1fr_auto] items-center gap-5">
             <BrandLogo size="sm" className="site-header-logo shrink-0" />
+
             <div className="site-header-links ml-3 flex flex-1 items-center justify-center gap-6">
               {desktopLinks.map((link) => (
                 <Link
@@ -304,205 +353,155 @@ export function Nav() {
             </div>
           </div>
 
-          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3 md:hidden">
-            <button
-              aria-label="Open search"
-              className={cn(
-                "inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]",
-                hideSearchTrigger && "opacity-0 pointer-events-none",
-              )}
-              onClick={openMobileSearch}
-              type="button"
-            >
-              <SearchIcon className="h-4 w-4" />
-            </button>
-
-            <BrandLogo size="sm" className="site-header-logo justify-self-center" />
-
-            <div className="flex items-center gap-2 justify-self-end">
-              <Link
-                aria-label={`Cart, ${cartCount} items`}
-                className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition-colors duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]"
-                href="/cart"
-              >
-                <CartIcon className="h-4 w-4" />
-                {cartCount > 0 ? (
-                  <span className="absolute -right-1 -top-1 inline-flex min-w-5 items-center justify-center rounded-full border border-[color:var(--bg)] bg-[color:var(--accent)] px-1.5 py-0.5 font-mono text-[0.6rem] font-semibold text-[color:var(--bg)]">
-                    {cartCount}
-                  </span>
-                ) : null}
-              </Link>
-
-              <button
-                aria-expanded={menuOpen}
-                aria-label="Open navigation menu"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]"
-                onClick={() => {
-                  setDesktopSearchOpen(false);
-                  setMobileSearchOpen(false);
-                  setMenuOpen((current) => !current);
-                }}
-                type="button"
-              >
-                <MenuIcon className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-
-          <AnimatePresence>
-              {desktopSearchOpen ? (
+          <div className="md:hidden">
+            <AnimatePresence mode="wait" initial={false}>
+              {mobileMode === "search" ? (
                 <motion.div
-                  className="pointer-events-none absolute left-0 right-0 top-full hidden px-4 md:block md:px-6"
-                  initial={{ opacity: 0, y: -10 }}
+                  key="mobile-search"
+                  className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 overflow-hidden"
+                  initial={{ opacity: 0, y: -8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
+                  exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                 >
-                  <div className="mx-auto mt-3 max-w-[1440px]">
-                    <div className="pointer-events-auto noise-surface rounded-[28px] border border-[color:var(--glass-border)] bg-[color:rgba(8,12,24,0.92)] p-4 shadow-[0_24px_70px_rgba(0,0,0,0.3)]">
-                      <div className="mt-4 grid gap-3">
-                        <div className="flex items-center justify-between gap-3">
-                          <div className="t-label text-[color:var(--text-muted)]">Predicted results</div>
-                        <div className="t-ui text-[color:var(--text-subtle)]">
-                          {searchLoading ? "Updating" : `${searchResults.length} matches`}
-                        </div>
-                      </div>
+                  <button
+                    aria-label="Close search"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]"
+                    onClick={() => {
+                      setMobileMode("idle");
+                      setSearchQuery("");
+                    }}
+                    type="button"
+                  >
+                    <CloseIcon className="h-4 w-4" />
+                  </button>
 
-                      <SearchResultsPanel
-                        loading={searchLoading}
-                        onNavigate={() => {
-                          setDesktopSearchOpen(false);
-                          setSearchQuery("");
-                        }}
-                        query={searchQuery.trim()}
-                        results={searchResults}
-                      />
-
-                      <Link
-                        className="group flex items-center justify-between rounded-[20px] border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.025)] px-4 py-3 transition duration-200 hover:border-[color:var(--accent)] hover:bg-[color:rgba(255,255,255,0.045)]"
-                        href={`/collection${searchQuery.trim() ? `?q=${encodeURIComponent(searchQuery.trim())}` : ""}`}
-                        onClick={() => {
-                          setDesktopSearchOpen(false);
-                          setSearchQuery("");
-                        }}
-                      >
-                        <span className="t-label text-[color:var(--text-muted)]">
-                          Search all results for &quot;{searchQuery.trim() || "all products"}&quot;
-                        </span>
-                        <ArrowRightIcon className="h-4 w-4 text-[color:var(--text-subtle)] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-[color:var(--text)]" />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
-
-          <AnimatePresence>
-            {mobileSearchOpen ? (
-                <motion.div
-                  className="absolute left-0 right-0 top-0 z-[110] px-4 pt-3 md:hidden"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                >
                   <form
-                    className="noise-surface rounded-[24px] border border-[color:var(--glass-border)] bg-[color:rgba(8,12,24,0.92)] p-4 shadow-[0_20px_48px_rgba(0,0,0,0.26)]"
+                    className="flex items-center overflow-hidden rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] px-4"
                     onSubmit={(event) => {
                       event.preventDefault();
                       submitSearch();
-                  }}
-                >
-                  <div className="flex items-center gap-3 rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] px-4 py-3">
-                    <button
-                      aria-label="Close search"
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[color:var(--text-muted)] transition duration-200 hover:text-[color:var(--text)]"
-                      onClick={() => {
-                        setMobileSearchOpen(false);
-                        setSearchQuery("");
-                      }}
-                      type="button"
-                    >
-                      <CloseIcon className="h-4 w-4" />
-                    </button>
+                    }}
+                  >
                     <input
                       aria-label="Search products"
-                      className="h-8 w-full border-0 bg-transparent text-[0.95rem] text-[color:var(--text)] outline-none placeholder:text-[color:var(--text-subtle)]"
+                      className="h-10 w-full border-0 bg-transparent text-[0.95rem] text-[color:var(--text)] outline-none placeholder:text-[color:var(--text-subtle)]"
                       onChange={(event) => setSearchQuery(event.target.value)}
                       placeholder="Search products"
                       ref={mobileInputRef}
                       value={searchQuery}
                     />
-                    <button
-                      aria-label="Search"
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[color:var(--text-muted)] transition duration-200 hover:text-[color:var(--text)]"
-                      type="submit"
-                    >
-                      <ArrowRightIcon className="h-4 w-4" />
-                    </button>
-                  </div>
+                  </form>
 
-                  <div className="mt-4 grid gap-3">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="t-label text-[color:var(--text-muted)]">Predicted results</div>
-                      <div className="t-ui text-[color:var(--text-subtle)]">
-                        {searchLoading ? "Updating" : `${searchResults.length} matches`}
-                      </div>
-                    </div>
+                  <button
+                    aria-label="Search"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]"
+                    type="button"
+                    onClick={submitSearch}
+                  >
+                    <ArrowRightIcon className="h-4 w-4" />
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="mobile-default"
+                  className="grid grid-cols-[auto_1fr_auto] items-center gap-3"
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                >
+                  <button
+                    aria-label="Open search"
+                    className={cn(
+                      "inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]",
+                      hideSearchTrigger && "pointer-events-none opacity-0",
+                    )}
+                    onClick={openMobileSearch}
+                    type="button"
+                  >
+                    <SearchIcon className="h-4 w-4" />
+                  </button>
 
-                    <SearchResultsPanel
-                      loading={searchLoading}
-                      onNavigate={() => {
-                        setMobileSearchOpen(false);
-                        setSearchQuery("");
-                      }}
-                      query={searchQuery.trim()}
-                      results={searchResults}
-                    />
+                  <BrandLogo size="sm" className="site-header-logo justify-self-center" />
 
+                  <div className="flex items-center gap-2 justify-self-end">
                     <Link
-                      className="group flex items-center justify-between rounded-[20px] border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.025)] px-4 py-3 transition duration-200 hover:border-[color:var(--accent)] hover:bg-[color:rgba(255,255,255,0.045)]"
-                      href={`/collection${searchQuery.trim() ? `?q=${encodeURIComponent(searchQuery.trim())}` : ""}`}
-                      onClick={() => {
-                        setMobileSearchOpen(false);
-                        setSearchQuery("");
-                      }}
+                      aria-label={`Cart, ${cartCount} items`}
+                      className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition-colors duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]"
+                      href="/cart"
                     >
-                      <span className="t-label text-[color:var(--text-muted)]">
-                        Search all results for &quot;{searchQuery.trim() || "all products"}&quot;
-                      </span>
-                      <ArrowRightIcon className="h-4 w-4 text-[color:var(--text-subtle)] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-[color:var(--text)]" />
+                      <CartIcon className="h-4 w-4" />
+                      {cartCount > 0 ? (
+                        <span className="absolute -right-1 -top-1 inline-flex min-w-5 items-center justify-center rounded-full border border-[color:var(--bg)] bg-[color:var(--accent)] px-1.5 py-0.5 font-mono text-[0.6rem] font-semibold text-[color:var(--bg)]">
+                          {cartCount}
+                        </span>
+                      ) : null}
                     </Link>
-                  </div>
-                </form>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
 
-          <AnimatePresence>
-            {menuOpen ? (
-              <motion.div
-                className="absolute left-0 right-0 top-full z-[125] px-4 md:hidden"
-                initial={{ opacity: 0, y: "-100%" }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: "-100%" }}
-                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <div className="noise-surface rounded-[28px] border border-[color:var(--glass-border)] bg-[color:rgba(8,12,24,0.94)] p-5 shadow-[0_24px_60px_rgba(0,0,0,0.34)]">
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="t-label text-[color:var(--text-muted)]">Raptile Studio</div>
                     <button
-                      aria-label="Close navigation menu"
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]"
-                      onClick={() => setMenuOpen(false)}
+                      aria-expanded={mobileMode === "menu"}
+                      aria-label="Open navigation menu"
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]"
+                      onClick={openMobileMenu}
                       type="button"
                     >
-                      <CloseIcon className="h-4 w-4" />
+                      <MenuIcon className="h-4 w-4" />
                     </button>
                   </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-                  <div className="mt-5 grid gap-4">
+            <AnimatePresence initial={false}>
+              {mobileMode === "search" ? (
+                <motion.div
+                  key="mobile-search-results"
+                  className="mt-4 grid gap-3 border-t border-[color:var(--glass-border)] pt-4"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="t-label text-[color:var(--text-muted)]">Predicted results</div>
+                    <div className="t-ui text-[color:var(--text-subtle)]">{searchLoading ? "Updating" : `${searchResults.length} matches`}</div>
+                  </div>
+
+                  <SearchResultsPanel
+                    loading={searchLoading}
+                    onNavigate={() => {
+                      setMobileMode("idle");
+                      setSearchQuery("");
+                    }}
+                    query={searchQuery.trim()}
+                    results={searchResults}
+                  />
+
+                  <Link
+                    className="group flex items-center justify-between rounded-[20px] border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.025)] px-4 py-3 transition duration-200 hover:border-[color:var(--accent)] hover:bg-[color:rgba(255,255,255,0.045)]"
+                    href={`/collection${searchQuery.trim() ? `?q=${encodeURIComponent(searchQuery.trim())}` : ""}`}
+                    onClick={() => {
+                      setMobileMode("idle");
+                      setSearchQuery("");
+                    }}
+                  >
+                    <span className="t-label text-[color:var(--text-muted)]">
+                      Search all results for &quot;{searchQuery.trim() || "all products"}&quot;
+                    </span>
+                    <ArrowRightIcon className="h-4 w-4 text-[color:var(--text-subtle)] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-[color:var(--text)]" />
+                  </Link>
+                </motion.div>
+              ) : mobileMode === "menu" ? (
+                <motion.div
+                  key="mobile-menu"
+                  className="mt-4 grid gap-5 overflow-hidden border-t border-[color:var(--glass-border)] pt-4"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <div className="grid gap-4">
                     <div className="grid gap-3">
                       {mobileLinks.map((link) => {
                         const active = isActiveLink(pathname, link.href);
@@ -517,27 +516,25 @@ export function Nav() {
                                 ? "border-[color:var(--accent)] bg-[color:var(--accent-subtle)] text-[color:var(--text)]"
                                 : "border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] text-[color:var(--text-muted)] hover:border-[color:var(--accent)] hover:text-[color:var(--text)]",
                             )}
-                            onClick={() => setMenuOpen(false)}
+                            onClick={() => setMobileMode("idle")}
                           >
-                            <span className="font-display text-[1.35rem] font-semibold tracking-[-0.04em]">
-                              {link.label}
-                            </span>
+                            <span className="font-display text-[1.25rem] font-semibold tracking-[-0.04em]">{link.label}</span>
                             <ArrowRightIcon className="h-4 w-4" />
                           </Link>
                         );
                       })}
                     </div>
 
-                    <div className="grid gap-4 border-t border-[color:var(--glass-border)] pt-4">
+                    <div className="grid gap-4 border-t border-[color:var(--glass-border)] pt-4 md:grid-cols-2">
                       <div className="grid gap-2">
                         <div className="t-label text-[color:var(--text-muted)]">Secondary links</div>
                         <div className="flex flex-wrap gap-2">
-                        {secondaryLinks.map((link) => (
-                          <Link
+                          {secondaryLinks.map((link) => (
+                            <Link
                               key={link.href}
                               className="ghost-button rounded-full px-4 py-2"
                               href={link.href}
-                              onClick={() => setMenuOpen(false)}
+                              onClick={() => setMobileMode("idle")}
                             >
                               <span className="t-label">{link.label}</span>
                             </Link>
@@ -550,10 +547,12 @@ export function Nav() {
                       </p>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+          </div>
+
+          <AnimatePresence>{desktopSearchOpen ? searchOverlay : null}</AnimatePresence>
         </div>
       </nav>
     </LazyMotion>

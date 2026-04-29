@@ -43,25 +43,36 @@
 }
 
 :root {
-  --bg: oklch(0.09 0.016 252);
-  --bg-soft: oklch(0.125 0.018 251);
-  --bg-elevated: oklch(0.17 0.02 250);
-  --text: oklch(0.92 0.012 78);
-  --text-muted: oklch(0.72 0.016 74);
-  --text-subtle: oklch(0.56 0.014 76);
-  --accent: oklch(0.58 0.19 265);
-  --accent-strong: oklch(0.86 0.06 252);
-  --accent-glow: oklch(0.52 0.17 262);
-  --accent-subtle: oklch(0.58 0.19 265 / 0.14);
-  --sold-out: oklch(0.42 0.04 246);
-  --glass-fill: oklch(0.14 0.02 250 / 0.3);
-  --glass-border: oklch(0.92 0.01 250 / 0.085);
-  --glass-highlight: oklch(0.96 0.01 250 / 0.07);
-  --glass-tint-a: oklch(0.3 0.02 259 / 0.2);
-  --glass-tint-b: oklch(0.27 0.02 245 / 0.16);
-  --shader-warm: oklch(0.66 0.14 261);
-  --shader-mid: oklch(0.34 0.08 249);
-  --shader-deep: oklch(0.09 0.03 252);
+  --charcoal-ink: oklch(0.11 0.012 40);
+  --warm-shadow: oklch(0.145 0.015 38);
+  --ash-lift: oklch(0.18 0.016 40);
+  --parchment: oklch(0.92 0.012 78);
+  --muted-silt: oklch(0.68 0.018 72);
+  --subtle-dust: oklch(0.46 0.015 62);
+  --amber-bronze: oklch(0.69 0.085 48);
+  --amber-bright: oklch(0.75 0.08 50);
+  --ember-glow: oklch(0.64 0.09 46);
+  --amber-haze: oklch(0.69 0.085 48 / 0.12);
+  --sold-out-oxide: oklch(0.38 0.04 40);
+  --bg: var(--charcoal-ink);
+  --bg-soft: var(--warm-shadow);
+  --bg-elevated: var(--ash-lift);
+  --text: var(--parchment);
+  --text-muted: var(--muted-silt);
+  --text-subtle: var(--subtle-dust);
+  --accent: var(--amber-bronze);
+  --accent-strong: var(--amber-bright);
+  --accent-glow: var(--ember-glow);
+  --accent-subtle: var(--amber-haze);
+  --sold-out: var(--sold-out-oxide);
+  --glass-fill: oklch(0.17 0.02 40 / 0.84);
+  --glass-border: oklch(0.92 0.012 80 / 0.1);
+  --glass-highlight: oklch(0.96 0.01 80 / 0.04);
+  --glass-tint-a: oklch(0.3 0.025 42 / 0.18);
+  --glass-tint-b: oklch(0.26 0.02 54 / 0.14);
+  --shader-warm: var(--amber-bronze);
+  --shader-mid: var(--warm-shadow);
+  --shader-deep: var(--charcoal-ink);
   --glass-shadow: oklch(0 0 0 / 0.16);
   --font-display: "Cabinet Grotesk", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
@@ -122,52 +133,18 @@
 
 html {
   min-height: 100%;
-  background: var(--bg);
+  background: var(--charcoal-ink);
 }
 
 body {
   min-height: 100vh;
   margin: 0;
   overflow-x: hidden;
-  background:
-    radial-gradient(ellipse at 18% -10%, color-mix(in oklch, var(--glass-tint-a) 62%, transparent), transparent 44%),
-    radial-gradient(ellipse at 82% 8%, color-mix(in oklch, var(--shader-mid) 26%, transparent), transparent 42%),
-    radial-gradient(ellipse at 50% 118%, color-mix(in oklch, var(--glass-tint-b) 42%, transparent), transparent 48%),
-    linear-gradient(
-      180deg,
-      color-mix(in oklch, var(--bg) 88%, var(--bg-soft)) 0%,
-      var(--bg) 42%,
-      color-mix(in oklch, var(--bg) 78%, var(--bg-soft)) 100%
-    );
+  background: var(--charcoal-ink);
   color: var(--text);
   font-family: var(--font-display);
   text-rendering: optimizeLegibility;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.025);
-  backdrop-filter: blur(56px) saturate(132%);
-  -webkit-backdrop-filter: blur(56px) saturate(132%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: url("/noise.png");
-  background-repeat: repeat;
-  background-size: 260px 260px;
-  opacity: var(--noise-background-opacity);
-  mix-blend-mode: soft-light;
-  pointer-events: none;
-  z-index: 0;
-  animation: backgroundNoiseDrift 26s linear infinite;
-  will-change: background-position, transform;
+  isolation: isolate;
 }
 
 a {
@@ -780,23 +757,6 @@ button {
   }
 }
 
-@keyframes backgroundNoiseDrift {
-  0% {
-    background-position: 0 0;
-    transform: translate3d(0, 0, 0);
-  }
-
-  50% {
-    background-position: -130px 90px;
-    transform: translate3d(0.45%, -0.35%, 0) scale(1.012);
-  }
-
-  100% {
-    background-position: -260px 180px;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
 @media (max-width: 767px) {
   .t-hero {
     font-size: clamp(2.2rem, 11vw, 3.5rem);
@@ -834,15 +794,6 @@ button {
   .glass-panel-heavy {
     backdrop-filter: blur(18px) saturate(126%);
     -webkit-backdrop-filter: blur(18px) saturate(126%);
-  }
-
-  body::before {
-    opacity: 0.26;
-  }
-
-  body::after {
-    background-size: 190px 190px;
-    animation-duration: 18s;
   }
 
   .editorial-copy,

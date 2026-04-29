@@ -6,7 +6,6 @@ import { useAnimationFrame } from "framer-motion";
 import type { PropsWithChildren } from "react";
 import { useEffect, useRef } from "react";
 
-import { TimeAccentBridge } from "@/components/providers/TimeAccentBridge";
 import { ShopifyRuntimeProvider, useShopifyRuntime } from "@/components/providers/ShopifyRuntimeContext";
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
@@ -103,7 +102,6 @@ function AppShell({ children }: PropsWithChildren) {
 
   return (
     <>
-      <TimeAccentBridge />
       <RuntimeBridge />
       <CartBridge />
       <div className="relative z-10 flex min-h-screen flex-col">

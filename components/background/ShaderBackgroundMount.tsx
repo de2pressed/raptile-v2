@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 
-export const ShaderBackgroundMount = dynamic(
-  () => import("@/components/background/ShaderBackground").then((module) => module.ShaderBackground),
+export const LiquidBackgroundMount = dynamic(
+  () => import("@/components/background/LiquidBackground").then((module) => module.LiquidBackground),
   { ssr: false },
 );

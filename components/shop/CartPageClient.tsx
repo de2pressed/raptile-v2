@@ -80,58 +80,60 @@ function CartPageClientConnected() {
           <div className="grid gap-4">
             {cartLines.map((line) => (
               <article key={line.id} className="glass-panel cart-noise-panel rounded-[28px] p-4 md:p-6">
-                <div className="relative z-[1] grid gap-4 md:grid-cols-[80px_minmax(0,1fr)_auto] md:items-center">
-                  <div className="relative aspect-square w-[84px] overflow-hidden rounded-[18px] bg-[color:var(--bg-elevated)] md:w-[96px]">
+                <div className="relative z-[1] grid gap-4 md:grid-cols-[112px_minmax(0,1fr)] md:gap-6">
+                  <div className="relative aspect-square w-[84px] overflow-hidden rounded-[18px] bg-[color:var(--bg-elevated)] md:w-[112px]">
                     {line.imageUrl ? (
                       <Image
                         alt={line.imageAlt ?? line.title}
                         className="h-full w-full object-cover"
                         fill
-                        sizes="80px"
+                        sizes="(max-width: 767px) 84px, 112px"
                         src={shopifyImageUrl(line.imageUrl, { width: 120, height: 150, crop: "center" })}
                       />
                     ) : null}
                   </div>
 
-                  <div className="grid gap-2">
-                    <Link
-                      className="t-product text-[color:var(--text)] transition-colors duration-200 hover:text-[color:var(--accent)]"
-                      href={line.handle ? `/products/${line.handle}` : "/"}
-                    >
-                      {line.title}
-                    </Link>
-                    <div className="t-label text-[color:var(--text-muted)]">{line.variantTitle}</div>
-                    <div className="t-price text-[color:var(--text)]">{line.price}</div>
-                  </div>
-
-                  <div className="flex flex-col items-start gap-3 md:items-end">
-                    <div className="flex items-center gap-2">
-                      <button
-                        className="ghost-button flex h-9 w-9 items-center justify-center rounded-full"
-                        onClick={() => {
-                          if (line.quantity <= 1) {
-                            cart.linesRemove([line.id]);
-                            return;
-                          }
-
-                          cart.linesUpdate([{ id: line.id, quantity: line.quantity - 1 }]);
-                        }}
-                        type="button"
+                  <div className="grid min-w-0 gap-3 pt-1">
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                      <Link
+                        className="t-product min-w-0 text-[color:var(--text)] transition-colors duration-200 hover:text-[color:var(--accent)]"
+                        href={line.handle ? `/products/${line.handle}` : "/"}
                       >
-                        -
-                      </button>
-                      <div className="t-ui min-w-[2.5rem] text-center text-[color:var(--text)]">{line.quantity}</div>
-                      <button
-                        className="ghost-button flex h-9 w-9 items-center justify-center rounded-full"
-                        onClick={() => cart.linesUpdate([{ id: line.id, quantity: line.quantity + 1 }])}
-                        type="button"
-                      >
-                        +
-                      </button>
+                        {line.title}
+                      </Link>
+                      <div className="t-label text-[color:var(--text-muted)]">{line.variantTitle}</div>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="t-price text-[color:var(--text)]">{line.price}</div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          className="ghost-button flex h-9 w-9 items-center justify-center rounded-full"
+                          onClick={() => {
+                            if (line.quantity <= 1) {
+                              cart.linesRemove([line.id]);
+                              return;
+                            }
+
+                            cart.linesUpdate([{ id: line.id, quantity: line.quantity - 1 }]);
+                          }}
+                          type="button"
+                        >
+                          -
+                        </button>
+                        <div className="t-ui min-w-[2.5rem] text-center text-[color:var(--text)]">{line.quantity}</div>
+                        <button
+                          className="ghost-button flex h-9 w-9 items-center justify-center rounded-full"
+                          onClick={() => cart.linesUpdate([{ id: line.id, quantity: line.quantity + 1 }])}
+                          type="button"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
 
                     <button
-                      className="t-label text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--accent)]"
+                      className="t-label justify-self-start text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--accent)]"
                       onClick={() => cart.linesRemove([line.id])}
                       type="button"
                     >

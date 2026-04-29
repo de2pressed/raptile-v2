@@ -405,27 +405,31 @@ export function Nav() {
               ) : (
                 <motion.div
                   key="mobile-default"
-                  className="grid grid-cols-[auto_1fr_auto] items-center gap-3"
+                  className="grid grid-cols-[1fr_auto_1fr] items-center gap-3"
                   initial={{ opacity: 0, y: -8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                 >
-                  <button
-                    aria-label="Open search"
-                    className={cn(
-                      "inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]",
-                      hideSearchTrigger && "pointer-events-none opacity-0",
-                    )}
-                    onClick={openMobileSearch}
-                    type="button"
-                  >
-                    <SearchIcon className="h-4 w-4" />
-                  </button>
+                  <div aria-hidden className="h-10 w-10" />
 
                   <BrandLogo size="sm" className="site-header-logo justify-self-center" />
 
                   <div className="flex items-center gap-2 justify-self-end">
+                    <button
+                      aria-label="Open search"
+                      aria-hidden={hideSearchTrigger}
+                      className={cn(
+                        "inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]",
+                        hideSearchTrigger && "pointer-events-none opacity-0",
+                      )}
+                      onClick={openMobileSearch}
+                      tabIndex={hideSearchTrigger ? -1 : 0}
+                      type="button"
+                    >
+                      <SearchIcon className="h-4 w-4" />
+                    </button>
+
                     <Link
                       aria-label={`Cart, ${cartCount} items`}
                       className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition-colors duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]"

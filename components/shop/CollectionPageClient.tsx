@@ -100,6 +100,19 @@ export function CollectionPageClient({ collectionTitle, collectionDescription, p
     setMobileFilterOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    if (!mobileFilterOpen) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileFilterOpen]);
+
   const filteredProducts = useMemo(() => {
     return filterCatalogProducts(products, { query, sort, size });
   }, [products, query, sort, size]);
@@ -291,7 +304,7 @@ export function CollectionPageClient({ collectionTitle, collectionDescription, p
         <AnimatePresence>
           {mobileFilterOpen ? (
             <motion.div
-              className="fixed inset-0 z-[145] md:hidden"
+              className="fixed inset-0 z-[145] flex items-center justify-center p-4 md:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -303,11 +316,11 @@ export function CollectionPageClient({ collectionTitle, collectionDescription, p
                 type="button"
               />
               <motion.div
-                className="noise-surface absolute inset-x-0 bottom-0 rounded-t-[28px] border-t border-[color:var(--glass-border)] bg-[color:rgba(8,12,24,0.92)] px-5 pb-6 pt-4"
-                initial={{ y: "100%" }}
-                animate={{ y: 0 }}
-                exit={{ y: "100%" }}
-                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                className="noise-surface relative w-full max-w-[28rem] max-h-[calc(100svh-2rem)] overflow-y-auto rounded-[30px] border border-[color:var(--glass-border)] bg-[color:rgba(8,12,24,0.92)] px-5 py-5 shadow-[0_24px_70px_rgba(0,0,0,0.32)]"
+                initial={{ opacity: 0, y: 24, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 24, scale: 0.98 }}
+                transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
               >
                 <div className="flex items-center justify-between gap-3">
                   <div>

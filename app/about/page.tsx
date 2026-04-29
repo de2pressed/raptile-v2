@@ -7,7 +7,7 @@ const pillars = [
     eyebrow: "01 / Founders",
     title: "Two college students, one shared frustration.",
     body:
-      "Raptile started with the simple feeling that Indian streetwear was being told in someone else’s language. The clothes were either too loud or too borrowed, and neither felt honest.",
+      "Raptile started with the simple feeling that Indian streetwear was being told in someone else's language. The clothes were either too loud or too borrowed, and neither felt honest.",
   },
   {
     eyebrow: "02 / Philosophy",
@@ -38,8 +38,8 @@ const processNotes = [
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto w-full max-w-[1440px] py-6 md:py-12">
-      <section className="grid gap-8 border-b border-[color:var(--glass-border)] pb-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] lg:items-end">
+    <div className="mx-auto w-full max-w-[1440px] py-4 md:py-8">
+      <section className="grid gap-8 border-b border-[color:var(--glass-border)] pb-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] lg:items-start">
         <div className="space-y-6">
           <div className="t-label text-[color:var(--text-muted)]">About Raptile Studio</div>
           <h1 className="t-hero max-w-[12ch] text-[color:var(--text)]">
@@ -62,7 +62,7 @@ export default function AboutPage() {
         </div>
 
         <div className="grid gap-4">
-          <div className="glass-panel rounded-[32px] px-6 py-6 md:px-8 md:py-8">
+          <div className="glass-panel rounded-[32px] px-5 py-5 md:px-7 md:py-7">
             <div className="grid gap-4">
               <BrandLogo size="lg" className="w-fit" />
               <div className="grid gap-2">

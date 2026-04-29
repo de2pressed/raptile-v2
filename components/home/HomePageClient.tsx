@@ -7,8 +7,8 @@ import * as motion from "framer-motion/client";
 import Image from "next/image";
 import Link from "next/link";
 
-import { ScrollNarrative } from "@/components/story/ScrollNarrative";
 import { ProductCard } from "@/components/shop/ProductCard";
+import { ScrollNarrative } from "@/components/story/ScrollNarrative";
 import type { ShopifyProduct } from "@/lib/commerce";
 import { fabricSignals, storyBeats } from "@/lib/story-content";
 import { shopifyImageUrl } from "@/lib/utils/shopifyImage";
@@ -28,36 +28,114 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
   });
   const heroOffset = useTransform(scrollYProgress, [0, 1], [0, reducedMotion ? 0 : 56]);
 
-  const featuredProducts = useMemo(() => products.slice(0, 2), [products]);
+  const featuredProducts = useMemo(() => products.slice(0, 4), [products]);
   const heroProduct = featuredProducts[0] ?? products[0] ?? null;
   const heroImage = heroProduct?.images[0] ?? null;
+  const heroSummary =
+    collectionDescription ||
+    "Heavyweight essentials for the quiet part of the wardrobe, framed with the same discipline as the garments themselves.";
 
   return (
-    <div className="mx-auto w-full max-w-[1440px] py-6 md:py-12">
+    <div className="mx-auto w-full max-w-[1440px] py-4 md:py-8">
       <section
         ref={heroRef}
-        className="grid gap-6 lg:min-h-[calc(100svh-var(--header-height))] lg:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)] lg:items-end"
+        className="grid gap-4 lg:min-h-[calc(100svh-var(--header-height))] lg:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)] lg:items-start"
       >
-        <div className="order-1 space-y-6 lg:order-1">
-          <div className="space-y-4">
-            <div className="t-label text-[color:var(--text-muted)]">Onyx Collection</div>
-            <h1 className="t-hero max-w-[10ch] text-[color:var(--text)]">
-              Heavyweight essentials, composed for low light.
-            </h1>
-            <p className="editorial-copy max-w-[34ch]">
-              {collectionDescription ||
-                "Heavyweight essentials for the quiet part of the wardrobe, framed with the same discipline as the garments themselves."}
-            </p>
+        <div className="grid gap-4 lg:hidden">
+          <div className="grid grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)] gap-3">
+            <Link
+              className="group relative min-h-[15rem] overflow-hidden rounded-[28px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)]"
+              href={heroProduct ? `/products/${heroProduct.handle}` : "/collection"}
+              aria-label={heroProduct ? `Open ${heroProduct.title}` : "Browse the collection"}
+            >
+              {heroImage ? (
+                <>
+                  <Image
+                    alt={heroImage.altText ?? heroProduct?.title ?? "Featured Raptile Studio piece"}
+                    className="absolute inset-0 z-[1] h-full w-full object-cover"
+                    fill
+                    priority
+                    quality={86}
+                    sizes="(max-width: 767px) 42vw, 100vw"
+                    src={shopifyImageUrl(heroImage.url, { width: 1200 })}
+                  />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_14%,color-mix(in_oklch,var(--bg)_18%,transparent)_100%)] transition duration-200 group-active:opacity-[0.88]" />
+                </>
+              ) : (
+                <div className="absolute inset-0 image-skeleton" />
+              )}
+
+              <div className="absolute inset-x-0 top-0 flex items-center justify-between gap-3 p-4">
+                <div className="t-label text-[color:var(--text-muted)]">Featured from the collection</div>
+                <div className="t-label text-[color:var(--text-muted)]">{heroProduct?.availableForSale ? "Ready now" : "Sold out"}</div>
+              </div>
+            </Link>
+
+            <div className="glass-panel flex min-h-[15rem] flex-col justify-between rounded-[28px] px-4 py-4">
+              <div className="space-y-3">
+                <div className="t-label text-[color:var(--text-muted)]">Onyx Collection</div>
+                <h1 className="font-display text-[clamp(2rem,8.5vw,2.8rem)] font-extrabold tracking-[-0.05em] leading-[0.94] text-[color:var(--text)]">
+                  Heavyweight essentials, composed for low light.
+                </h1>
+              </div>
+              <p className="t-ui max-w-[24ch] leading-6 text-[color:var(--text-muted)]">{heroSummary}</p>
+            </div>
           </div>
 
           <div className="flex flex-wrap gap-3">
             <Link className="btn-primary rounded-full px-5 py-3.5" href="/collection">
               <span className="t-label text-[color:var(--bg)]">Shop Collection</span>
             </Link>
-            <Link
-              className="ghost-button rounded-full px-5 py-3.5 text-[color:var(--text)]"
-              href="/about"
-            >
+            <Link className="ghost-button rounded-full px-5 py-3.5 text-[color:var(--text)]" href="/about">
+              <span className="t-label">Read the Story</span>
+            </Link>
+          </div>
+
+          <div className="space-y-4 border-t border-[color:var(--glass-border)] pt-5">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[color:var(--text-muted)]">
+              {fabricSignals.map((item, index) => (
+                <div key={item} className="flex items-center gap-3">
+                  <span className="t-ui">{item}</span>
+                  {index < fabricSignals.length - 1 ? (
+                    <span aria-hidden className="text-[color:var(--text-subtle)]">
+                      /
+                    </span>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid gap-4 border-t border-[color:var(--glass-border)] pt-5 sm:grid-cols-3">
+            <div className="space-y-1">
+              <div className="t-label text-[color:var(--text-muted)]">Collection</div>
+              <div className="font-display text-2xl font-bold tracking-[-0.04em] text-[color:var(--text)]">{collectionTitle}</div>
+            </div>
+            <div className="space-y-1">
+              <div className="t-label text-[color:var(--text-muted)]">Weight</div>
+              <div className="font-display text-2xl font-bold tracking-[-0.04em] text-[color:var(--text)]">240gsm</div>
+            </div>
+            <div className="space-y-1">
+              <div className="t-label text-[color:var(--text-muted)]">Finish</div>
+              <div className="font-display text-2xl font-bold tracking-[-0.04em] text-[color:var(--text)]">Double bio wash</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="hidden lg:block">
+          <div className="space-y-4">
+            <div className="t-label text-[color:var(--text-muted)]">Onyx Collection</div>
+            <h1 className="t-hero max-w-[10ch] text-[color:var(--text)]">
+              Heavyweight essentials, composed for low light.
+            </h1>
+            <p className="editorial-copy max-w-[34ch]">{heroSummary}</p>
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <Link className="btn-primary rounded-full px-5 py-3.5" href="/collection">
+              <span className="t-label text-[color:var(--bg)]">Shop Collection</span>
+            </Link>
+            <Link className="ghost-button rounded-full px-5 py-3.5 text-[color:var(--text)]" href="/about">
               <span className="t-label">Read the Story</span>
             </Link>
           </div>
@@ -94,7 +172,7 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
         </div>
 
         <Link
-          className="group order-2 block cursor-pointer overflow-hidden rounded-[28px] md:rounded-[38px] lg:order-2"
+          className="group hidden cursor-pointer overflow-hidden rounded-[28px] md:rounded-[38px] lg:block"
           href={heroProduct ? `/products/${heroProduct.handle}` : "/collection"}
           aria-label={heroProduct ? `Open ${heroProduct.title}` : "Browse the collection"}
         >
@@ -145,7 +223,7 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
         </div>
 
         {featuredProducts.length > 0 ? (
-          <div className="mt-8 grid gap-5 md:grid-cols-2">
+          <div className="mt-8 grid grid-cols-2 gap-5 lg:grid-cols-4">
             {featuredProducts.map((product, index) => (
               <motion.div
                 key={product.id}

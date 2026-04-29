@@ -55,28 +55,28 @@ export function ProductCard({ product, className }: ProductCardProps) {
   }, [galleryImages.length, product.id]);
 
   useEffect(() => {
-    if (reducedMotion || isHoverCapable || galleryImages.length < 2) {
+    if (reducedMotion || galleryImages.length < 2) {
       return;
     }
 
-    const scheduleNextFlip = () => {
-      const delay = 2500 + Math.random() * 2000;
-      timerRef.current = window.setTimeout(() => {
-        setActiveIndex((current) => (current === 0 ? 1 : 0));
-        scheduleNextFlip();
-      }, delay);
-    };
+    if (isHoverCapable && isHovered) {
+      return;
+    }
 
-    scheduleNextFlip();
+    const delay = isHoverCapable ? 2800 : 2200 + Math.random() * 1600;
+    timerRef.current = window.setTimeout(() => {
+      setActiveIndex((current) => (current === 0 ? 1 : 0));
+    }, delay);
 
     return () => {
       if (timerRef.current !== null) {
         window.clearTimeout(timerRef.current);
+        timerRef.current = null;
       }
     };
-  }, [galleryImages.length, isHoverCapable, reducedMotion]);
+  }, [activeIndex, galleryImages.length, isHoverCapable, isHovered, reducedMotion]);
 
-  const visibleIndex = isHoverCapable && isHovered && galleryImages.length > 1 ? 1 : activeIndex;
+  const visibleIndex = activeIndex;
   const visibleImage = galleryImages[visibleIndex] ?? galleryImages[0] ?? null;
 
   return (
@@ -93,7 +93,6 @@ export function ProductCard({ product, className }: ProductCardProps) {
           }
 
           setIsHovered(true);
-          setActiveIndex(1);
         }}
         onMouseLeave={() => {
           if (!isHoverCapable || galleryImages.length < 2) {
@@ -101,11 +100,10 @@ export function ProductCard({ product, className }: ProductCardProps) {
           }
 
           setIsHovered(false);
-          setActiveIndex(0);
         }}
       >
         <article className="grid min-w-0 gap-4">
-          <div className="relative aspect-square w-full overflow-hidden rounded-[24px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] transition duration-300 ease-[var(--ease-out-expo)] group-hover:border-[color:var(--accent)] group-hover:shadow-[0_20px_48px_rgba(0,0,0,0.18)] md:rounded-[28px]">
+          <div className="relative aspect-square w-full overflow-hidden rounded-[24px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] transition duration-300 ease-[var(--ease-out-expo)] group-hover:border-[color:var(--accent)] md:rounded-[28px]">
             <AnimatePresence mode="wait" initial={false}>
               {visibleImage ? (
                 <motion.div

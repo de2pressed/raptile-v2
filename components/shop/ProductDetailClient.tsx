@@ -10,7 +10,6 @@ import { AddToCartButton } from "@/components/shop/AddToCartButton";
 import { NotifyMeForm } from "@/components/shop/NotifyMeForm";
 import { ProductReviews } from "@/components/shop/ProductReviews";
 import { SizeChartTable } from "@/components/shop/SizeChartTable";
-import { SpecDrawer } from "@/components/shop/SpecDrawer";
 import { ChevronDownIcon, ChevronUpIcon } from "@/components/ui/icons";
 import type { ProductVariant, ShopifyProduct } from "@/lib/commerce";
 import { formatPrice } from "@/lib/commerce";
@@ -21,8 +20,6 @@ import { filterImagesByColor, normalizeColorName } from "@/lib/utils/imageFilter
 import { cn } from "@/lib/utils";
 import { shopifyImageUrl } from "@/lib/utils/shopifyImage";
 
-const BLUR_DATA_URL =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWPQy7P9HwAFnwJ+m8dK8QAAAABJRU5ErkJggg==";
 const SIZE_PRIORITY = ["M", "S", "L", "XL", "XXL"];
 
 interface ProductDetailClientProps {
@@ -71,10 +68,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           ],
     [product.availableForSale, product.priceRange.minVariantPrice, product.variants],
   );
-  const defaultVariant = useMemo(
-    () => variants.find((variant) => variant.availableForSale) ?? variants[0],
-    [variants],
-  );
+  const defaultVariant = useMemo(() => variants.find((variant) => variant.availableForSale) ?? variants[0], [variants]);
   const colors = useMemo(() => getProductColors(product), [product]);
   const sizes = useMemo(() => getProductSizes(product), [product]);
   const initialSelectedColor = getFirstAvailableColor(product) ?? colors[0] ?? null;
@@ -87,11 +81,11 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   );
   const [selectedSize, setSelectedSize] = useState<string | null>(() => pickDefaultSize(initialAvailableSizes));
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [imageDirection, setImageDirection] = useState<1 | -1>(1);
   const [isSizeChartOpen, setIsSizeChartOpen] = useState(false);
   const setSelectedVariantId = useRaptileStore((state) => state.setSelectedVariant);
-  const setSpecDrawerOpen = useRaptileStore((state) => state.setSpecDrawerOpen);
   const touchStartXRef = useRef<number | null>(null);
-  const touchCurrentXRef = useRef<number | null>(null);
+  const touchEndXRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!hasColorOptions || selectedColor) {
@@ -122,13 +116,23 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   }, [displayImages.length]);
 
   useEffect(() => {
-    if (product.images.length === 0) {
+    if (displayImages.length < 2) {
       return;
     }
 
     const preloaders: Array<HTMLImageElement> = [];
+    const imageIndices = new Set<number>([
+      selectedImageIndex,
+      (selectedImageIndex + 1) % displayImages.length,
+      (selectedImageIndex - 1 + displayImages.length) % displayImages.length,
+    ]);
 
-    for (const image of product.images) {
+    for (const index of imageIndices) {
+      const image = displayImages[index];
+      if (!image) {
+        continue;
+      }
+
       const preload = new window.Image();
       preload.decoding = "async";
       preload.src = shopifyImageUrl(image.url, { width: 1400 });
@@ -139,7 +143,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
     return () => {
       preloaders.length = 0;
     };
-  }, [product.images, product.title]);
+  }, [displayImages, product.title, selectedImageIndex]);
 
   const normalizedSelectedColor = selectedColor ? normalizeColorName(selectedColor) : "";
 
@@ -192,17 +196,20 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
   useEffect(() => {
     setSelectedVariantId(selectedVariant?.id ?? null);
-    setSpecDrawerOpen(false);
+  }, [selectedVariant?.id, setSelectedVariantId]);
 
+  useEffect(() => {
     return () => {
       setSelectedVariantId(null);
-      setSpecDrawerOpen(false);
     };
-  }, [selectedVariant?.id, setSelectedVariantId, setSpecDrawerOpen]);
+  }, [setSelectedVariantId]);
 
   const changeImage = (direction: 1 | -1) => {
-    if (displayImages.length < 2) return;
+    if (displayImages.length < 2) {
+      return;
+    }
 
+    setImageDirection(direction);
     setSelectedImageIndex((current) => {
       const next = current + direction;
       if (next < 0) return displayImages.length - 1;
@@ -224,7 +231,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
     }
 
     touchStartXRef.current = touch.clientX;
-    touchCurrentXRef.current = touch.clientX;
+    touchEndXRef.current = touch.clientX;
   };
 
   const handleTouchMove = (event: TouchEvent<HTMLDivElement>) => {
@@ -237,21 +244,21 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
       return;
     }
 
-    touchCurrentXRef.current = touch.clientX;
+    touchEndXRef.current = touch.clientX;
   };
 
   const finishTouch = () => {
-    if (touchStartXRef.current === null || touchCurrentXRef.current === null) {
+    if (touchStartXRef.current === null || touchEndXRef.current === null) {
       touchStartXRef.current = null;
-      touchCurrentXRef.current = null;
+      touchEndXRef.current = null;
       return;
     }
 
-    const delta = touchCurrentXRef.current - touchStartXRef.current;
+    const delta = touchEndXRef.current - touchStartXRef.current;
     touchStartXRef.current = null;
-    touchCurrentXRef.current = null;
+    touchEndXRef.current = null;
 
-    if (Math.abs(delta) < 36) {
+    if (Math.abs(delta) < 20) {
       return;
     }
 
@@ -275,7 +282,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 <button
                   key={`${image.url}-${index}`}
                   className={cn(
-                    "relative h-[68px] w-[68px] overflow-hidden rounded-[18px] border bg-[color:var(--bg)] transition duration-200",
+                    "squircle-frame relative h-[68px] w-[68px] overflow-hidden border bg-[color:var(--bg-elevated)] transition duration-200",
                     active
                       ? "border-[color:var(--accent)] bg-[color:var(--glass-fill)]"
                       : "border-[color:var(--glass-border)] hover:border-[color:var(--accent)]",
@@ -285,7 +292,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 >
                   <Image
                     alt={image.altText ?? product.title}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-cover bg-[color:var(--bg-elevated)]"
                     fill
                     sizes="68px"
                     src={shopifyImageUrl(image.url, { width: 136 })}
@@ -297,7 +304,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
           <div className="min-w-0">
             <div
-              className="relative aspect-square w-full overflow-hidden md:aspect-auto md:h-[calc(100svh-var(--header-height)-2rem)] md:max-h-[calc(100svh-var(--header-height)-2rem)] lg:h-[calc(100svh-var(--header-height)-2rem)]"
+              className="squircle-frame relative aspect-square w-full overflow-hidden bg-[color:var(--bg-elevated)] md:aspect-auto md:h-[calc(100svh-var(--header-height)-2rem)] md:max-h-[calc(100svh-var(--header-height)-2rem)] lg:h-[calc(100svh-var(--header-height)-2rem)]"
               onTouchCancel={finishTouch}
               onTouchEnd={finishTouch}
               onTouchMove={handleTouchMove}
@@ -308,19 +315,25 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 <motion.div
                   key={selectedImage?.url ?? "fallback"}
                   className="absolute inset-0 flex h-full w-full items-center justify-center"
-                  initial={{ opacity: 0, scale: reducedMotion ? 1 : 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: reducedMotion ? 1 : 0.98 }}
-                  transition={{ duration: reducedMotion ? 0.01 : 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  initial={{
+                    opacity: 0,
+                    x: reducedMotion ? 0 : imageDirection > 0 ? 18 : -18,
+                    scale: reducedMotion ? 1 : 0.985,
+                  }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{
+                    opacity: 0,
+                    x: reducedMotion ? 0 : imageDirection > 0 ? -18 : 18,
+                    scale: reducedMotion ? 1 : 0.985,
+                  }}
+                  transition={{ duration: reducedMotion ? 0.01 : 0.18, ease: [0.16, 1, 0.3, 1] }}
                 >
                   {selectedImage ? (
                     <Image
                       alt={selectedImage.altText ?? product.title}
-                      blurDataURL={BLUR_DATA_URL}
-                      className="h-full w-full object-cover md:object-contain"
+                      className="h-full w-full bg-[color:var(--bg-elevated)] object-cover md:object-contain"
                       fetchPriority="high"
                       height={selectedImageHeight}
-                      placeholder="blur"
                       priority
                       quality={84}
                       sizes="(min-width: 1536px) 56vw, (min-width: 1280px) 58vw, (min-width: 1024px) calc(100vw - 560px), 100vw"
@@ -464,17 +477,6 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 />
               )}
 
-              <button
-                className="ghost-button rounded-full px-5 py-3 text-left"
-                onClick={() => setSpecDrawerOpen(true)}
-                type="button"
-              >
-                <span className="t-label flex items-center justify-between">
-                  <span>Open details</span>
-                  <span aria-hidden>Info</span>
-                </span>
-              </button>
-
               <div className="h-px w-full bg-[color:var(--glass-border)]" />
 
               {description ? <div className="max-w-[58ch] text-sm leading-8 text-[color:var(--text-muted)] md:text-base">{description}</div> : null}
@@ -482,7 +484,6 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           </div>
         </div>
         <ProductReviews productHandle={product.handle} productTitle={product.title} />
-        <SpecDrawer product={product} />
       </section>
     </LazyMotion>
   );

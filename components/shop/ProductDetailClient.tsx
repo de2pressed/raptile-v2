@@ -7,7 +7,9 @@ import { useEffect, useMemo, useState } from "react";
 
 import { AddToCartButton } from "@/components/shop/AddToCartButton";
 import { NotifyMeForm } from "@/components/shop/NotifyMeForm";
+import { SizeChartTable } from "@/components/shop/SizeChartTable";
 import { SpecDrawer } from "@/components/shop/SpecDrawer";
+import { ChevronDownIcon, ChevronUpIcon } from "@/components/ui/icons";
 import type { ProductVariant, ShopifyProduct } from "@/lib/commerce";
 import { formatPrice } from "@/lib/commerce";
 import { getColorHex } from "@/lib/colorMap";
@@ -19,9 +21,36 @@ import { shopifyImageUrl } from "@/lib/utils/shopifyImage";
 
 const BLUR_DATA_URL =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWPQy7P9HwAFnwJ+m8dK8QAAAABJRU5ErkJggg==";
+const SIZE_PRIORITY = ["M", "S", "L", "XL", "XXL"];
 
 interface ProductDetailClientProps {
   product: ShopifyProduct;
+}
+
+function getAvailableSizesForSelection(
+  sizes: string[],
+  variants: ProductVariant[],
+  selectedColor: string | null,
+  hasColorOptions: boolean,
+) {
+  return sizes.filter((size) =>
+    variants.some((variant) => {
+      const color = getOptionValue(variant, "Color");
+      const variantSize = getOptionValue(variant, "Size");
+      const colorMatch = !hasColorOptions || !selectedColor || normalizeColorName(color) === normalizeColorName(selectedColor);
+      return colorMatch && variant.availableForSale && variantSize === size;
+    }),
+  );
+}
+
+function pickDefaultSize(availableSizes: string[]) {
+  for (const preferred of SIZE_PRIORITY) {
+    if (availableSizes.includes(preferred)) {
+      return preferred;
+    }
+  }
+
+  return availableSizes[0] ?? null;
 }
 
 export function ProductDetailClient({ product }: ProductDetailClientProps) {
@@ -46,12 +75,18 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   );
   const colors = useMemo(() => getProductColors(product), [product]);
   const sizes = useMemo(() => getProductSizes(product), [product]);
+  const initialSelectedColor = getFirstAvailableColor(product) ?? colors[0] ?? null;
   const hasColorOptions = colors.length > 0;
   const hasSizeOptions = sizes.length > 0;
-  const [selectedColor, setSelectedColor] = useState<string | null>(() => getFirstAvailableColor(product));
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(initialSelectedColor);
+  const initialAvailableSizes = useMemo(
+    () => getAvailableSizesForSelection(sizes, variants, initialSelectedColor, hasColorOptions),
+    [hasColorOptions, initialSelectedColor, sizes, variants],
+  );
+  const [selectedSize, setSelectedSize] = useState<string | null>(() => pickDefaultSize(initialAvailableSizes));
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [pointerStartX, setPointerStartX] = useState<number | null>(null);
+  const [isSizeChartOpen, setIsSizeChartOpen] = useState(false);
   const setSelectedVariantId = useRaptileStore((state) => state.setSelectedVariant);
   const setSpecDrawerOpen = useRaptileStore((state) => state.setSpecDrawerOpen);
 
@@ -60,8 +95,8 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
       return;
     }
 
-    setSelectedColor(getFirstAvailableColor(product) ?? colors[0] ?? null);
-  }, [colors, hasColorOptions, product, selectedColor]);
+    setSelectedColor(initialSelectedColor);
+  }, [hasColorOptions, initialSelectedColor, selectedColor]);
 
   const displayImages = useMemo(() => {
     if (!product.images.length) {
@@ -86,18 +121,8 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const normalizedSelectedColor = selectedColor ? normalizeColorName(selectedColor) : "";
 
   const availableSizesForColor = useMemo(
-    () =>
-      sizes.filter((size) =>
-        variants.some((variant) => {
-          const color = getOptionValue(variant, "Color");
-          const variantSize = getOptionValue(variant, "Size");
-          const colorMatch =
-            !hasColorOptions || !normalizedSelectedColor || normalizeColorName(color) === normalizedSelectedColor;
-
-          return colorMatch && variant.availableForSale && variantSize === size;
-        }),
-      ),
-    [hasColorOptions, normalizedSelectedColor, sizes, variants],
+    () => getAvailableSizesForSelection(sizes, variants, selectedColor, hasColorOptions),
+    [hasColorOptions, selectedColor, sizes, variants],
   );
 
   useEffect(() => {
@@ -106,7 +131,13 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
       return;
     }
 
-    setSelectedSize((current) => (current && availableSizesForColor.includes(current) ? current : null));
+    setSelectedSize((current) => {
+      if (current && availableSizesForColor.includes(current)) {
+        return current;
+      }
+
+      return pickDefaultSize(availableSizesForColor);
+    });
   }, [availableSizesForColor, hasSizeOptions]);
 
   const selectedVariant = useMemo(() => {
@@ -118,8 +149,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
       variants.find((candidate) => {
         const color = getOptionValue(candidate, "Color");
         const size = getOptionValue(candidate, "Size");
-        const colorMatch =
-          !hasColorOptions || !normalizedSelectedColor || normalizeColorName(color) === normalizedSelectedColor;
+        const colorMatch = !hasColorOptions || !normalizedSelectedColor || normalizeColorName(color) === normalizedSelectedColor;
         const sizeMatch = !hasSizeOptions || size === selectedSize;
         return colorMatch && sizeMatch;
       }) ?? null;
@@ -136,6 +166,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const selectedImageHeight = selectedImage?.height ?? 1600;
   const soldOut = !product.availableForSale || (selectedVariant ? !selectedVariant.availableForSale : false);
   const emptySelectionLabel = hasSizeOptions ? "Select a size" : "Add to Cart";
+
   useEffect(() => {
     setSelectedVariantId(selectedVariant?.id ?? null);
     setSpecDrawerOpen(false);
@@ -198,7 +229,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
           <div className="min-w-0">
             <div
-              className="squircle-frame relative grid min-h-[28rem] place-items-center overflow-hidden border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] p-4 md:min-h-[34rem] md:p-6 lg:min-h-[calc(100vh-7rem)] lg:p-8"
+              className="relative grid min-h-[min(74svh,42rem)] place-items-center overflow-hidden rounded-[28px] md:min-h-[34rem] md:rounded-[34px] md:border md:border-[color:var(--glass-border)] md:bg-[color:var(--bg-elevated)] md:p-6 lg:min-h-[calc(100vh-7rem)] lg:p-8"
               onPointerDown={(event) => {
                 if (displayImages.length < 2) return;
                 setPointerStartX(event.clientX);
@@ -229,7 +260,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                     <Image
                       alt={selectedImage.altText ?? product.title}
                       blurDataURL={BLUR_DATA_URL}
-                      className="h-full w-full object-contain"
+                      className="h-full w-full object-cover md:object-contain"
                       fetchPriority="high"
                       height={selectedImageHeight}
                       placeholder="blur"
@@ -333,11 +364,36 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                       );
                     })}
                   </div>
-                  {!selectedSize ? (
-                    <div className="t-label italic text-[color:var(--text-muted)]">Select a size</div>
-                  ) : null}
+                  {!selectedSize ? <div className="t-label italic text-[color:var(--text-muted)]">Select a size</div> : null}
                 </div>
               ) : null}
+
+              <div className="grid gap-3">
+                <button
+                  className="ghost-button rounded-full px-5 py-3 text-left"
+                  onClick={() => setIsSizeChartOpen((current) => !current)}
+                  type="button"
+                >
+                  <span className="t-label flex items-center justify-between">
+                    <span>Size Chart</span>
+                    {isSizeChartOpen ? <ChevronUpIcon className="h-4 w-4" /> : <ChevronDownIcon className="h-4 w-4" />}
+                  </span>
+                </button>
+
+                <AnimatePresence initial={false}>
+                  {isSizeChartOpen ? (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: reducedMotion ? 0.01 : 0.24, ease: [0.16, 1, 0.3, 1] }}
+                      style={{ overflow: "hidden" }}
+                    >
+                      <SizeChartTable />
+                    </motion.div>
+                  ) : null}
+                </AnimatePresence>
+              </div>
 
               <div className="h-px w-full bg-[color:var(--glass-border)]" />
 

@@ -1,64 +1,69 @@
 "use client";
 
-import { AnimatePresence, LazyMotion, domAnimation, useReducedMotion } from "framer-motion";
+import { LazyMotion, domAnimation, useReducedMotion } from "framer-motion";
 import * as motion from "framer-motion/client";
 import { usePathname } from "next/navigation";
+import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 
-export default function PageTransition({ children }: { children: React.ReactNode }) {
+export default function PageTransition({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const reducedMotion = useReducedMotion();
   const initialPathRef = useRef(pathname);
   const [displayChildren, setDisplayChildren] = useState(children);
-  const [displayPath, setDisplayPath] = useState(pathname);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [phase, setPhase] = useState<"idle" | "exit" | "enter">("idle");
 
   useEffect(() => {
     if (initialPathRef.current === pathname) {
       initialPathRef.current = "";
       setDisplayChildren(children);
-      setDisplayPath(pathname);
+      setPhase("idle");
       return;
     }
 
-    setIsTransitioning(true);
+    setPhase("exit");
 
-    const timer = window.setTimeout(() => {
+    const swapTimer = window.setTimeout(() => {
       setDisplayChildren(children);
-      setDisplayPath(pathname);
-      setIsTransitioning(false);
-    }, reducedMotion ? 80 : 260);
+      setPhase("enter");
+    }, reducedMotion ? 0 : 160);
 
-    return () => window.clearTimeout(timer);
+    const settleTimer = window.setTimeout(() => {
+      setPhase("idle");
+    }, reducedMotion ? 120 : 400);
+
+    return () => {
+      window.clearTimeout(swapTimer);
+      window.clearTimeout(settleTimer);
+    };
   }, [children, pathname, reducedMotion]);
+
+  const transition = reducedMotion
+    ? { duration: 0.01, ease: [0.4, 0, 0.2, 1] as const }
+    : { duration: 0.4, ease: [0.4, 0, 0.2, 1] as const };
 
   return (
     <LazyMotion features={domAnimation}>
-      <>
+      <div className="relative">
         <motion.div
-          key={displayPath}
           initial={false}
-          animate={{ opacity: isTransitioning ? 0.72 : 1, y: 0, filter: "blur(0px)" }}
-          transition={
-            reducedMotion
-              ? { duration: 0.12, ease: [0.16, 1, 0.3, 1] }
-              : { duration: 0.42, ease: [0.16, 1, 0.3, 1] }
-          }
+          animate={{
+            filter: phase === "exit" ? "blur(12px)" : "blur(0px)",
+            opacity: phase === "exit" ? 0.94 : 1,
+          }}
+          transition={transition}
         >
           {displayChildren}
         </motion.div>
-        <AnimatePresence>
-          {isTransitioning ? (
-            <motion.div
-              className="page-transition-overlay"
-              initial={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
-              animate={{ opacity: reducedMotion ? 0.32 : 1, clipPath: "inset(0 0 0% 0)" }}
-              exit={{ opacity: 0, clipPath: "inset(100% 0 0 0)" }}
-              transition={{ duration: reducedMotion ? 0.1 : 0.34, ease: [0.16, 1, 0.3, 1] }}
-            />
-          ) : null}
-        </AnimatePresence>
-      </>
+
+        <motion.div
+          aria-hidden
+          className="page-transition-overlay"
+          initial={false}
+          animate={{ opacity: phase === "idle" ? 0 : phase === "exit" ? 0.6 : 0 }}
+          transition={transition}
+        />
+      </div>
     </LazyMotion>
   );
 }

@@ -4,154 +4,51 @@ import { useEffect, useRef } from "react";
 
 import { getIstTimeAccentPalette } from "@/lib/time-accent";
 
-const vertexShaderSource = `
-attribute vec2 position;
-void main() {
-  gl_Position = vec4(position, 0.0, 1.0);
-}
-`;
+type CloudLayer = {
+  centerX: number;
+  centerY: number;
+  radius: number;
+  spreadX: number;
+  spreadY: number;
+  speed: number;
+  phase: number;
+  blur: number;
+  opacity: number;
+  colorKey: "accent" | "accentStrong" | "accentGlow" | "shaderWarm" | "shaderMid";
+};
 
-const fragmentShaderSource = `
-precision highp float;
+const CLOUD_LAYERS: CloudLayer[] = [
+  { centerX: 0.16, centerY: 0.24, radius: 0.28, spreadX: 0.16, spreadY: 0.08, speed: 0.8, phase: 0.2, blur: 92, opacity: 0.52, colorKey: "accent" },
+  { centerX: 0.42, centerY: 0.18, radius: 0.34, spreadX: 0.22, spreadY: 0.1, speed: 0.58, phase: 1.4, blur: 118, opacity: 0.36, colorKey: "shaderWarm" },
+  { centerX: 0.68, centerY: 0.34, radius: 0.38, spreadX: 0.2, spreadY: 0.12, speed: 0.76, phase: 2.1, blur: 124, opacity: 0.48, colorKey: "accentStrong" },
+  { centerX: 0.3, centerY: 0.76, radius: 0.46, spreadX: 0.24, spreadY: 0.14, speed: 0.68, phase: 3.3, blur: 136, opacity: 0.45, colorKey: "shaderMid" },
+  { centerX: 0.78, centerY: 0.82, radius: 0.4, spreadX: 0.26, spreadY: 0.16, speed: 0.62, phase: 4.5, blur: 128, opacity: 0.42, colorKey: "accentGlow" },
+];
 
-uniform float u_time;
-uniform vec2 u_resolution;
-uniform float u_scroll;
-uniform vec3 u_warm;
-uniform vec3 u_mid;
-uniform vec3 u_deep;
-uniform vec3 u_accent;
-uniform float u_mobile;
-
-float hash(vec2 p) {
-  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
-}
-
-float smoothNoise(vec2 p) {
-  vec2 i = floor(p);
-  vec2 f = fract(p);
-  vec2 u = f * f * (3.0 - 2.0 * f);
-  return mix(
-    mix(hash(i + vec2(0.0, 0.0)), hash(i + vec2(1.0, 0.0)), u.x),
-    mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x),
-    u.y
-  );
-}
-
-float fbm(vec2 p) {
-  float value = 0.0;
-  float amplitude = 0.5;
-  float frequency = 1.0;
-
-  for (int i = 0; i < 5; i++) {
-    value += amplitude * smoothNoise(p * frequency);
-    amplitude *= 0.52;
-    frequency *= 2.15;
+function colorWithAlpha(color: string, alpha: number) {
+  if (color.startsWith("rgba")) {
+    return color.replace(/rgba?\(([^)]+)\)/i, (_match, inner) => {
+      const [r = 0, g = 0, b = 0] = String(inner)
+        .split(",")
+        .slice(0, 3)
+        .map((component: string) => Number.parseFloat(component.trim()));
+      return `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(3)})`;
+    });
   }
 
-  return value;
-}
-
-void main() {
-  vec2 uv = gl_FragCoord.xy / u_resolution;
-  uv.y = 1.0 - uv.y;
-
-  float t = u_time * mix(0.035, 0.056, u_mobile);
-  float scroll = u_scroll * 0.55;
-  float breathe = 1.0 + sin(u_time * mix(0.22, 0.38, u_mobile)) * mix(0.045, 0.08, u_mobile);
-
-  vec2 flowA = uv * mix(2.3, 2.85, u_mobile) * breathe + vec2(t * 0.24, -t * 0.16) + vec2(scroll * 0.35, scroll * 0.15);
-  vec2 flowB = uv * mix(3.9, 4.7, u_mobile) * breathe - vec2(t * 0.16, t * 0.2) - vec2(scroll * 0.2, scroll * 0.08);
-
-  float fieldA = fbm(flowA);
-  float fieldB = fbm(flowB + vec2(fieldA * 0.75, fieldA * 0.5));
-  float fieldC = fbm(vec2(fieldA, fieldB) * 2.2 + vec2(t * 0.12, -t * 0.08));
-
-  vec2 vignetteUV = uv - vec2(0.5, 0.62);
-  float vignette = 1.0 - dot(vignetteUV * vec2(1.0, 0.82), vignetteUV * vec2(1.0, 0.82)) * 1.9;
-  vignette = clamp(vignette, 0.0, 1.0);
-
-  float combined = clamp(mix(fieldA, fieldC, 0.45) * vignette, 0.0, 1.0);
-  vec3 color = mix(u_deep, u_mid, smoothstep(0.08, 0.82, combined));
-  color = mix(color, u_warm, smoothstep(0.35, 0.92, fieldA) * 0.42);
-  color += u_accent * exp(-abs(uv.y - mod(t * mix(0.18, 0.32, u_mobile), 1.0)) * mix(140.0, 92.0, u_mobile)) * mix(0.18, 0.25, u_mobile);
-  color += u_warm * exp(-abs(uv.x - 0.52) * mix(7.0, 5.6, u_mobile)) * combined * mix(0.08, 0.13, u_mobile);
-  color += u_mid * exp(-abs(uv.x - 0.5) * 4.5) * fieldB * 0.03;
-
-  float grain = smoothNoise(gl_FragCoord.xy * mix(0.9, 1.15, u_mobile) + vec2(t * 48.0, -t * 33.0));
-  color += vec3(grain * mix(0.025, 0.035, u_mobile));
-
-  gl_FragColor = vec4(color, 1.0);
-}
-`;
-
-function compileShader(gl: WebGLRenderingContext, type: number, source: string) {
-  const shader = gl.createShader(type);
-
-  if (!shader) {
-    throw new Error("Unable to create shader.");
-  }
-
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
-
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    const message = gl.getShaderInfoLog(shader) || "Unknown shader compilation error.";
-    gl.deleteShader(shader);
-    throw new Error(message);
-  }
-
-  return shader;
-}
-
-function createProgram(gl: WebGLRenderingContext) {
-  const vertexShader = compileShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-  const fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
-  const program = gl.createProgram();
-
-  if (!program) {
-    throw new Error("Unable to create shader program.");
-  }
-
-  gl.attachShader(program, vertexShader);
-  gl.attachShader(program, fragmentShader);
-  gl.linkProgram(program);
-
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    const message = gl.getProgramInfoLog(program) || "Unknown program link error.";
-    gl.deleteProgram(program);
-    throw new Error(message);
-  }
-
-  return { program, vertexShader, fragmentShader };
-}
-
-function colorToVec3(value: string) {
-  const rgba = value.match(/rgba?\(([^)]+)\)/i);
-
-  if (rgba?.[1]) {
-    const [r = 0, g = 0, b = 0] = rgba[1]
-      .split(",")
-      .slice(0, 3)
-      .map((component) => Number.parseFloat(component.trim()));
-
-    return [r / 255, g / 255, b / 255] as const;
-  }
-
-  const hex = value.replace("#", "").trim();
+  const hex = color.replace("#", "").trim();
   const normalized =
-    hex.length === 3
+    hex.length === 3 || hex.length === 4
       ? hex
           .split("")
           .map((char) => char + char)
           .join("")
-      : hex.slice(0, 6);
+      : hex;
 
-  return [
-    Number.parseInt(normalized.slice(0, 2), 16) / 255,
-    Number.parseInt(normalized.slice(2, 4), 16) / 255,
-    Number.parseInt(normalized.slice(4, 6), 16) / 255,
-  ] as const;
+  const r = Number.parseInt(normalized.slice(0, 2), 16);
+  const g = Number.parseInt(normalized.slice(2, 4), 16);
+  const b = Number.parseInt(normalized.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(3)})`;
 }
 
 export function ShaderBackground() {
@@ -164,138 +61,145 @@ export function ShaderBackground() {
       return;
     }
 
-    const gl = canvas.getContext("webgl", {
+    const context = canvas.getContext("2d", {
       alpha: false,
-      antialias: false,
-      depth: false,
-      stencil: false,
-      preserveDrawingBuffer: false,
-      powerPreference: "high-performance",
+      desynchronized: true,
     });
 
-    if (!gl) {
+    if (!context) {
       return;
     }
 
-    const { program, vertexShader, fragmentShader } = createProgram(gl);
-    const buffer = gl.createBuffer();
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let animationFrame = 0;
+    let lastFrameAt = 0;
+    let resizeObserver: ResizeObserver | null = null;
+    let viewportWidth = 1;
+    let viewportHeight = 1;
+    let devicePixelRatio = 1;
 
-    if (!buffer) {
-      return;
-    }
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([
-        -1, -1,
-        1, -1,
-        -1, 1,
-        -1, 1,
-        1, -1,
-        1, 1,
-      ]),
-      gl.STATIC_DRAW,
-    );
-
-    gl.useProgram(program);
-
-    const positionLocation = gl.getAttribLocation(program, "position");
-    const timeLocation = gl.getUniformLocation(program, "u_time");
-    const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
-    const scrollLocation = gl.getUniformLocation(program, "u_scroll");
-    const warmLocation = gl.getUniformLocation(program, "u_warm");
-    const midLocation = gl.getUniformLocation(program, "u_mid");
-    const deepLocation = gl.getUniformLocation(program, "u_deep");
-    const accentLocation = gl.getUniformLocation(program, "u_accent");
-    const mobileLocation = gl.getUniformLocation(program, "u_mobile");
-
-    gl.enableVertexAttribArray(positionLocation);
-    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-
-    let frameId = 0;
-    let sizeObserver: ResizeObserver | null = null;
-    let scrollProgress = 0;
-
-    const applyTone = () => {
-      const palette = getIstTimeAccentPalette(new Date());
-
-      if (warmLocation) {
-        gl.uniform3fv(warmLocation, colorToVec3(palette.shaderWarm));
-      }
-
-      if (midLocation) {
-        gl.uniform3fv(midLocation, colorToVec3(palette.shaderMid));
-      }
-
-      if (deepLocation) {
-        gl.uniform3fv(deepLocation, colorToVec3(palette.shaderDeep));
-      }
-
-      if (accentLocation) {
-        gl.uniform3fv(accentLocation, colorToVec3(palette.accent));
-      }
-    };
-
-    const updateScroll = () => {
-      const doc = document.documentElement;
-      const maxScroll = Math.max(doc.scrollHeight - window.innerHeight, 1);
-      scrollProgress = window.scrollY / maxScroll;
-    };
-
-    const updateSize = () => {
+    const resize = () => {
       const mobile = window.innerWidth < 768;
-      const dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1.25 : 1.75);
-      const viewportWidth = Math.max(1, Math.floor(window.innerWidth * dpr));
-      const viewportHeight = Math.max(1, Math.floor(window.innerHeight * dpr));
+      devicePixelRatio = Math.min(window.devicePixelRatio || 1, mobile ? 1.25 : 1.5);
+      viewportWidth = Math.max(1, Math.floor(window.innerWidth));
+      viewportHeight = Math.max(1, Math.floor(window.innerHeight));
 
+      canvas.width = Math.max(1, Math.floor(viewportWidth * devicePixelRatio));
+      canvas.height = Math.max(1, Math.floor(viewportHeight * devicePixelRatio));
       canvas.style.width = "100vw";
       canvas.style.height = "100vh";
+      canvas.style.opacity = mobile ? "0.9" : "1";
       canvas.style.transform = "translateZ(0)";
       canvas.style.transformOrigin = "top left";
-      canvas.style.opacity = mobile ? "0.9" : "1";
 
-      canvas.width = viewportWidth;
-      canvas.height = viewportHeight;
-      gl.viewport(0, 0, viewportWidth, viewportHeight);
-      gl.uniform2f(resolutionLocation, viewportWidth, viewportHeight);
-      if (mobileLocation) {
-        gl.uniform1f(mobileLocation, mobile ? 1 : 0);
+      context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+    };
+
+    const draw = (now: number) => {
+      const shouldReduceMotion = prefersReducedMotion;
+      if (shouldReduceMotion && lastFrameAt > 0) {
+        return;
+      }
+
+      if (!shouldReduceMotion && now - lastFrameAt < 34) {
+        animationFrame = window.requestAnimationFrame(draw);
+        return;
+      }
+
+      lastFrameAt = now;
+
+      const palette = getIstTimeAccentPalette(new Date());
+      const cycle = 82_000;
+      const progress = (now % cycle) / cycle;
+      const pulse = 0.5 + Math.sin(progress * Math.PI * 2) * 0.5;
+
+      context.clearRect(0, 0, viewportWidth, viewportHeight);
+
+      const background = context.createLinearGradient(0, 0, 0, viewportHeight);
+      background.addColorStop(0, palette.bgSoft);
+      background.addColorStop(0.48, palette.bg);
+      background.addColorStop(1, palette.bgElevated);
+      context.fillStyle = background;
+      context.fillRect(0, 0, viewportWidth, viewportHeight);
+
+      const ambient = context.createRadialGradient(
+        viewportWidth * 0.52,
+        viewportHeight * 0.26,
+        0,
+        viewportWidth * 0.52,
+        viewportHeight * 0.52,
+        Math.max(viewportWidth, viewportHeight) * 0.95,
+      );
+      ambient.addColorStop(0, colorWithAlpha(palette.accent, 0.28));
+      ambient.addColorStop(0.36, colorWithAlpha(palette.shaderWarm, 0.18));
+      ambient.addColorStop(0.74, colorWithAlpha(palette.shaderMid, 0.1));
+      ambient.addColorStop(1, colorWithAlpha(palette.bg, 0));
+      context.fillStyle = ambient;
+      context.fillRect(0, 0, viewportWidth, viewportHeight);
+
+      context.globalCompositeOperation = "screen";
+
+      for (const layer of CLOUD_LAYERS) {
+        const driftX = Math.sin(progress * Math.PI * 2 * layer.speed + layer.phase);
+        const driftY = Math.cos(progress * Math.PI * 2 * (layer.speed * 0.82) + layer.phase * 1.3);
+        const x = viewportWidth * layer.centerX + driftX * viewportWidth * layer.spreadX;
+        const y = viewportHeight * layer.centerY + driftY * viewportHeight * layer.spreadY;
+        const radius = Math.max(viewportWidth, viewportHeight) * layer.radius;
+
+        context.save();
+        context.filter = `blur(${layer.blur}px)`;
+        context.globalAlpha = layer.opacity * (0.84 + pulse * 0.16);
+
+        const gradient = context.createRadialGradient(x, y, 0, x, y, radius);
+        const color = palette[layer.colorKey];
+        gradient.addColorStop(0, colorWithAlpha(color, 0.95));
+        gradient.addColorStop(0.34, colorWithAlpha(color, 0.46));
+        gradient.addColorStop(0.72, colorWithAlpha(color, 0.12));
+        gradient.addColorStop(1, colorWithAlpha(color, 0));
+
+        context.fillStyle = gradient;
+        context.beginPath();
+        context.ellipse(
+          x,
+          y,
+          radius * (1.05 + Math.sin(progress * Math.PI * 2 + layer.phase) * 0.08),
+          radius * (0.54 + Math.cos(progress * Math.PI * 2 + layer.phase) * 0.06),
+          layer.phase * 0.12,
+          0,
+          Math.PI * 2,
+        );
+        context.fill();
+        context.restore();
+      }
+
+      context.globalCompositeOperation = "source-over";
+
+      const beam = context.createLinearGradient(0, viewportHeight * 0.58, viewportWidth, viewportHeight * 0.58);
+      beam.addColorStop(0, colorWithAlpha(palette.accent, 0));
+      beam.addColorStop(0.48, colorWithAlpha(palette.accentStrong, 0.08));
+      beam.addColorStop(0.52, colorWithAlpha(palette.accentStrong, 0.22));
+      beam.addColorStop(0.56, colorWithAlpha(palette.accentStrong, 0.08));
+      beam.addColorStop(1, colorWithAlpha(palette.accent, 0));
+
+      context.globalAlpha = 0.72;
+      context.fillStyle = beam;
+      context.fillRect(0, 0, viewportWidth, viewportHeight);
+      context.globalAlpha = 1;
+
+      if (!shouldReduceMotion) {
+        animationFrame = window.requestAnimationFrame(draw);
       }
     };
 
-    const render = () => {
-      gl.uniform1f(timeLocation, performance.now() / 1000);
-      gl.uniform1f(scrollLocation, scrollProgress);
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-      frameId = window.requestAnimationFrame(render);
-    };
+    resize();
+    resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(document.documentElement);
 
-    applyTone();
-    updateScroll();
-    updateSize();
-
-    const toneTimer = window.setInterval(applyTone, 60_000);
-
-    window.addEventListener("scroll", updateScroll, { passive: true });
-    window.addEventListener("resize", updateSize, { passive: true });
-
-    sizeObserver = new ResizeObserver(updateSize);
-    sizeObserver.observe(document.documentElement);
-
-    frameId = window.requestAnimationFrame(render);
+    animationFrame = window.requestAnimationFrame(draw);
 
     return () => {
-      window.clearInterval(toneTimer);
-      window.cancelAnimationFrame(frameId);
-      window.removeEventListener("scroll", updateScroll);
-      window.removeEventListener("resize", updateSize);
-      sizeObserver?.disconnect();
-      gl.deleteBuffer(buffer);
-      gl.deleteProgram(program);
-      gl.deleteShader(vertexShader);
-      gl.deleteShader(fragmentShader);
-      gl.getExtension("WEBGL_lose_context")?.loseContext();
+      window.cancelAnimationFrame(animationFrame);
+      resizeObserver?.disconnect();
     };
   }, []);
 

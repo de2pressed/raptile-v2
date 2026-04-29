@@ -33,9 +33,12 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
   const heroImage = heroProduct?.images[0] ?? null;
 
   return (
-    <div className="mx-auto w-full max-w-[1440px] py-8 md:py-12">
-      <section ref={heroRef} className="grid gap-8 lg:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)] lg:items-end">
-        <div className="space-y-6">
+    <div className="mx-auto w-full max-w-[1440px] py-6 md:py-12">
+      <section
+        ref={heroRef}
+        className="grid min-h-[calc(100svh-var(--header-height))] gap-6 lg:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)] lg:items-end"
+      >
+        <div className="order-2 space-y-6 lg:order-1">
           <div className="space-y-4">
             <div className="t-label text-[color:var(--text-muted)]">Onyx Collection</div>
             <h1 className="t-hero max-w-[10ch] text-[color:var(--text)]">
@@ -90,11 +93,15 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
           </div>
         </div>
 
-        <motion.div
-          className="noise-surface relative isolate overflow-hidden rounded-[38px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)]"
-          style={{ y: heroOffset }}
+        <Link
+          className="group order-1 block cursor-pointer overflow-hidden rounded-[28px] md:rounded-[38px] lg:order-2"
+          href={heroProduct ? `/products/${heroProduct.handle}` : "/collection"}
+          aria-label={heroProduct ? `Open ${heroProduct.title}` : "Browse the collection"}
         >
-          <div className="relative min-h-[34rem] md:min-h-[40rem]">
+          <motion.div
+            className="noise-surface relative isolate aspect-[4/5] min-h-[26rem] overflow-hidden rounded-[28px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] md:aspect-auto md:min-h-[40rem] md:rounded-[38px]"
+            style={{ y: heroOffset }}
+          >
             {heroImage ? (
               <>
                 <Image
@@ -106,13 +113,13 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
                   sizes="(min-width: 1280px) 42vw, 100vw"
                   src={shopifyImageUrl(heroImage.url, { width: 1400 })}
                 />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_15%,color-mix(in_oklch,var(--bg)_22%,transparent)_100%)]" />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_15%,color-mix(in_oklch,var(--bg)_22%,transparent)_100%)] transition duration-200 group-active:opacity-[0.85]" />
               </>
             ) : (
               <div className="absolute inset-0 image-skeleton" />
             )}
 
-            <div className="relative z-[1] flex h-full min-h-[34rem] flex-col justify-between p-6 md:min-h-[40rem] md:p-8">
+            <div className="relative z-[1] flex h-full min-h-[26rem] flex-col justify-between p-5 md:min-h-[40rem] md:p-8">
               <div className="flex items-center justify-between gap-4">
                 <div className="t-label text-[color:var(--text-muted)]">Featured from the collection</div>
                 <div className="t-label text-[color:var(--text-muted)]">
@@ -122,8 +129,8 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
 
               <div className="hidden" aria-hidden />
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </Link>
       </section>
 
       <section className="pt-16 md:pt-20">

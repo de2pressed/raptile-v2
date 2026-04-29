@@ -15,9 +15,9 @@ export default async function AboutPage() {
   const heroImage = products[0]?.images[0] ?? products[1]?.images[0] ?? null;
 
   return (
-    <div className="mx-auto w-full max-w-[1440px] py-8 md:py-12">
-      <section className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-end">
-        <div className="space-y-6">
+    <div className="mx-auto w-full max-w-[1440px] py-6 md:py-12">
+      <section className="grid min-h-[calc(100svh-var(--header-height))] gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-end">
+        <div className="order-2 space-y-6 lg:order-1">
           <div className="space-y-4">
             <div className="t-label text-[color:var(--text-muted)]">About Raptile Studio</div>
             <h1 className="t-hero max-w-[10ch] text-[color:var(--text)]">Made for repeat wear, not repeat noise.</h1>
@@ -49,8 +49,8 @@ export default async function AboutPage() {
           </div>
         </div>
 
-        <div className="noise-surface relative isolate overflow-hidden rounded-[38px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)]">
-          <div className="relative min-h-[34rem] md:min-h-[40rem]">
+        <div className="noise-surface order-1 relative isolate aspect-[4/5] min-h-[26rem] overflow-hidden rounded-[28px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] md:order-2 md:aspect-auto md:min-h-[40rem] md:rounded-[38px]">
+          <div className="relative h-full min-h-[26rem] md:min-h-[40rem]">
             {heroImage ? (
               <>
                 <Image
@@ -67,7 +67,7 @@ export default async function AboutPage() {
               <div className="absolute inset-0 image-skeleton" />
             )}
 
-            <div className="relative z-[1] flex h-full min-h-[34rem] flex-col justify-between p-6 md:min-h-[40rem] md:p-8">
+            <div className="relative z-[1] flex h-full min-h-[26rem] flex-col justify-between p-5 md:min-h-[40rem] md:p-8">
               <div className="flex items-center justify-between gap-4">
                 <div className="t-label text-[color:var(--text-muted)]">The studio listens to the cloth first.</div>
                 <div className="t-label text-[color:var(--text-muted)]">Editorial / measured / tactile</div>

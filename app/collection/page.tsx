@@ -1,16 +1,20 @@
+import { CollectionPageClient } from "@/components/shop/CollectionPageClient";
+import { getFeaturedCollection } from "@/lib/collection";
 import { Suspense } from "react";
 
-import { CollectionHeader } from "@/components/shop/CollectionHeader";
-import { ProductGridServer } from "@/components/shop/ProductGridServer";
-import { ProductGridSkeleton } from "@/components/shop/ProductGridSkeleton";
+const FALLBACK_COLLECTION_DESCRIPTION =
+  "Heavyweight essentials, short-run releases, and a slower approach to garments that stay composed over time.";
 
-export default function CollectionPage() {
+export default async function CollectionPage() {
+  const collection = await getFeaturedCollection();
+
   return (
-    <>
-      <CollectionHeader />
-      <Suspense fallback={<ProductGridSkeleton />}>
-        <ProductGridServer />
-      </Suspense>
-    </>
+    <Suspense fallback={<div className="min-h-[calc(100svh-var(--header-height))]" />}>
+      <CollectionPageClient
+        collectionDescription={collection?.description || FALLBACK_COLLECTION_DESCRIPTION}
+        collectionTitle={collection?.title?.trim() || "Onyx Collection"}
+        products={collection?.products ?? []}
+      />
+    </Suspense>
   );
 }

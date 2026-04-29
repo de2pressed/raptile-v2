@@ -16,7 +16,7 @@ export function CartPageClient() {
 
   if (!isConfigured) {
     return (
-      <section className="flex min-h-[calc(100vh-84px-16rem)] items-center justify-center py-12">
+      <section className="flex min-h-[calc(100svh-var(--header-height))] items-center justify-center py-8">
         <div className="text-center">
           <div className="font-display text-3xl font-medium tracking-[-0.04em] text-[color:var(--text)] md:text-4xl">
             Storefront offline.
@@ -49,7 +49,7 @@ function CartPageClientConnected() {
 
   if (cartLines.length === 0) {
     return (
-      <section className="flex min-h-[calc(100vh-84px-16rem)] items-center justify-center py-12">
+      <section className="flex min-h-[calc(100svh-var(--header-height))] items-center justify-center py-8">
         <div className="text-center">
           <div className="font-display text-3xl font-medium tracking-[-0.04em] text-[color:var(--text)] md:text-4xl">
             Your cart is empty.
@@ -67,8 +67,8 @@ function CartPageClientConnected() {
   }
 
   return (
-    <section className="py-8 md:py-10">
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
+    <section className="mx-auto flex min-h-[calc(100svh-var(--header-height))] w-full max-w-[1440px] items-start py-6 md:py-8">
+      <div className="grid w-full gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="grid gap-4">
           <div className="grid gap-2">
             <div className="font-display text-4xl font-bold tracking-[-0.04em] text-[color:var(--text)]">Cart</div>

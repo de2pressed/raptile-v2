@@ -25,6 +25,8 @@ interface RaptileStore {
   setSpecDrawerOpen: (open: boolean) => void;
   selectedVariantId: string | null;
   setSelectedVariant: (id: string | null) => void;
+  isCollectionSearchVisible: boolean;
+  setCollectionSearchVisible: (visible: boolean) => void;
 }
 
 export const useRaptileStore = create<RaptileStore>((set) => ({
@@ -40,4 +42,6 @@ export const useRaptileStore = create<RaptileStore>((set) => ({
   setSpecDrawerOpen: (open) => set({ isSpecDrawerOpen: open }),
   selectedVariantId: null,
   setSelectedVariant: (id) => set({ selectedVariantId: id }),
+  isCollectionSearchVisible: false,
+  setCollectionSearchVisible: (visible) => set({ isCollectionSearchVisible: visible }),
 }));

@@ -11,7 +11,7 @@ export async function CollectionHeader() {
       <div className="grid min-w-0 gap-8 border-b border-[color:var(--glass-border)] pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(280px,360px)] lg:items-end">
         <div className="min-w-0 space-y-4">
           <div
-            className="max-w-full text-wrap break-words font-display font-extrabold uppercase tracking-[-0.06em] text-[color:var(--text)]"
+            className="max-w-full whitespace-normal break-words font-display font-extrabold uppercase tracking-[-0.06em] text-[color:var(--text)]"
             style={{ fontSize: "clamp(2.35rem, 12vw, 6rem)", lineHeight: 0.92 }}
           >
             {collectionTitle}

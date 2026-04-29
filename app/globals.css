@@ -267,8 +267,7 @@ button {
   mix-blend-mode: soft-light;
   pointer-events: none;
   z-index: 0;
-  animation: noiseDrift 18s linear infinite;
-  will-change: background-position, transform;
+  will-change: background-position;
 }
 
 .noise-surface {
@@ -416,7 +415,6 @@ button {
   mix-blend-mode: soft-light;
   pointer-events: none;
   z-index: 0;
-  animation: noiseDrift 16s linear infinite;
 }
 
 .btn-primary:hover {
@@ -519,7 +517,6 @@ button {
   mix-blend-mode: soft-light;
   pointer-events: none;
   z-index: 0;
-  animation: noiseDrift 18s linear infinite;
 }
 
 .contact-form > * {
@@ -684,30 +681,6 @@ button {
   border-radius: 28px;
 }
 
-.page-transition-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 140;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at 50% 8%, color-mix(in oklch, var(--accent) 24%, transparent), transparent 34%),
-    linear-gradient(180deg, color-mix(in oklch, var(--accent) 12%, transparent), color-mix(in oklch, var(--accent) 4%, transparent));
-  backdrop-filter: blur(18px) saturate(132%);
-  -webkit-backdrop-filter: blur(18px) saturate(132%);
-}
-
-.page-transition-overlay::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("/noise.png");
-  background-repeat: repeat;
-  background-size: 180px 180px;
-  opacity: var(--noise-header-opacity);
-  mix-blend-mode: soft-light;
-  animation: noiseDrift 7s linear infinite;
-}
-
 @keyframes dotPulse {
   0%,
   100% {
@@ -796,6 +769,14 @@ button {
   .glass-panel-heavy {
     backdrop-filter: blur(18px) saturate(126%);
     -webkit-backdrop-filter: blur(18px) saturate(126%);
+  }
+
+  .glass-panel::after,
+  .noise-surface::after,
+  .btn-primary::after,
+  .ghost-button::after,
+  .contact-form::after {
+    opacity: 0.018;
   }
 
   .editorial-copy,

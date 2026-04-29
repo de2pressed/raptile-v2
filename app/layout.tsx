@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { LiquidBackgroundMount } from "@/components/background/ShaderBackgroundMount";
+import BackgroundStage from "@/components/BackgroundStage";
 import { AppProviders } from "@/components/providers/AppProviders";
 import PageTransition from "@/components/ui/PageTransition";
 import { getShopifyRuntimeConfig } from "@/lib/shopify-config.server";
@@ -21,7 +21,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body>
-        <LiquidBackgroundMount />
+        <BackgroundStage />
         <AppProviders shopifyConfig={shopifyConfig}>
           <PageTransition>{children}</PageTransition>
         </AppProviders>

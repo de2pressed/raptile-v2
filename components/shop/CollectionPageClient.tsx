@@ -6,7 +6,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { ProductGrid } from "@/components/shop/ProductGrid";
-import { ArrowRightIcon, ChevronDownIcon, CloseIcon, FilterIcon, SearchIcon } from "@/components/ui/icons";
+import { ChevronDownIcon, CloseIcon, FilterIcon, SearchIcon } from "@/components/ui/icons";
+import { GlassPanel } from "@/components/ui/GlassPanel";
 import { createCatalogFilterState, filterCatalogProducts, sortCatalogProducts, type CollectionSort } from "@/lib/catalog";
 import type { ShopifyProduct } from "@/lib/commerce";
 import { useRaptileStore } from "@/lib/store";
@@ -151,76 +152,89 @@ export function CollectionPageClient({ collectionTitle, collectionDescription, p
   };
 
   const hasFilters = Boolean(query.trim() || size);
+  const resultSummary = hasFilters ? `${filteredProducts.length} of ${products.length} pieces` : `${products.length} pieces`;
 
   return (
     <LazyMotion features={domAnimation}>
       <div className="mx-auto w-full max-w-[1440px] py-6 md:py-10">
-        <section className="grid gap-8 border-b border-[color:var(--glass-border)] pb-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,360px)] lg:items-end">
+        <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.72fr)] lg:items-end">
           <div className="min-w-0 space-y-4">
+            <div className="flex flex-wrap items-center gap-3 t-label text-[color:var(--text-muted)]">
+              <span>{collectionTitle}</span>
+              <span aria-hidden>/</span>
+              <span>{products.length} pieces</span>
+              <span aria-hidden>/</span>
+              <span>Built in India</span>
+            </div>
             <div
               className="max-w-full whitespace-normal break-words font-display font-extrabold uppercase tracking-[-0.06em] text-[color:var(--text)]"
               style={{ fontSize: "clamp(2.25rem, 11vw, 6rem)", lineHeight: 0.92 }}
             >
               {collectionTitle}
             </div>
-            <div className="t-ui text-[color:var(--text-muted)]">{`Collection, ${products.length} pieces`}</div>
-          </div>
-          <div className="min-w-0 max-w-full space-y-4 lg:justify-self-end">
             <p className="editorial-copy max-w-[34ch]">{collectionDescription}</p>
             <div className="t-ui max-w-[34ch] leading-6 text-[color:var(--text-muted)]">
               Weight, wash, and silhouette stay close to the cloth. The interface stays out of the way.
             </div>
           </div>
-        </section>
 
-        <div ref={searchBarRef} className="mt-8 grid gap-4">
-          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-            <label className="grid gap-2">
-              <span className="t-label text-[color:var(--text-muted)]">Search collection</span>
-              <div className="relative">
-                <input
-                  className="contact-input h-12 rounded-full pl-11 pr-4"
-                  onChange={(event) => {
-                    const nextQuery = event.target.value;
-                    setQuery(nextQuery);
-                    updateQueryParams({ query: nextQuery });
-                  }}
-                  placeholder="Search product names, fits, details"
-                  value={query}
-                />
-                <div className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--text-subtle)]">
-                  <SearchIcon className="h-4 w-4" />
+          <GlassPanel className="rounded-[34px] px-5 py-5 md:px-6 md:py-6">
+            <div ref={searchBarRef} className="grid gap-5">
+              <div className="flex items-start justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="t-label text-[color:var(--text-muted)]">Search and sort</div>
+                  <div className="t-ui text-[color:var(--text-subtle)]">Narrow the release without losing the mood.</div>
                 </div>
+                <div className="t-ui text-[color:var(--text-subtle)]">{resultSummary}</div>
               </div>
-            </label>
 
-            <div className="flex flex-wrap items-center gap-2 lg:justify-end">
-              <div className="relative">
-                <select
-                  className="contact-input h-12 appearance-none rounded-full pr-10 text-[color:var(--text)]"
-                  onChange={(event) => {
-                    const nextSort = event.target.value as CollectionSort;
-                    setSort(nextSort);
-                    updateQueryParams({ sort: nextSort });
-                  }}
-                  value={sort}
+              <label className="grid gap-2">
+                <span className="t-label text-[color:var(--text-muted)]">Search collection</span>
+                <div className="relative">
+                  <input
+                    className="contact-input h-12 rounded-full pl-11 pr-4"
+                    onChange={(event) => {
+                      const nextQuery = event.target.value;
+                      setQuery(nextQuery);
+                      updateQueryParams({ query: nextQuery });
+                    }}
+                    placeholder="Search product names, fits, details"
+                    value={query}
+                  />
+                  <div className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--text-subtle)]">
+                    <SearchIcon className="h-4 w-4" />
+                  </div>
+                </div>
+              </label>
+
+              <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
+                <div className="relative">
+                  <select
+                    className="contact-input h-12 appearance-none rounded-full pr-10 text-[color:var(--text)]"
+                    onChange={(event) => {
+                      const nextSort = event.target.value as CollectionSort;
+                      setSort(nextSort);
+                      updateQueryParams({ sort: nextSort });
+                    }}
+                    value={sort}
+                  >
+                    <option value="newest">Newest</option>
+                    <option value="price-asc">Price: Low - High</option>
+                    <option value="price-desc">Price: High - Low</option>
+                    <option value="bestselling">Bestselling</option>
+                  </select>
+                  <ChevronDownIcon className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--text-subtle)]" />
+                </div>
+
+                <button
+                  className="ghost-button inline-flex h-12 items-center justify-center gap-2 rounded-full px-4 md:hidden"
+                  onClick={() => setMobileFilterOpen(true)}
+                  type="button"
                 >
-                  <option value="newest">Newest</option>
-                  <option value="price-asc">Price: Low - High</option>
-                  <option value="price-desc">Price: High - Low</option>
-                  <option value="bestselling">Bestselling</option>
-                </select>
-                <ChevronDownIcon className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--text-subtle)]" />
+                  <FilterIcon className="h-4 w-4" />
+                  <span className="t-label">Filter</span>
+                </button>
               </div>
-
-              <button
-                className="ghost-button inline-flex h-12 items-center gap-2 rounded-full px-4 md:hidden"
-                onClick={() => setMobileFilterOpen(true)}
-                type="button"
-              >
-                <FilterIcon className="h-4 w-4" />
-                <span className="t-label">Filter</span>
-              </button>
 
               <div className="hidden flex-wrap items-center gap-2 md:flex">
                 {SIZE_OPTIONS.map((option) => {
@@ -248,24 +262,24 @@ export function CollectionPageClient({ collectionTitle, collectionDescription, p
                 })}
               </div>
             </div>
-          </div>
+          </GlassPanel>
+        </section>
 
-          {activeChips.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              {activeChips.map((chip) => (
-                <button
-                  key={chip.key}
-                  className="inline-flex items-center gap-2 rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] px-4 py-2 text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]"
-                  onClick={chip.onRemove}
-                  type="button"
-                >
-                  <span className="t-ui">{chip.label}</span>
-                  <CloseIcon className="h-3.5 w-3.5" />
-                </button>
-              ))}
-            </div>
-          ) : null}
-        </div>
+        {activeChips.length > 0 ? (
+          <div className="mt-6 flex flex-wrap gap-2">
+            {activeChips.map((chip) => (
+              <button
+                key={chip.key}
+                className="inline-flex items-center gap-2 rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] px-4 py-2 text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]"
+                onClick={chip.onRemove}
+                type="button"
+              >
+                <span className="t-ui">{chip.label}</span>
+                <CloseIcon className="h-3.5 w-3.5" />
+              </button>
+            ))}
+          </div>
+        ) : null}
 
         <div className="mt-8">
           {filteredProducts.length > 0 ? (

@@ -3,6 +3,7 @@
 import { AnimatePresence, LazyMotion, domAnimation, useReducedMotion } from "framer-motion";
 import * as motion from "framer-motion/client";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { TouchEvent } from "react";
 
@@ -10,12 +11,14 @@ import { AddToCartButton } from "@/components/shop/AddToCartButton";
 import { NotifyMeForm } from "@/components/shop/NotifyMeForm";
 import { ProductReviews } from "@/components/shop/ProductReviews";
 import { SizeChartTable } from "@/components/shop/SizeChartTable";
+import { GlassPanel } from "@/components/ui/GlassPanel";
 import { ChevronDownIcon, ChevronUpIcon } from "@/components/ui/icons";
 import type { ProductVariant, ShopifyProduct } from "@/lib/commerce";
 import { formatPrice } from "@/lib/commerce";
 import { getColorHex } from "@/lib/colorMap";
 import { getFirstAvailableColor, getOptionValue, getProductColors, getProductSizes } from "@/lib/product-options";
 import { useRaptileStore } from "@/lib/store";
+import { fabricSignals } from "@/lib/story-content";
 import { filterImagesByColor, normalizeColorName } from "@/lib/utils/imageFilter";
 import { cn } from "@/lib/utils";
 import { shopifyImageUrl } from "@/lib/utils/shopifyImage";
@@ -24,6 +27,16 @@ const SIZE_PRIORITY = ["M", "S", "L", "XL", "XXL"];
 
 interface ProductDetailClientProps {
   product: ShopifyProduct;
+}
+
+function summarizeText(value: string, maxLength: number) {
+  const normalized = value.replace(/\s+/g, " ").trim();
+
+  if (normalized.length <= maxLength) {
+    return normalized;
+  }
+
+  return `${normalized.slice(0, Math.max(0, maxLength - 3)).trimEnd()}...`;
 }
 
 function getAvailableSizesForSelection(
@@ -219,6 +232,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   };
 
   const description = product.description.trim();
+  const storySummary = summarizeText(description || product.description, 180);
 
   const handleTouchStart = (event: TouchEvent<HTMLDivElement>) => {
     if (displayImages.length < 2) {
@@ -483,6 +497,48 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             </div>
           </div>
         </div>
+
+        <div className="mt-10 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)]">
+          <GlassPanel className="rounded-[34px] px-5 py-5 md:px-6 md:py-6">
+            <div className="space-y-4">
+              <div className="t-label text-[color:var(--text-muted)]">Fabric notes</div>
+              <p className="editorial-copy max-w-[34ch]">{storySummary}</p>
+              <div className="flex flex-wrap gap-2">
+                {fabricSignals.map((item) => (
+                  <span
+                    key={item}
+                    className="inline-flex items-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] px-4 py-2 t-ui text-[color:var(--text-muted)]"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </GlassPanel>
+
+          <GlassPanel className="rounded-[34px] px-5 py-5 md:px-6 md:py-6">
+            <div className="space-y-4">
+              <div className="t-label text-[color:var(--text-muted)]">Need fit help?</div>
+              <p className="t-ui leading-7 text-[color:var(--text-muted)]">
+                Use the size chart below or contact the studio if you want a second read before ordering. The product
+                page stays direct, but support is one click away.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  className="ghost-button rounded-full px-5 py-3"
+                  onClick={() => setIsSizeChartOpen(true)}
+                  type="button"
+                >
+                  <span className="t-label">Open size chart</span>
+                </button>
+                <Link className="ghost-button rounded-full px-5 py-3 text-[color:var(--text)]" href="/contact">
+                  <span className="t-label">Contact the studio</span>
+                </Link>
+              </div>
+            </div>
+          </GlassPanel>
+        </div>
+
         <ProductReviews productHandle={product.handle} productTitle={product.title} />
       </section>
     </LazyMotion>

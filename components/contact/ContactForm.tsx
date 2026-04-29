@@ -13,12 +13,12 @@ export function ContactForm() {
   const [formData, setFormData] = useState(initialState);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [feedback, setFeedback] = useState("");
-  const statusMessage = status === "loading" ? "Sending your message..." : feedback;
+  const statusMessage = status === "success" || status === "error" ? feedback : "";
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setStatus("loading");
-    setFeedback("Sending your message...");
+    setFeedback("");
 
     try {
       const response = await fetch("/api/contact", {
@@ -45,8 +45,8 @@ export function ContactForm() {
   };
 
   return (
-    <form aria-busy={status === "loading"} className="contact-form space-y-5" onSubmit={handleSubmit}>
-      <div className="grid gap-5 md:grid-cols-2">
+    <form aria-busy={status === "loading"} className="space-y-4" onSubmit={handleSubmit}>
+      <div className="grid gap-4 md:grid-cols-2">
         <label className="space-y-2">
           <span className="t-label">Name</span>
           <input
@@ -98,21 +98,11 @@ export function ContactForm() {
 
       <div className="flex flex-col items-start gap-3">
         <button
-          className="btn-primary rounded-full px-5 py-3 text-left disabled:cursor-wait disabled:opacity-55"
+          className="btn-primary w-full rounded-full px-5 py-3 sm:w-auto disabled:cursor-wait disabled:opacity-55"
           disabled={status === "loading"}
           type="submit"
         >
-          <span className="relative z-[1] flex min-h-[1.1rem] items-center justify-center gap-1.5">
-            {status === "loading" ? (
-              <span className="flex items-center gap-1.5" aria-label="Sending">
-                <span className="loading-dot animation-delay-0" />
-                <span className="loading-dot animation-delay-150" />
-                <span className="loading-dot animation-delay-300" />
-              </span>
-            ) : (
-              <span className="t-label text-[color:var(--bg)]">Send Message</span>
-            )}
-          </span>
+          <span className="t-label text-[color:var(--bg)]">{status === "loading" ? "Sending..." : "Send Message"}</span>
         </button>
         {statusMessage ? (
           <p

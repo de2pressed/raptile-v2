@@ -7,12 +7,10 @@ import type { PropsWithChildren } from "react";
 import { useEffect, useRef } from "react";
 
 import { ThemeBackdrop } from "@/components/background/ThemeBackdrop";
-import { ThemeLabPanel } from "@/components/layout/ThemeLabPanel";
 import { ShopifyRuntimeProvider, useShopifyRuntime } from "@/components/providers/ShopifyRuntimeContext";
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
 import { CartDrawer } from "@/components/shop/CartDrawer";
-import { ThemeLabProvider } from "@/components/providers/ThemeLabProvider";
 import { formatPrice } from "@/lib/commerce";
 import { useRaptileStore } from "@/lib/store";
 import type { ShopifyRuntimeConfig } from "@/lib/shopify-config";
@@ -114,7 +112,6 @@ function AppShell({ children }: PropsWithChildren) {
         <Footer />
       </div>
       <CartDrawer />
-      <ThemeLabPanel />
       {!isConfigured ? (
         <div className="pointer-events-none fixed bottom-4 right-4 z-[120] hidden max-w-[min(18rem,calc(100vw-2rem))] px-0 md:block md:bottom-6 md:right-6">
           <div className="glass-panel rounded-full px-4 py-2 before:rounded-full">
@@ -135,24 +132,22 @@ export function AppProviders({
   shopifyConfig: ShopifyRuntimeConfig;
 }>) {
   return (
-    <ThemeLabProvider>
-      <ShopifyRuntimeProvider value={shopifyConfig}>
-        {shopifyConfig.isConfigured ? (
-          <ShopifyProvider
-            countryIsoCode="IN"
-            languageIsoCode="EN"
-            storeDomain={shopifyConfig.storeDomain}
-            storefrontApiVersion={shopifyConfig.storefrontApiVersion}
-            storefrontToken={shopifyConfig.storefrontToken}
-          >
-            <CartProvider countryCode="IN" languageCode="EN">
-              <AppShell>{children}</AppShell>
-            </CartProvider>
-          </ShopifyProvider>
-        ) : (
-          <AppShell>{children}</AppShell>
-        )}
-      </ShopifyRuntimeProvider>
-    </ThemeLabProvider>
+    <ShopifyRuntimeProvider value={shopifyConfig}>
+      {shopifyConfig.isConfigured ? (
+        <ShopifyProvider
+          countryIsoCode="IN"
+          languageIsoCode="EN"
+          storeDomain={shopifyConfig.storeDomain}
+          storefrontApiVersion={shopifyConfig.storefrontApiVersion}
+          storefrontToken={shopifyConfig.storefrontToken}
+        >
+          <CartProvider countryCode="IN" languageCode="EN">
+            <AppShell>{children}</AppShell>
+          </CartProvider>
+        </ShopifyProvider>
+      ) : (
+        <AppShell>{children}</AppShell>
+      )}
+    </ShopifyRuntimeProvider>
   );
 }

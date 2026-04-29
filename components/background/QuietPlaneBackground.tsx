@@ -37,7 +37,7 @@ export default function LoomRegister({ palette }: { palette: ThemePalette }) {
   return (
     <div
       aria-hidden="true"
-      className="fixed inset-0 overflow-hidden"
+      className="absolute inset-0 overflow-hidden"
       style={{
         background: `linear-gradient(180deg, ${palette.bgSoft} 0%, ${palette.bg} 50%, ${palette.bgElevated} 100%)`,
       }}

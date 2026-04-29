@@ -1,6 +1,6 @@
 ---
 name: Raptile Studio
-description: Editorial heavyweight storefront for the Onyx collection.
+description: Editorial heavyweight storefront for an Indian streetwear label.
 colors:
   charcoal-ink: "oklch(0.11 0.012 40)"
   warm-shadow: "oklch(0.145 0.015 38)"
@@ -128,7 +128,7 @@ components:
 
 **Creative North Star: "The Material Archive"**
 
-Raptile Studio reads like a dark gallery for heavyweight essentials. The system is built to keep the cloth in front, with the interface acting as a quiet frame around it. The homepage is story-led, the collection page is commerce-led, and the about page is a slower editorial narrative, but they all share the same rule: the garment carries the emotion, the UI only sharpens the read.
+Raptile Studio reads like a dark gallery for heavyweight essentials. The system is built to keep the cloth in front, with the interface acting as a quiet frame around it. The page stack is layered, starting with `BackgroundStage`, then `AppProviders`, then `PageTransition`, then the routed content. The homepage is story-led, the collection page is commerce-led, and the about page is a slower editorial narrative, but they all share the same rule: the garment carries the emotion, the UI only sharpens the read.
 
 The visual tone is restrained, tactile, and cinematic. Surfaces sit in warm darkness instead of pure black, accents stay rare, and motion should feel mechanical rather than playful. The system explicitly rejects generic SaaS gradients, glowing dashboard cards, loud streetwear neon, playful DTC pastels, and white-label Shopify templates.
 
@@ -138,6 +138,7 @@ The visual tone is restrained, tactile, and cinematic. Surfaces sit in warm dark
 - One amber accent, used sparingly.
 - Scroll-led storytelling with controlled motion.
 - Commerce surfaces stay legible, compact, and calm.
+- The brand should read as local, not imported theater.
 
 ## 2. Colors
 
@@ -211,21 +212,25 @@ Buttons are rounded pills with clear hierarchy. Primary buttons use amber fill, 
 Glass panels are the main container language for navigation, footers, info blocks, and support surfaces. They use a 28px to 34px corner radius, a thin border, blur, and the noise treatment on the panel itself. Product cards are simpler and tighter, with square imagery, a 28px frame, and compact metadata below. The collection grid should stay disciplined, with up to four cards across on large screens, never a sprawling wall of oversized tiles.
 
 ### Navigation and Logo
-The header is intentionally taller than a generic ecommerce bar. It uses a sticky, full-width shell with a minimum height of 84px, the logo on the left, and clear text links on the right on desktop. The mobile menu becomes a separate overlay panel, not a compressed desktop nav. The logo should use `/public/logo/logo.png` when present, with a wordmark fallback that still feels like the same brand.
+The header is intentionally taller than a generic ecommerce bar. `Nav` uses a sticky, full-width glass shell with predictive search on desktop, a mode-switching mobile header, and compact cart badges that stay informational rather than loud. The logo component resolves `/logo/logo.png` and falls back to a wordmark if the asset fails, so the brand remains legible even when the image is unavailable.
+
+### Application Shell
+The global shell is always present: `BackgroundStage` supplies atmosphere, `PageTransition` keeps route changes controlled, and `AppProviders` handles Shopify and time-accent context. This layer should feel like stagecraft, not decoration.
 
 ### Product Detail
 The PDP is a split editorial layout: a large image stage, a thumbnail rail on desktop when needed, and a fixed-width information column that stays readable. The description must remain fully visible on desktop, without an internal scroll trap. The image stage should feel generous and centered, with object containment that respects the garment shape.
 
 ### Story Sections
-The homepage and about page both rely on the scroll narrative pattern. One side stays pinned, the other side advances through steps that explain weight, wash, shape, and release rhythm. This is the main place to stage cloth facts like 240gsm and double bio washed, because the information should feel woven into the story, not dumped into a spec sheet.
+The homepage and about page both rely on the scroll narrative pattern. One side stays pinned, the other side advances through steps that explain weight, wash, shape, and release rhythm. This is the main place to stage cloth facts like 240gsm and double bio washed, because the information should feel woven into the story, not dumped into a spec sheet. The story asset set and `ScrollNarrative` should always support the garment, never compete with it.
 
 ### Support Surfaces
-Contact, shipping, returns, and size guide content should stay calm and utilitarian. Use the same glass language, but lower the visual temperature. The job is clarity, not performance.
+Contact, shipping, returns, and size guide content should stay calm and utilitarian. Use the same glass language, but lower the visual temperature. `SupportPageFrame`, `ContactForm`, and `SizeChartTable` should all stay readable, sparse, and low-drama. The job is clarity, not performance.
 
 ## 6. Do's and Don'ts
 
 ### Do:
 - **Do** keep product imagery dominant and let the UI stay dark, warm, and restrained.
+- **Do** keep the background stage, page transitions, and navigation shell restrained so the shell supports the cloth.
 - **Do** use `noise-surface` and `glass-panel` on controls, headers, footers, and story cards so texture lives on interface elements, not garments.
 - **Do** keep the homepage sequence explicit: Onyx collection first, featured products second, cloth feature storytelling third.
 - **Do** keep the collection grid compact, with responsive columns that cap out at four across on large screens.

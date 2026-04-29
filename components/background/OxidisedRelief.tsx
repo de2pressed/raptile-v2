@@ -90,6 +90,9 @@ export default function OxidisedRelief() {
 
   return (
     <div className="bg-oxidised-relief" aria-hidden="true">
+      <div className="bg-oxidised-relief__plate" />
+      <div className="bg-oxidised-relief__vignette" />
+      <div className="bg-oxidised-relief__sheen" />
       <svg
         className="bg-oxidised-relief__svg"
         preserveAspectRatio="none"
@@ -107,7 +110,7 @@ export default function OxidisedRelief() {
             strokeLinejoin="round"
             strokeWidth={line.strokeWidth}
             style={{
-              animation: `${line.animationName} ${line.animationDuration} ease-in-out infinite alternate`,
+              animation: `${line.animationName} ${line.animationDuration} cubic-bezier(0.16, 1, 0.3, 1) infinite alternate`,
               animationDelay: line.animationDelay,
               willChange: "transform",
             }}

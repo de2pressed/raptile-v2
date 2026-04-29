@@ -1,0 +1,114 @@
+.bg-oxidised-relief {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: var(--charcoal-ink);
+}
+
+.bg-oxidised-relief__plate,
+.bg-oxidised-relief__vignette,
+.bg-oxidised-relief__sheen {
+  position: absolute;
+  inset: 0;
+}
+
+.bg-oxidised-relief__plate {
+  background:
+    radial-gradient(ellipse 78% 58% at 58% 40%, oklch(0.69 0.085 48 / 0.045) 0%, transparent 54%),
+    radial-gradient(ellipse 92% 78% at 46% 62%, oklch(0.145 0.015 38 / 0.55) 0%, transparent 64%),
+    linear-gradient(180deg, color-mix(in oklch, var(--charcoal-ink) 96%, var(--warm-shadow)) 0%, var(--charcoal-ink) 100%);
+}
+
+.bg-oxidised-relief__vignette {
+  background: radial-gradient(
+    ellipse 82% 82% at 50% 48%,
+    transparent 32%,
+    oklch(0.06 0.008 40 / 0.4) 74%,
+    oklch(0.04 0.005 40 / 0.84) 100%
+  );
+}
+
+.bg-oxidised-relief__sheen {
+  background: radial-gradient(
+    ellipse 52% 42% at 58% 38%,
+    oklch(0.69 0.085 48 / 0.03) 0%,
+    transparent 60%
+  );
+  animation: relief-sheen 24s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
+  will-change: opacity, transform;
+}
+
+.bg-oxidised-relief__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: relief-breath 26s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
+  transform-origin: center;
+}
+
+.bg-oxidised-relief__svg path {
+  transform-origin: center;
+}
+
+@keyframes relief-breath {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  100% {
+    transform: translate3d(0.3%, -0.2%, 0) scale(1.01);
+  }
+}
+
+@keyframes relief-sheen {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1.05) translate(-0.5%, 0.25%);
+  }
+}
+
+@keyframes relief-drift-0 {
+  0% {
+    transform: translateY(0) scaleY(1);
+  }
+
+  100% {
+    transform: translateY(6px) scaleY(1.012);
+  }
+}
+
+@keyframes relief-drift-1 {
+  0% {
+    transform: translateY(0) scaleX(1);
+  }
+
+  100% {
+    transform: translateY(-5px) scaleX(1.008);
+  }
+}
+
+@keyframes relief-drift-2 {
+  0% {
+    transform: translateY(2px) scaleY(0.995);
+  }
+
+  100% {
+    transform: translateY(-4px) scaleY(1.01);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-oxidised-relief__sheen,
+  .bg-oxidised-relief__svg,
+  .bg-oxidised-relief__svg path {
+    animation: none !important;
+  }
+}

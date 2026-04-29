@@ -1,4 +1,4 @@
-@import "../components/BackgroundStage/switcher.css";
+@import "../components/background/relief.css";
 
 @tailwind base;
 @tailwind components;

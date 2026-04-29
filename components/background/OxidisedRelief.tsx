@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 
+import type { ThemePalette } from "@/lib/theme-lab";
+import { mixColor, withAlpha } from "@/lib/theme-lab";
+
 const DESKTOP_LINE_COUNT = 16;
 const MOBILE_LINE_COUNT = 10;
 const DESKTOP_SEGMENTS = 60;
@@ -71,15 +74,17 @@ function generateContourPath(
   return path;
 }
 
-function buildContours(viewport: Viewport) {
+function buildContours(viewport: Viewport, palette: ThemePalette) {
   const lineCount = viewport.compact ? MOBILE_LINE_COUNT : DESKTOP_LINE_COUNT;
 
   return Array.from({ length: lineCount }, (_, index): ContourLine => {
     const norm = lineCount <= 1 ? 0.5 : index / (lineCount - 1);
+    const bandColor = mixColor(palette.shaderDeep, palette.shaderWarm, 0.16 + norm * 0.64);
+    const glowColor = mixColor(palette.accent, palette.shaderMid, 0.24 + norm * 0.24);
 
     return {
       d: generateContourPath(index, lineCount, viewport.width, viewport.height, SEED, viewport.compact),
-      stroke: `rgba(${Math.floor(130 + norm * 56)}, ${Math.floor(72 + norm * 34)}, ${Math.floor(22 + norm * 12)}, ${(0.035 + norm * 0.085).toFixed(3)})`,
+      stroke: withAlpha(mixColor(bandColor, glowColor, 0.36), 0.045 + norm * 0.08),
       strokeWidth: Number((viewport.compact ? 0.38 + norm * 0.32 : 0.42 + norm * 0.48).toFixed(2)),
       opacity: Number((viewport.compact ? 0.56 + norm * 0.16 : 0.64 + norm * 0.18).toFixed(3)),
       animationName: ANIMATION_NAMES[index % ANIMATION_NAMES.length],
@@ -89,7 +94,7 @@ function buildContours(viewport: Viewport) {
   });
 }
 
-export default function OxidisedRelief() {
+export default function OxidisedRelief({ palette }: { palette: ThemePalette }) {
   const [viewport, setViewport] = useState<Viewport>({ width: 0, height: 0, compact: false });
   const [contours, setContours] = useState<ContourLine[]>([]);
 
@@ -103,7 +108,7 @@ export default function OxidisedRelief() {
       const nextViewport = { width, height, compact };
 
       setViewport(nextViewport);
-      setContours(buildContours(nextViewport));
+      setContours(buildContours(nextViewport, palette));
     };
 
     const handleResize = () => {
@@ -118,7 +123,7 @@ export default function OxidisedRelief() {
       window.clearTimeout(resizeTimer);
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [palette]);
 
   return (
     <div className="bg-oxidised-relief" aria-hidden="true">

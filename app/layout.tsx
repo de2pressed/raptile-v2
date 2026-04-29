@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { AppProviders } from "@/components/providers/AppProviders";
-import OxidisedRelief from "@/components/background/OxidisedRelief";
 import PageTransition from "@/components/ui/PageTransition";
 import { getShopifyRuntimeConfig } from "@/lib/shopify-config.server";
 
@@ -21,7 +20,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body>
-        <OxidisedRelief />
         <AppProviders shopifyConfig={shopifyConfig}>
           <PageTransition>{children}</PageTransition>
         </AppProviders>

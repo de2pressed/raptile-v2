@@ -4,7 +4,7 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  background: var(--charcoal-ink);
+  background: var(--bg);
 }
 
 .bg-oxidised-relief__plate,
@@ -16,9 +16,9 @@
 
 .bg-oxidised-relief__plate {
   background:
-    radial-gradient(ellipse 78% 58% at 58% 40%, oklch(0.69 0.085 48 / 0.048) 0%, transparent 54%),
-    radial-gradient(ellipse 92% 78% at 46% 62%, oklch(0.145 0.015 38 / 0.55) 0%, transparent 64%),
-    linear-gradient(180deg, color-mix(in oklch, var(--charcoal-ink) 96%, var(--warm-shadow)) 0%, var(--charcoal-ink) 100%);
+    radial-gradient(ellipse 78% 58% at 58% 40%, color-mix(in oklch, var(--shader-warm) 18%, transparent) 0%, transparent 54%),
+    radial-gradient(ellipse 92% 78% at 46% 62%, color-mix(in oklch, var(--bg-soft) 76%, var(--bg)) 0%, transparent 64%),
+    linear-gradient(180deg, color-mix(in oklch, var(--bg) 96%, var(--bg-soft)) 0%, var(--bg) 100%);
   background-size: 100% 100%, 100% 100%, 100% 100%;
   animation: relief-current 34s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
   will-change: transform;
@@ -28,15 +28,15 @@
   background: radial-gradient(
     ellipse 82% 82% at 50% 48%,
     transparent 30%,
-    oklch(0.06 0.008 40 / 0.4) 74%,
-    oklch(0.04 0.005 40 / 0.84) 100%
+    color-mix(in oklch, var(--bg) 80%, transparent) 74%,
+    color-mix(in oklch, var(--bg) 92%, transparent) 100%
   );
 }
 
 .bg-oxidised-relief__sheen {
   background: radial-gradient(
     ellipse 56% 44% at 58% 38%,
-    oklch(0.69 0.085 48 / 0.04) 0%,
+    color-mix(in oklch, var(--accent) 14%, transparent) 0%,
     transparent 62%
   );
   animation: relief-sheen 20s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate;
@@ -121,9 +121,9 @@
 @media (max-width: 767px) {
   .bg-oxidised-relief__plate {
     background:
-      radial-gradient(ellipse 94% 70% at 52% 28%, oklch(0.69 0.085 48 / 0.04) 0%, transparent 58%),
-      radial-gradient(ellipse 108% 86% at 50% 64%, oklch(0.145 0.015 38 / 0.52) 0%, transparent 68%),
-      linear-gradient(180deg, color-mix(in oklch, var(--charcoal-ink) 95%, var(--warm-shadow)) 0%, var(--charcoal-ink) 100%);
+      radial-gradient(ellipse 94% 70% at 52% 28%, color-mix(in oklch, var(--shader-warm) 16%, transparent) 0%, transparent 58%),
+      radial-gradient(ellipse 108% 86% at 50% 64%, color-mix(in oklch, var(--bg-soft) 72%, var(--bg)) 0%, transparent 68%),
+      linear-gradient(180deg, color-mix(in oklch, var(--bg) 94%, var(--bg-soft)) 0%, var(--bg) 100%);
     animation-duration: 44s;
   }
 
@@ -131,8 +131,8 @@
     background: radial-gradient(
       ellipse 96% 88% at 50% 52%,
       transparent 26%,
-      oklch(0.06 0.008 40 / 0.36) 72%,
-      oklch(0.04 0.005 40 / 0.82) 100%
+      color-mix(in oklch, var(--bg) 84%, transparent) 72%,
+      color-mix(in oklch, var(--bg) 94%, transparent) 100%
     );
   }
 

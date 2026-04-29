@@ -2,15 +2,15 @@
 
 import { useEffect, useRef } from "react";
 
+import type { ThemePalette } from "@/lib/theme-lab";
+import { parseColor } from "@/lib/theme-lab";
+
 const GRID = 28;
 const SPRING = 0.14;
 const DAMPING = 0.985;
 const AMBIENT_INTERVAL = 90;
 const RESIZE_DEBOUNCE_MS = 150;
 const INERTIA_THRESHOLD = 0.5;
-
-const BASE_COLOR = [18, 14, 10] as const;
-const AMBER_COLOR = [200, 130, 50] as const;
 
 type GridState = {
   cols: number;
@@ -119,21 +119,22 @@ function fillStaticFrame(
   imageData: ImageData,
   width: number,
   height: number,
+  baseColor: ReturnType<typeof parseColor>,
 ) {
   const { data } = imageData;
 
   for (let index = 0; index < width * height; index += 1) {
     const offset = index * 4;
-    data[offset] = BASE_COLOR[0];
-    data[offset + 1] = BASE_COLOR[1];
-    data[offset + 2] = BASE_COLOR[2];
+    data[offset] = Math.round(baseColor.r);
+    data[offset + 1] = Math.round(baseColor.g);
+    data[offset + 2] = Math.round(baseColor.b);
     data[offset + 3] = 255;
   }
 
   context.putImageData(imageData, 0, 0);
 }
 
-export function LiquidBackground() {
+export function LiquidBackground({ palette }: { palette: ThemePalette }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -152,6 +153,10 @@ export function LiquidBackground() {
       return;
     }
 
+    const baseColor = parseColor(palette.bg);
+    const accentColor = parseColor(palette.accent);
+    const warmColor = parseColor(palette.shaderWarm);
+    const midColor = parseColor(palette.shaderMid);
     const prefersReducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     let resizeTimer = 0;
     let animationFrame = 0;
@@ -168,7 +173,7 @@ export function LiquidBackground() {
     let prefersReducedMotion = prefersReducedMotionQuery.matches;
 
     const renderStatic = () => {
-      fillStaticFrame(context, imageData, pixelWidth, pixelHeight);
+      fillStaticFrame(context, imageData, pixelWidth, pixelHeight, baseColor);
     };
 
     const resizeCanvas = () => {
@@ -182,7 +187,7 @@ export function LiquidBackground() {
       canvas.height = pixelHeight;
       canvas.style.width = "100%";
       canvas.style.height = "100%";
-      canvas.style.backgroundColor = "var(--charcoal-ink)";
+      canvas.style.backgroundColor = palette.bg;
 
       grid = createGrid(viewportWidth, viewportHeight);
       imageData = context.createImageData(pixelWidth, pixelHeight);
@@ -209,9 +214,9 @@ export function LiquidBackground() {
           const shine = Math.pow(spec, 2.2);
           const offset = (py * pixelWidth + px) * 4;
 
-          data[offset] = clampByte(BASE_COLOR[0] + shine * AMBER_COLOR[0] * 0.9);
-          data[offset + 1] = clampByte(BASE_COLOR[1] + shine * AMBER_COLOR[1] * 0.5);
-          data[offset + 2] = clampByte(BASE_COLOR[2] + shine * AMBER_COLOR[2] * 0.18);
+          data[offset] = clampByte(baseColor.r + shine * accentColor.r * 0.34 + shine * warmColor.r * 0.18);
+          data[offset + 1] = clampByte(baseColor.g + shine * accentColor.g * 0.26 + shine * warmColor.g * 0.12);
+          data[offset + 2] = clampByte(baseColor.b + shine * accentColor.b * 0.16 + shine * midColor.b * 0.14);
           data[offset + 3] = 255;
         }
       }
@@ -302,7 +307,7 @@ export function LiquidBackground() {
       prefersReducedMotionQuery.removeEventListener("change", handleReducedMotionChange);
       window.clearTimeout(resizeTimer);
     };
-  }, []);
+  }, [palette]);
 
   return <canvas ref={canvasRef} aria-hidden className="pointer-events-none fixed inset-0 z-0 block" />;
 }

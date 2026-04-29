@@ -137,14 +137,14 @@
 
 html {
   min-height: 100%;
-  background: var(--charcoal-ink);
+  background: var(--bg);
 }
 
 body {
   min-height: 100vh;
   margin: 0;
   overflow-x: hidden;
-  background: var(--charcoal-ink);
+  background: var(--bg);
   color: var(--text);
   font-family: var(--font-display);
   text-rendering: optimizeLegibility;
@@ -281,7 +281,7 @@ button {
   position: sticky;
   top: 0;
   min-height: var(--header-height);
-  background: rgba(10, 10, 20, 0.26);
+  background: color-mix(in oklch, var(--glass-fill) 82%, transparent);
   backdrop-filter: blur(var(--glass-blur-shell)) saturate(136%);
   -webkit-backdrop-filter: blur(var(--glass-blur-shell)) saturate(136%);
   transition:
@@ -294,7 +294,7 @@ button {
 .site-header[data-scrolled="true"] {
   min-height: var(--header-compact-height);
   border-color: color-mix(in oklch, var(--accent) 18%, var(--glass-border));
-  background: rgba(10, 10, 20, 0.32);
+  background: color-mix(in oklch, var(--glass-fill) 92%, var(--bg-soft));
   box-shadow: 0 22px 56px color-mix(in oklch, var(--bg) 42%, transparent);
 }
 
@@ -453,6 +453,71 @@ button {
   background: color-mix(in oklch, var(--glass-fill) 94%, var(--bg-soft));
 }
 
+.theme-lab-chip {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.8rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 22px;
+  background: color-mix(in oklch, var(--glass-fill) 82%, transparent);
+  padding: 0.8rem 0.85rem;
+  text-align: left;
+  color: var(--text);
+  transition:
+    border-color var(--duration-base) var(--ease-out-expo),
+    background var(--duration-base) var(--ease-out-expo),
+    transform var(--duration-base) var(--ease-out-expo),
+    box-shadow var(--duration-base) var(--ease-out-expo);
+}
+
+.theme-lab-chip:hover {
+  border-color: var(--accent);
+  background: color-mix(in oklch, var(--glass-fill) 90%, var(--bg-soft));
+  transform: translateY(-1px);
+}
+
+.theme-lab-chip.is-active {
+  border-color: var(--accent);
+  background: color-mix(in oklch, var(--accent-subtle) 76%, var(--glass-fill));
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight),
+    0 14px 30px color-mix(in oklch, var(--glass-shadow) 58%, transparent);
+}
+
+.theme-lab-swatch {
+  position: relative;
+  flex: none;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--glass-border) 84%, transparent);
+  box-shadow: inset 0 1px 0 var(--glass-highlight);
+}
+
+.theme-lab-swatch--bar {
+  width: 3.3rem;
+  height: 2.5rem;
+  border-radius: 16px;
+}
+
+.theme-lab-swatch--dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  width: 3.3rem;
+  height: 2.5rem;
+  border-radius: 16px;
+  background: color-mix(in oklch, var(--glass-fill) 70%, transparent);
+}
+
+.theme-lab-swatch--dots > span {
+  display: block;
+  width: 0.52rem;
+  height: 0.52rem;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--text) 10%, transparent);
+}
+
 .btn-primary .t-label,
 .ghost-button .t-label {
   position: relative;
@@ -475,7 +540,7 @@ button {
 
 .footer-shell {
   --noise-surface-opacity: var(--noise-header-opacity);
-  background: rgba(10, 10, 20, 0.26);
+  background: color-mix(in oklch, var(--glass-fill) 80%, transparent);
   backdrop-filter: blur(var(--glass-blur-shell)) saturate(136%);
   -webkit-backdrop-filter: blur(var(--glass-blur-shell)) saturate(136%);
 }

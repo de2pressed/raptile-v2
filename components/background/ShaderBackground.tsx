@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
-import { getIstTimeAccentPalette } from "@/lib/time-accent";
+import type { ThemePalette } from "@/lib/theme-lab";
+import { withAlpha } from "@/lib/theme-lab";
 
 type CloudLayer = {
   centerX: number;
@@ -25,33 +26,7 @@ const CLOUD_LAYERS: CloudLayer[] = [
   { centerX: 0.78, centerY: 0.82, radius: 0.4, spreadX: 0.26, spreadY: 0.16, speed: 0.62, phase: 4.5, blur: 128, opacity: 0.42, colorKey: "accentGlow" },
 ];
 
-function colorWithAlpha(color: string, alpha: number) {
-  if (color.startsWith("rgba")) {
-    return color.replace(/rgba?\(([^)]+)\)/i, (_match, inner) => {
-      const [r = 0, g = 0, b = 0] = String(inner)
-        .split(",")
-        .slice(0, 3)
-        .map((component: string) => Number.parseFloat(component.trim()));
-      return `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(3)})`;
-    });
-  }
-
-  const hex = color.replace("#", "").trim();
-  const normalized =
-    hex.length === 3 || hex.length === 4
-      ? hex
-          .split("")
-          .map((char) => char + char)
-          .join("")
-      : hex;
-
-  const r = Number.parseInt(normalized.slice(0, 2), 16);
-  const g = Number.parseInt(normalized.slice(2, 4), 16);
-  const b = Number.parseInt(normalized.slice(4, 6), 16);
-  return `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(3)})`;
-}
-
-export function ShaderBackground() {
+export function ShaderBackground({ palette }: { palette: ThemePalette }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -89,6 +64,7 @@ export function ShaderBackground() {
       canvas.style.width = "100vw";
       canvas.style.height = "100vh";
       canvas.style.opacity = mobile ? "0.9" : "1";
+      canvas.style.backgroundColor = palette.bg;
       canvas.style.transform = "translateZ(0)";
       canvas.style.transformOrigin = "top left";
 
@@ -108,7 +84,6 @@ export function ShaderBackground() {
 
       lastFrameAt = now;
 
-      const palette = getIstTimeAccentPalette(new Date());
       const cycle = 82_000;
       const progress = (now % cycle) / cycle;
       const pulse = 0.5 + Math.sin(progress * Math.PI * 2) * 0.5;
@@ -130,10 +105,10 @@ export function ShaderBackground() {
         viewportHeight * 0.52,
         Math.max(viewportWidth, viewportHeight) * 0.95,
       );
-      ambient.addColorStop(0, colorWithAlpha(palette.accent, 0.28));
-      ambient.addColorStop(0.36, colorWithAlpha(palette.shaderWarm, 0.18));
-      ambient.addColorStop(0.74, colorWithAlpha(palette.shaderMid, 0.1));
-      ambient.addColorStop(1, colorWithAlpha(palette.bg, 0));
+      ambient.addColorStop(0, withAlpha(palette.accent, 0.28));
+      ambient.addColorStop(0.36, withAlpha(palette.shaderWarm, 0.18));
+      ambient.addColorStop(0.74, withAlpha(palette.shaderMid, 0.1));
+      ambient.addColorStop(1, withAlpha(palette.bg, 0));
       context.fillStyle = ambient;
       context.fillRect(0, 0, viewportWidth, viewportHeight);
 
@@ -152,10 +127,10 @@ export function ShaderBackground() {
 
         const gradient = context.createRadialGradient(x, y, 0, x, y, radius);
         const color = palette[layer.colorKey];
-        gradient.addColorStop(0, colorWithAlpha(color, 0.95));
-        gradient.addColorStop(0.34, colorWithAlpha(color, 0.46));
-        gradient.addColorStop(0.72, colorWithAlpha(color, 0.12));
-        gradient.addColorStop(1, colorWithAlpha(color, 0));
+        gradient.addColorStop(0, withAlpha(color, 0.95));
+        gradient.addColorStop(0.34, withAlpha(color, 0.46));
+        gradient.addColorStop(0.72, withAlpha(color, 0.12));
+        gradient.addColorStop(1, withAlpha(color, 0));
 
         context.fillStyle = gradient;
         context.beginPath();
@@ -175,11 +150,11 @@ export function ShaderBackground() {
       context.globalCompositeOperation = "source-over";
 
       const beam = context.createLinearGradient(0, viewportHeight * 0.58, viewportWidth, viewportHeight * 0.58);
-      beam.addColorStop(0, colorWithAlpha(palette.accent, 0));
-      beam.addColorStop(0.48, colorWithAlpha(palette.accentStrong, 0.08));
-      beam.addColorStop(0.52, colorWithAlpha(palette.accentStrong, 0.22));
-      beam.addColorStop(0.56, colorWithAlpha(palette.accentStrong, 0.08));
-      beam.addColorStop(1, colorWithAlpha(palette.accent, 0));
+      beam.addColorStop(0, withAlpha(palette.accent, 0));
+      beam.addColorStop(0.48, withAlpha(palette.accentStrong, 0.08));
+      beam.addColorStop(0.52, withAlpha(palette.accentStrong, 0.22));
+      beam.addColorStop(0.56, withAlpha(palette.accentStrong, 0.08));
+      beam.addColorStop(1, withAlpha(palette.accent, 0));
 
       context.globalAlpha = 0.72;
       context.fillStyle = beam;
@@ -201,7 +176,7 @@ export function ShaderBackground() {
       window.cancelAnimationFrame(animationFrame);
       resizeObserver?.disconnect();
     };
-  }, []);
+  }, [palette]);
 
   return <canvas ref={canvasRef} aria-hidden className="pointer-events-none fixed inset-0 z-0 will-change-transform" />;
 }

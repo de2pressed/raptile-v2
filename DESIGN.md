@@ -3,22 +3,22 @@ name: Raptile Studio
 description: High-concept editorial storefront for an Indian streetwear label.
 colors:
   charcoal-ink: "oklch(0.11 0.012 40)"
-  warm-shadow: "oklch(0.145 0.015 38)"
-  ash-lift: "oklch(0.18 0.016 40)"
-  parchment: "oklch(0.92 0.012 78)"
-  muted-silt: "oklch(0.68 0.018 72)"
-  subtle-dust: "oklch(0.46 0.015 62)"
-  amber-bronze: "oklch(0.69 0.085 48)"
-  amber-bright: "oklch(0.75 0.08 50)"
-  ember-glow: "oklch(0.64 0.09 46)"
-  amber-haze: "oklch(0.69 0.085 48 / 0.12)"
-  sold-out-oxide: "oklch(0.38 0.04 40)"
-  glass-fill: "oklch(0.17 0.02 40 / 0.84)"
-  glass-border: "oklch(0.92 0.012 80 / 0.1)"
-  glass-highlight: "oklch(0.96 0.01 80 / 0.04)"
-  glass-tint-warm: "oklch(0.3 0.025 42 / 0.18)"
-  glass-tint-cool: "oklch(0.26 0.02 54 / 0.14)"
-  shadow-ink: "oklch(0 0 0 / 0.16)"
+  warm-shadow: "oklch(0.145 0.015 40)"
+  ash-lift: "oklch(0.19 0.016 40)"
+  parchment: "oklch(0.94 0.01 84)"
+  muted-silt: "oklch(0.72 0.018 74)"
+  subtle-dust: "oklch(0.5 0.014 70)"
+  amber-bronze: "oklch(0.71 0.08 48)"
+  amber-bright: "oklch(0.88 0.03 76)"
+  ember-glow: "oklch(0.58 0.08 42)"
+  amber-haze: "oklch(0.71 0.08 48 / 0.12)"
+  sold-out-oxide: "oklch(0.42 0.035 42)"
+  glass-fill: "oklch(0.17 0.014 40 / 0.84)"
+  glass-border: "oklch(0.94 0.01 82 / 0.1)"
+  glass-highlight: "oklch(0.99 0.004 82 / 0.04)"
+  glass-tint-warm: "oklch(0.3 0.03 44 / 0.18)"
+  glass-tint-cool: "oklch(0.24 0.02 56 / 0.14)"
+  shadow-ink: "oklch(0 0 0 / 0.18)"
 typography:
   display:
     fontFamily: "Cabinet Grotesk, sans-serif"
@@ -130,22 +130,22 @@ components:
 
 Raptile Studio reads like a fashion label with a point of view, not a storefront trying to please everyone. The system is built to keep the cloth in front, with the interface acting as a precise frame around it. The page stack is layered, starting with `BackgroundStage`, then `AppProviders`, then `PageTransition`, then the routed content. The homepage is story-led, the collection page is commerce-led, and the about page is a slower editorial narrative, but they all share the same rule: the garment carries the emotion, the UI sharpens the read.
 
-The visual tone is sharp, polished, and high-concept. Surfaces sit in deep warmth instead of flat black, accents stay deliberate, and motion should feel composed rather than playful. The system explicitly rejects generic AI-slop copy, glowing dashboard cards, loud streetwear neon, playful DTC pastels, and white-label Shopify templates.
+The visual tone is sharp, polished, and high-concept. Surfaces sit in smoked warmth instead of flat black, accents stay deliberate, and motion should feel composed rather than playful. The system explicitly rejects generic AI-slop copy, glowing dashboard cards, loud streetwear neon, playful DTC pastels, and white-label Shopify templates.
 
 **Key Characteristics:**
 - Cloth first, interface second.
 - Sharp surfaces, not flat black.
-- One amber accent, used with intent.
+- One ember accent, used with intent.
 - Scroll-led storytelling with controlled motion.
 - Commerce surfaces stay legible, compact, and exact.
 - The brand should read as specific and self-possessed, not generic or borrowed.
 
 ## 2. Colors
 
-The palette is warm, low-chroma, and materially grounded. It should feel like charred walnut, brushed bronze, and softened parchment under low evening light.
+The palette is warm, low-chroma, and materially grounded. It should feel like charred walnut, smoked copper, and softened parchment under low evening light.
 
 ### Primary
-- **Amber Bronze** (`oklch(0.69 0.085 48)`): the primary call-to-action color, active states, and rare emphasis. It should read as metal under warm light, not neon.
+- **Ember Bronze** (`oklch(0.71 0.08 48)`): the primary call-to-action color, active states, and rare emphasis. It should read as metal under warm light, not neon.
 
 ### Neutral
 - **Charcoal Ink** (`oklch(0.11 0.012 40)`): root background and the darkest canvas for the entire storefront.
@@ -163,7 +163,7 @@ The palette is warm, low-chroma, and materially grounded. It should feel like ch
 - **Shadow Ink** (`oklch(0 0 0 / 0.16)`): ambient shadow tone for depth without hard contrast.
 
 ### Named Rules
-**The One Accent Rule.** Amber is reserved for primary actions, active states, and the occasional editorial callout. If it starts appearing everywhere, the system has lost its focus.
+**The One Accent Rule.** Ember is reserved for primary actions, active states, and the occasional editorial callout. If it starts appearing everywhere, the system has lost its focus.
 
 **The Noise-On-UI Rule.** Texture belongs on panels, shells, and controls only. Product photography stays clean. Never let grain or overlay contaminate the garment image.
 
@@ -206,7 +206,7 @@ This system uses a hybrid of tonal layering and very soft shadow, not dramatic d
 ## 5. Components
 
 ### Buttons
-Buttons are rounded pills with clear hierarchy. Primary buttons use amber fill, dark text, and a slight lift on hover. Ghost buttons use glass fill, muted text, and a thin border. Focus states rely on an amber halo rather than a loud outline. Keep the padding generous enough to feel tactile, but not so large that the button becomes a decorative block.
+Buttons are rounded pills with clear hierarchy. Primary buttons use ember fill, dark text, and a slight lift on hover. Ghost buttons use glass fill, muted text, and a thin border. Focus states rely on an ember halo rather than a loud outline. Keep the padding generous enough to feel tactile, but not so large that the button becomes a decorative block.
 
 ### Cards and Panels
 Glass panels are the main container language for navigation, footers, info blocks, and support surfaces. They use a 28px to 34px corner radius, a thin border, blur, and the noise treatment on the panel itself. Product cards are simpler and tighter, with square imagery, a 28px frame, and compact metadata below. The collection grid should stay disciplined, with up to four cards across on large screens, never a sprawling wall of oversized tiles.

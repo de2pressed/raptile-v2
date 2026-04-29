@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 
 import LoomRegister from "@/components/background/QuietPlaneBackground";
-import { SLATE_CURRENT } from "@/lib/theme-lab";
+import { EMBER_CURRENT } from "@/lib/theme-lab";
 
 export function ThemeBackdrop() {
   const reduceMotion = useReducedMotion() ?? false;
@@ -15,7 +15,7 @@ export function ThemeBackdrop() {
       animate={reduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1 }}
       transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
     >
-      <LoomRegister palette={SLATE_CURRENT} />
+      <LoomRegister palette={EMBER_CURRENT} />
     </motion.div>
   );
 }

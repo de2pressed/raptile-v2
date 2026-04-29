@@ -43,17 +43,17 @@
 }
 
 :root {
-  --charcoal-ink: #0b1118;
-  --warm-shadow: #111a27;
-  --ash-lift: #172232;
-  --parchment: #eef3f6;
-  --muted-silt: #bac8d7;
-  --subtle-dust: #7e8ea4;
-  --amber-bronze: #5f7bd8;
-  --amber-bright: #d8e5ff;
-  --ember-glow: #334ea8;
-  --amber-haze: rgba(95, 123, 216, 0.12);
-  --sold-out-oxide: #5d6878;
+  --charcoal-ink: oklch(0.11 0.012 40);
+  --warm-shadow: oklch(0.145 0.015 40);
+  --ash-lift: oklch(0.19 0.016 40);
+  --parchment: oklch(0.94 0.01 84);
+  --muted-silt: oklch(0.72 0.018 74);
+  --subtle-dust: oklch(0.5 0.014 70);
+  --amber-bronze: oklch(0.71 0.08 48);
+  --amber-bright: oklch(0.88 0.03 76);
+  --ember-glow: oklch(0.58 0.08 42);
+  --amber-haze: oklch(0.71 0.08 48 / 0.12);
+  --sold-out-oxide: oklch(0.42 0.035 42);
   --bg: var(--charcoal-ink);
   --bg-soft: var(--warm-shadow);
   --bg-elevated: var(--ash-lift);
@@ -65,15 +65,15 @@
   --accent-glow: var(--ember-glow);
   --accent-subtle: var(--amber-haze);
   --sold-out: var(--sold-out-oxide);
-  --glass-fill: rgba(17, 25, 37, 0.84);
-  --glass-border: rgba(238, 243, 246, 0.1);
-  --glass-highlight: rgba(255, 255, 255, 0.06);
-  --glass-tint-a: rgba(95, 123, 216, 0.16);
-  --glass-tint-b: rgba(118, 155, 228, 0.1);
-  --shader-warm: #6f7dff;
-  --shader-mid: #3b53b5;
-  --shader-deep: #090e16;
-  --glass-shadow: rgba(0, 0, 0, 0.18);
+  --glass-fill: oklch(0.17 0.014 40 / 0.84);
+  --glass-border: oklch(0.94 0.01 82 / 0.1);
+  --glass-highlight: oklch(0.99 0.004 82 / 0.04);
+  --glass-tint-a: oklch(0.3 0.03 44 / 0.18);
+  --glass-tint-b: oklch(0.24 0.02 56 / 0.14);
+  --shader-warm: oklch(0.74 0.08 48);
+  --shader-mid: oklch(0.47 0.04 45);
+  --shader-deep: oklch(0.08 0.012 40);
+  --glass-shadow: oklch(0 0 0 / 0.18);
   --font-display: "Cabinet Grotesk", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
   --space-1: 4px;

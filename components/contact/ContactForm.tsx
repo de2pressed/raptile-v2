@@ -13,11 +13,12 @@ export function ContactForm() {
   const [formData, setFormData] = useState(initialState);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [feedback, setFeedback] = useState("");
+  const statusMessage = status === "loading" ? "Sending your message..." : feedback;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setStatus("loading");
-    setFeedback("");
+    setFeedback("Sending your message...");
 
     try {
       const response = await fetch("/api/contact", {
@@ -44,12 +45,13 @@ export function ContactForm() {
   };
 
   return (
-    <form className="contact-form space-y-5" onSubmit={handleSubmit}>
+    <form aria-busy={status === "loading"} className="contact-form space-y-5" onSubmit={handleSubmit}>
       <div className="grid gap-5 md:grid-cols-2">
         <label className="space-y-2">
           <span className="t-label">Name</span>
           <input
             className="contact-input"
+            autoComplete="name"
             name="name"
             onChange={(event) => setFormData((current) => ({ ...current, name: event.target.value }))}
             required
@@ -61,6 +63,7 @@ export function ContactForm() {
           <span className="t-label">Email</span>
           <input
             className="contact-input"
+            autoComplete="email"
             name="email"
             onChange={(event) => setFormData((current) => ({ ...current, email: event.target.value }))}
             required
@@ -74,6 +77,7 @@ export function ContactForm() {
         <span className="t-label">Order Number (Optional)</span>
         <input
           className="contact-input"
+          autoComplete="off"
           name="orderNumber"
           onChange={(event) => setFormData((current) => ({ ...current, orderNumber: event.target.value }))}
           type="text"
@@ -110,9 +114,14 @@ export function ContactForm() {
             )}
           </span>
         </button>
-        {feedback ? (
-          <p className={`t-ui ${status === "error" ? "text-[color:var(--accent-strong)]" : "text-[color:var(--text-muted)]"}`}>
-            {feedback}
+        {statusMessage ? (
+          <p
+            aria-atomic="true"
+            aria-live="polite"
+            className={`t-ui ${status === "error" ? "text-[color:var(--accent-strong)]" : "text-[color:var(--text-muted)]"}`}
+            role="status"
+          >
+            {statusMessage}
           </p>
         ) : null}
       </div>

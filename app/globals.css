@@ -92,9 +92,11 @@
   --duration-fast: 120ms;
   --duration-base: 250ms;
   --duration-slow: 400ms;
+  --glass-blur-panel: 28px;
+  --glass-blur-heavy: 22px;
+  --glass-blur-shell: 28px;
   --noise-header-opacity: 0.05;
   --noise-surface-opacity: var(--noise-header-opacity);
-  --noise-background-opacity: 0.05;
   --header-height: 64px;
   --header-compact-height: 54px;
   color-scheme: dark;
@@ -227,8 +229,8 @@ button {
 .glass-panel {
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(28px) saturate(136%);
-  -webkit-backdrop-filter: blur(28px) saturate(136%);
+  backdrop-filter: blur(var(--glass-blur-panel)) saturate(136%);
+  -webkit-backdrop-filter: blur(var(--glass-blur-panel)) saturate(136%);
   background:
     linear-gradient(
       180deg,
@@ -267,7 +269,6 @@ button {
   mix-blend-mode: soft-light;
   pointer-events: none;
   z-index: 0;
-  will-change: background-position;
 }
 
 .noise-surface {
@@ -281,8 +282,8 @@ button {
   top: 0;
   min-height: var(--header-height);
   background: rgba(10, 10, 20, 0.26);
-  backdrop-filter: blur(28px) saturate(136%);
-  -webkit-backdrop-filter: blur(28px) saturate(136%);
+  backdrop-filter: blur(var(--glass-blur-shell)) saturate(136%);
+  -webkit-backdrop-filter: blur(var(--glass-blur-shell)) saturate(136%);
   transition:
     min-height 320ms var(--ease-out-expo),
     border-color 320ms var(--ease-out-expo),
@@ -342,8 +343,8 @@ button {
 }
 
 .glass-panel-heavy {
-  backdrop-filter: blur(22px) saturate(136%);
-  -webkit-backdrop-filter: blur(22px) saturate(136%);
+  backdrop-filter: blur(var(--glass-blur-heavy)) saturate(136%);
+  -webkit-backdrop-filter: blur(var(--glass-blur-heavy)) saturate(136%);
 }
 
 .mono-rule {
@@ -475,8 +476,8 @@ button {
 .footer-shell {
   --noise-surface-opacity: var(--noise-header-opacity);
   background: rgba(10, 10, 20, 0.26);
-  backdrop-filter: blur(28px) saturate(136%);
-  -webkit-backdrop-filter: blur(28px) saturate(136%);
+  backdrop-filter: blur(var(--glass-blur-shell)) saturate(136%);
+  -webkit-backdrop-filter: blur(var(--glass-blur-shell)) saturate(136%);
 }
 
 .cart-noise-panel {
@@ -715,24 +716,15 @@ button {
   }
 }
 
-@keyframes noiseDrift {
-  0% {
-    background-position: 0 0;
-    transform: translate3d(0, 0, 0);
-  }
-
-  50% {
-    background-position: 120px -80px;
-    transform: translate3d(-0.4%, 0.3%, 0);
-  }
-
-  100% {
-    background-position: 240px -160px;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
 @media (max-width: 767px) {
+  :root {
+    --glass-blur-panel: 14px;
+    --glass-blur-heavy: 18px;
+    --glass-blur-shell: 18px;
+    --noise-header-opacity: 0.035;
+    --noise-surface-opacity: 0.035;
+  }
+
   .t-hero {
     font-size: clamp(2.2rem, 11vw, 3.5rem);
     letter-spacing: -0.025em;
@@ -762,13 +754,13 @@ button {
   }
 
   .glass-panel {
-    backdrop-filter: blur(14px) saturate(124%);
-    -webkit-backdrop-filter: blur(14px) saturate(124%);
+    backdrop-filter: blur(var(--glass-blur-panel)) saturate(124%);
+    -webkit-backdrop-filter: blur(var(--glass-blur-panel)) saturate(124%);
   }
 
   .glass-panel-heavy {
-    backdrop-filter: blur(18px) saturate(126%);
-    -webkit-backdrop-filter: blur(18px) saturate(126%);
+    backdrop-filter: blur(var(--glass-blur-heavy)) saturate(126%);
+    -webkit-backdrop-filter: blur(var(--glass-blur-heavy)) saturate(126%);
   }
 
   .glass-panel::after,

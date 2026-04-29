@@ -1,5 +1,11 @@
 import { SupportPageFrame } from "@/components/layout/SupportPageFrame";
 
+const freeShippingThreshold = new Intl.NumberFormat("en-IN", {
+  currency: "INR",
+  maximumFractionDigits: 0,
+  style: "currency",
+}).format(2999);
+
 export default function ShippingPage() {
   return (
     <SupportPageFrame title="Shipping">
@@ -14,8 +20,8 @@ export default function ShippingPage() {
         <section>
           <h2 className="support-heading">Domestic Shipping</h2>
           <p>
-            India orders usually arrive in 4 to 7 business days after dispatch. Shipping is free on domestic
-            orders above ₹2,999.
+            Orders in India usually arrive in 4 to 7 business days after dispatch. Shipping is free on domestic
+            orders above {freeShippingThreshold}.
           </p>
         </section>
         <section>

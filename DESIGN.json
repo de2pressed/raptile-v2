@@ -393,28 +393,29 @@
       "kind": "custom",
       "refersTo": "glass-panel",
       "description": "Pinned image stage plus scroll-linked copy blocks for fabric notes and brand story sections.",
-      "html": "<section class=\"ds-story\"><aside class=\"ds-story-stage\"></aside><div class=\"ds-story-copy\"><h3>240gsm body</h3><p>Dense, soft, and controlled.</p></div></section>",
+      "html": "<section class=\"ds-story\"><aside class=\"ds-story-stage\"></aside><div class=\"ds-story-copy\"><h3>240gsm body</h3><p>Built to look finished.</p></div></section>",
       "css": ".ds-story{display:grid;gap:24px}.ds-story-stage{min-height:28rem;border:1px solid oklch(0.92 0.012 80 / 0.1);border-radius:34px;background:oklch(0.18 0.016 40);box-shadow:0 18px 48px oklch(0 0 0 / 0.16)}.ds-story-copy h3{margin:0 0 8px;font-family:'Cabinet Grotesk',sans-serif;font-size:clamp(1.6rem,5vw,4rem);line-height:1.02;letter-spacing:-0.03em;color:oklch(0.92 0.012 78)}.ds-story-copy p{margin:0;font-family:'Cabinet Grotesk',sans-serif;font-size:0.98rem;line-height:1.85;color:oklch(0.68 0.018 72)}"
     }
   ],
   "narrative": {
-    "northStar": "The Material Archive",
+    "northStar": "Polished Disruption",
     "overview": [
-      "Raptile Studio reads like a dark gallery for heavyweight essentials. The system is built to keep the cloth in front, with the interface acting as a quiet frame around it.",
-      "The homepage is story-led, the collection page is commerce-led, and the about page is a slower editorial narrative, but they all share the same rule: the garment carries the emotion, the UI only sharpens the read.",
-      "The visual tone is restrained, tactile, and cinematic. Surfaces sit in warm darkness instead of pure black, accents stay rare, and motion should feel mechanical rather than playful."
+      "Raptile Studio reads like a fashion label with a point of view, not a storefront trying to please everyone. The system is built to keep the cloth in front, with the interface acting as a precise frame around it.",
+      "The homepage is story-led, the collection page is commerce-led, and the about page is a slower editorial narrative, but they all share the same rule: the garment carries the emotion, the UI sharpens the read.",
+      "The visual tone is sharp, polished, and high-concept. Surfaces sit in deep warmth instead of flat black, accents stay deliberate, and motion should feel composed rather than playful."
     ],
     "keyCharacteristics": [
       "Cloth first, interface second.",
-      "Warm dark surfaces, not flat black.",
-      "One amber accent, used sparingly.",
+      "Sharp surfaces, not flat black.",
+      "One amber accent, used with intent.",
       "Scroll-led storytelling with controlled motion.",
-      "Commerce surfaces stay legible, compact, and calm."
+      "Commerce surfaces stay legible, compact, and exact.",
+      "The brand should read as specific and self-possessed, not generic or borrowed."
     ],
     "rules": [
       {
         "name": "One Accent Rule",
-        "body": "Amber is reserved for primary actions, active states, and the occasional editorial callout.",
+        "body": "Amber is reserved for primary actions, active states, and the occasional editorial callout. If it starts appearing everywhere, the system has lost its focus.",
         "section": "colors"
       },
       {
@@ -434,10 +435,10 @@
       }
     ],
     "dos": [
-      "Do keep product imagery dominant and let the UI stay dark, warm, and restrained.",
+      "Do keep product imagery dominant and let the UI stay dark, warm, and polished.",
+      "Do keep the background stage, page transitions, and navigation shell composed so the shell supports the cloth.",
       "Do use noise-surface and glass-panel on controls, headers, footers, and story cards so texture lives on interface elements, not garments.",
-      "Do keep the homepage sequence explicit: Onyx collection first, featured products second, cloth feature storytelling third.",
-      "Do keep the collection grid compact, with responsive columns that cap out at four across on large screens."
+      "Do keep the homepage sequence explicit: Onyx collection first, featured products second, fabric story third."
     ],
     "donts": [
       "Don't use generic SaaS gradients.",
@@ -445,6 +446,7 @@
       "Don't use loud streetwear neon.",
       "Don't use playful DTC pastels.",
       "Don't use white-label Shopify templates.",
+      "Don't let the copy sound like AI slop or \"just another clothing brand\".",
       "Don't add decorative amber fill on secondary UI.",
       "Don't rely on hover gimmicks or icon-card grids.",
       "Don't let any interface treatment compete with product images."

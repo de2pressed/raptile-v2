@@ -120,7 +120,7 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
   const collectionSize = products.length;
   const heroSummary =
     collectionDescription ||
-    "A short edit of heavyweight tees and essentials, tuned for Indian weather and repeated wear.";
+    "A sharp edit of heavyweight tees and essentials, built for heat, motion, and repeat wear.";
   const heroOverlaySummary = heroProduct
     ? summarizeText(heroProduct.description || heroSummary, 120)
     : "The cover piece appears here once products are published.";
@@ -199,16 +199,16 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: reducedMotion ? 0.01 : 0.55, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="space-y-4">
-            <div className="flex flex-wrap items-center gap-3 t-label text-[color:var(--text-muted)]">
-              <span>{collectionTitle}</span>
-              <span aria-hidden>/</span>
-              <span>{collectionSize} pieces</span>
-              <span aria-hidden>/</span>
-              <span>Built in India</span>
-            </div>
+            <div className="space-y-4">
+              <div className="flex flex-wrap items-center gap-3 t-label text-[color:var(--text-muted)]">
+                <span>{collectionTitle}</span>
+                <span aria-hidden>/</span>
+                <span>{collectionSize} pieces</span>
+                <span aria-hidden>/</span>
+                <span>Built in India</span>
+              </div>
             <h1 className="t-hero max-w-[11ch] text-[color:var(--text)]">
-              Heavyweight essentials, tuned for heat and repeat wear.
+              Heavyweight essentials, cut to look original and stay polished.
             </h1>
             <p className="editorial-copy max-w-[36ch]">{heroSummary}</p>
           </div>
@@ -260,11 +260,11 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
             <div className="space-y-2">
               <div className="t-label text-[color:var(--text-muted)]">Featured pieces</div>
               <h2 className="t-display max-w-[11ch] text-[color:var(--text)]">
-                A short index, not a wall of product tiles.
+                A sharp index, not a wall of product tiles.
               </h2>
               <p className="editorial-copy max-w-[34ch]">
-                One cover piece leads, the rest are listed by price and status so the page stays fast to read on mobile and
-                still feels composed on desktop.
+                One cover piece leads, the rest are listed by price and status so the page reads fast on mobile and
+                stays composed on desktop.
               </p>
             </div>
 
@@ -273,7 +273,7 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
                 <div className="t-label text-[color:var(--text-muted)]">Studio note</div>
                 <p className="t-ui leading-7 text-[color:var(--text-muted)]">
                   This homepage keeps the cloth in front. A cover image, then a release index, then the fabric story as you
-                  scroll. The page feels calmer when the structure is this direct.
+                  scroll. The page works when the structure stays this direct.
                 </p>
               </div>
 
@@ -322,7 +322,7 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
           cta={{ href: "/collection", label: "Browse the collection" }}
           intro="Weight, wash, shape, and release keep the line in focus as you move through the page."
           label="Fabric notes"
-          title="The cloth story stays visible as you scroll."
+          title="The fabric story stays in view as you scroll."
           items={storyBeats}
         />
       </section>

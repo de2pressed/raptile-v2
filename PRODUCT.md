@@ -8,18 +8,23 @@ brand
 Style-conscious shoppers in India, mostly on mobile but sometimes on desktop, browsing a small release of heavyweight tees and related essentials. They compare fit, color, and size, read the brand story, and expect the storefront to feel as considered as the clothing itself.
 
 ## Product Purpose
-Raptile Studio is a headless Shopify storefront for an Indian streetwear label built around heavyweight essentials and short-run releases. The site exists to make the brand feel honest, local, and premium while keeping the commercial path clear across discovery, product detail, cart, and support pages. Success looks like a storefront that feels unmistakably specific, while core commerce actions such as color selection, size selection, add to cart, and checkout remain obvious and reliable.
+Raptile Studio is a headless Shopify storefront for an Indian streetwear label built around heavyweight essentials and short-run releases. The site exists to make the brand feel like a serious creative label: original, exacting, and polished enough to stand apart without leaning on hype. It keeps the commercial path clear across discovery, product detail, cart, and support pages. Success looks like a storefront that feels unmistakably specific and fully resolved, while core commerce actions such as color selection, size selection, add to cart, and checkout remain obvious and reliable.
 
 ## Brand Personality
-Restrained, tactile, direct. The voice should feel deliberate and composed, with quiet confidence instead of hype. Visual drama comes from garment photography, contrast, pacing, and motion, not from loud UI chrome.
+Creative, exacting, and a little defiant. The voice should feel like a label that knows the rules and breaks them with control. It should read slowly and land sharply. Visual drama comes from garment photography, contrast, pacing, and precision, not from loud UI chrome or trend-chasing decoration.
+
+## Voice Cues
+- Use phrases like `well executed`, `polished to the brim`, and `be the trend` when the brand needs a confident line.
+- Keep sentences compact, high-contrast, and deliberate.
+- Let the writing feel finished, not improvised.
 
 ## Anti-references
-Do not let the storefront drift into generic SaaS gradients, glowing dashboard cards, loud streetwear neon, playful DTC pastels, or white-label Shopify templates. Avoid decorative amber fill on secondary UI, hover gimmicks, icon-card grids, and any interface treatment that competes with the product images. Do not fall back to thin tech-minimal sameness or copy that sounds borrowed from a trend deck.
+Do not let the storefront drift into AI slop, "just another clothing brand" copy, generic SaaS gradients, glowing dashboard cards, loud streetwear neon, playful DTC pastels, or white-label Shopify templates. Avoid decorative amber fill on secondary UI, hover gimmicks, icon-card grids, and any interface treatment that competes with the product images. Do not fall back to thin tech-minimal sameness or copy that sounds borrowed from a trend deck.
 
 ## Design Principles
 1. Cloth leads, UI supports: garment photography, fit, and texture should carry the emotional weight.
-2. Editorial story, obvious commerce: the brand can feel composed and cinematic without obscuring search, cart, sizing, and checkout.
-3. Local identity matters: the site should read as made for the climate, pace, and culture it serves, not as imported streetwear theater.
+2. Editorial story, obvious commerce: the brand can feel composed and high-concept without obscuring search, cart, sizing, and checkout.
+3. Specificity matters: the site should feel original, sharp, and minimal where it helps, not like a template with a better font.
 4. Motion should feel controlled: transitions, fades, and overlays should add rhythm, not attention-seeking movement.
 5. Every support surface still speaks for the brand: shipping, returns, size guide, and contact pages should stay calm, useful, and consistent.
 

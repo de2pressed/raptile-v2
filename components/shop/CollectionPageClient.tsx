@@ -174,7 +174,7 @@ export function CollectionPageClient({ collectionTitle, collectionDescription, p
             </div>
             <p className="editorial-copy max-w-[34ch]">{collectionDescription}</p>
             <div className="t-ui max-w-[34ch] leading-6 text-[color:var(--text-muted)]">
-              Weight, wash, and silhouette stay close to the cloth. The interface stays out of the way.
+              Weight, wash, and silhouette stay close to the garment. The interface stays exact and quiet.
             </div>
           </div>
 
@@ -183,7 +183,9 @@ export function CollectionPageClient({ collectionTitle, collectionDescription, p
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
                   <div className="t-label text-[color:var(--text-muted)]">Search and sort</div>
-                  <div className="t-ui text-[color:var(--text-subtle)]">Narrow the release without losing the mood.</div>
+                  <div className="t-ui text-[color:var(--text-subtle)]">
+                    Narrow the release without losing the point of view.
+                  </div>
                 </div>
                 <div className="t-ui text-[color:var(--text-subtle)]">{resultSummary}</div>
               </div>
@@ -288,7 +290,7 @@ export function CollectionPageClient({ collectionTitle, collectionDescription, p
             <div className="glass-panel rounded-[30px] px-6 py-8 md:px-8 md:py-10">
               <div className="t-label text-[color:var(--text-muted)]">No matches</div>
               <div className="mt-4 max-w-[34rem] font-display text-3xl font-bold tracking-[-0.04em] text-[color:var(--text)] md:text-4xl">
-                No products match the current search or size filter.
+                No pieces match the current search or size filter.
               </div>
               <div className="mt-4 flex flex-wrap gap-3">
                 <button

@@ -547,7 +547,7 @@ export function Nav() {
                       </div>
 
                       <p className="t-ui max-w-[24rem] text-[color:var(--text-muted)]">
-                        Minimal essentials from India. Heavyweight fits, reduced graphics, slower drops.
+                        Creative essentials from India. Heavyweight fits, precise cuts, slower drops.
                       </p>
                     </div>
                   </div>

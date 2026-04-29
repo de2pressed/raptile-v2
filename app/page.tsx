@@ -2,7 +2,7 @@ import { HomePageClient } from "@/components/home/HomePageClient";
 import { getFeaturedCollection } from "@/lib/collection";
 
 const FALLBACK_COLLECTION_DESCRIPTION =
-  "A short edit of heavyweight tees and essentials, tuned for Indian weather and repeated wear.";
+  "A sharp edit of heavyweight tees and essentials, built for heat, motion, and repeat wear.";
 
 export default async function HomePage() {
   const collection = await getFeaturedCollection();

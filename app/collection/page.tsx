@@ -3,7 +3,7 @@ import { getFeaturedCollection } from "@/lib/collection";
 import { Suspense } from "react";
 
 const FALLBACK_COLLECTION_DESCRIPTION =
-  "Heavyweight essentials, short-run releases, and a slower approach to garments that stay composed over time.";
+  "Heavyweight essentials, short-run releases, and a deliberate pace that still lands sharp.";
 
 export default async function CollectionPage() {
   const collection = await getFeaturedCollection();

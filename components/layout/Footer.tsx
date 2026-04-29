@@ -69,7 +69,7 @@ export function Footer() {
           <div className="max-w-[28rem] space-y-3">
             <BrandLogo />
             <p className="t-ui max-w-[22rem] leading-6 text-[color:var(--text-muted)]">
-              Minimal essentials from India. Heavyweight fits, reduced graphics, slower drops.
+              Creative essentials from India. Heavyweight fits, precise cuts, slower drops.
             </p>
           </div>
 
@@ -77,7 +77,7 @@ export function Footer() {
             <div className="space-y-3">
               <div className="t-label text-[color:var(--text-muted)]">Newsletter</div>
               <h2 className="font-display text-3xl font-bold tracking-[-0.04em] text-[color:var(--text)]">
-                Be the first to know about new drops and exclusive discounts.
+                Be first when the next drop lands.
               </h2>
               <p className="t-ui max-w-[30rem] text-[color:var(--text-muted)]">
                 One email field, no clutter. Updates only when the studio has something worth opening.

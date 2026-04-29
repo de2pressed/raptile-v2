@@ -20,10 +20,10 @@ export async function CollectionHeader() {
         </div>
         <div className="min-w-0 max-w-full space-y-4 lg:justify-self-end">
           <p className="editorial-copy">
-            Heavyweight tees, small runs, and a slower approach to graphics-led essentials built to hold shape over time.
+            Heavyweight tees, small runs, and a sharper edit of graphics-led essentials built to hold shape over time.
           </p>
           <div className="t-ui max-w-[34ch] leading-6 text-[color:var(--text-muted)]">
-            The point is to keep the edit short and the read immediate.
+            The point is to keep the edit sharp and the read immediate.
           </div>
         </div>
       </div>

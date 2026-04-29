@@ -6,50 +6,50 @@ import { ArrowRightIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 const heroSignals = [
-  "Two students / one shared frustration",
-  "Indian weather / Indian movement",
-  "Heavyweight cloth / controlled wash",
-  "Identity comes from fit, not graphics",
+  "Two students / one cleaner standard",
+  "Indian weather / exact fits",
+  "Heavyweight cloth / precise wash",
+  "Identity comes from silhouette, not noise",
 ] as const;
 
 const processNotes = [
-  "Built in India, for India.",
-  "Heavyweight cloth and controlled wash.",
-  "Short release windows, not constant noise.",
-  "Identity comes from fit, not graphics.",
+  "Built in India, finished with intent.",
+  "Heavyweight cloth and exact wash.",
+  "Short release windows, no filler.",
+  "Identity comes from silhouette, not noise.",
 ] as const;
 
 const stayTheSame = [
-  "A quiet tone that lets the cloth speak first.",
-  "A refusal to chase loud references or imported identity.",
-  "A fit process that keeps coming back to everyday wear.",
-  "A release rhythm that stays measured, not performative.",
+  "A disciplined frame that lets the garment lead.",
+  "A refusal to copy loud references or borrowed identity.",
+  "A fit process that keeps coming back to real wear.",
+  "A release rhythm that stays deliberate, not chaotic.",
 ] as const;
 
 const pillars = [
   {
     eyebrow: "01 / Founders",
-    title: "Two college students, one shared frustration.",
+    title: "Two students, one refusal to look generic.",
     body:
-      "Raptile started with the simple feeling that Indian streetwear was being told in someone else's language. The clothes were either too loud or too borrowed, and neither felt honest.",
+      "Raptile started with the feeling that Indian streetwear was often either overworked or borrowed. The goal was to make something original, exacting, and hard to mistake for a template.",
   },
   {
     eyebrow: "02 / Philosophy",
-    title: "Built for Indian weather, Indian movement, Indian life.",
+    title: "Built for Indian weather, movement, and repeat wear.",
     body:
-      "The cut, weight, and wash are tuned for heat, humidity, movement, and repeated wear. The goal is not a copy of western minimalism, but a piece that belongs here first.",
+      "The cut, weight, and wash are tuned for heat, humidity, motion, and repeated wear. The goal is not to imitate a western archive, but to make pieces that feel finished here.",
   },
   {
     eyebrow: "03 / Process",
     title: "Design decisions stay close to the cloth.",
     body:
-      "Every release is checked against drape, shoulder shape, collar density, and how the garment holds after a real day outside. If the piece does not feel settled, it does not ship.",
+      "Every release is checked against drape, shoulder shape, collar density, and how the garment holds after a real day outside. If the piece does not feel fully considered, it does not ship.",
   },
   {
     eyebrow: "04 / Future",
-    title: "A label that stays small enough to stay clear.",
+    title: "A label that can lead without shouting.",
     body:
-      "The vision is not scale for its own sake. It is a body of work that feels considered, local, and durable enough to keep wearing until the next drop arrives on its own terms.",
+      "The vision is not scale for its own sake. It is a body of work that feels sharper with every drop, strong enough to stay current without chasing the crowd.",
   },
 ] as const;
 
@@ -108,13 +108,12 @@ export default function AboutPage() {
             </div>
 
             <h1 className="t-hero max-w-[12ch] text-[color:var(--text)]">
-              Built by two students who wanted Indian streetwear to feel honest.
+              Built by two students who wanted Indian streetwear to feel sharper.
             </h1>
 
             <p className="editorial-copy max-w-[38ch]">
-              Raptile is a label shaped by long campus nights, early sample rounds, and the decision to make something
-              that felt local without looking provincial. The point is not to imitate a western archive. The point is to
-              build a wardrobe that belongs to the place it comes from.
+              Raptile is shaped by long campus nights, early sample rounds, and the decision to make something
+              original enough to stand up straight. The aim is not to look loud. The aim is to look finished.
             </p>
           </div>
 
@@ -153,7 +152,7 @@ export default function AboutPage() {
               <div className="space-y-2">
                 <div className="t-label text-[color:var(--text-muted)]">Manifesto</div>
                 <p className="font-display text-[clamp(1.7rem,3.8vw,2.55rem)] font-bold tracking-[-0.04em] leading-[0.98] text-[color:var(--text)]">
-                  Raw, grounded, and built around the people who will actually wear it.
+                  Well executed, disruptive, and polished to the brim.
                 </p>
               </div>
             </div>
@@ -183,17 +182,17 @@ export default function AboutPage() {
           <div className="space-y-6">
             <div className="t-label text-[color:var(--text-muted)]">Founders story</div>
             <h2 className="t-display max-w-[11ch] text-[color:var(--text)]">
-              Started after class, kept alive by the need to make better tees.
+              Started after class, kept alive by the urge to do it properly.
             </h2>
             <p className="editorial-copy max-w-[40ch]">
-              The first samples were not a brand exercise. They were a response to how hard it was to find shirts that
-              felt serious without turning theatrical. The founders kept returning to the same questions: what if the
-              fabric could carry the mood, what if the fit could stay calm, and what if the label could speak plainly.
+              The first samples were a response to how often shirts felt either overdesigned or undercooked. The
+              founders kept returning to the same questions: what if the fabric could carry the mood, what if the fit
+              could stay clean, and what if the label could speak with precision.
             </p>
             <p className="editorial-copy max-w-[40ch]">
               That direction stayed intact as the work moved from one sample to the next. Less graphics, better weight,
-              smaller runs, and a stronger read on the body. The brand did not grow out of trend hunting. It grew out of
-              repeated wear tests and the discipline to cut whatever felt borrowed.
+              smaller runs, and a stronger read on the body. The brand did not grow out of chasing trends. It grew out
+              of repeated wear tests and the discipline to cut anything that dulled the point of view.
             </p>
           </div>
 
@@ -231,12 +230,11 @@ export default function AboutPage() {
           <div className="space-y-4">
             <div className="t-label text-[color:var(--text-muted)]">Where it is going</div>
             <h2 className="t-display max-w-[12ch] text-[color:var(--text)]">
-              The long-term goal is simple, a label people trust because it never talks over the product.
+              The long-term goal is simple: make a label people trust because every drop lands polished.
             </h2>
             <p className="editorial-copy max-w-[40ch]">
               Raptile is moving toward a tighter archive of pieces that stay useful across seasons, cities, and repeat
-              wear. Each drop should earn its place quietly, with enough clarity that the garments feel like part of a
-              lived-in wardrobe instead of a seasonal statement.
+              wear. Each drop should earn its place by being clear, well executed, and easy to come back to.
             </p>
 
             <div className="flex flex-wrap gap-3">
@@ -255,11 +253,11 @@ export default function AboutPage() {
           <GlassPanel className="rounded-[34px] px-6 py-6 md:px-8 md:py-8">
             <div className="space-y-4">
               <div className="t-label text-[color:var(--text-muted)]">
-                What built in India for India means
+                What being built in India means
               </div>
               <p className="t-ui leading-7 text-[color:var(--text-muted)]">
-                It means making for the weather, the pace, and the way people move here. It means local references,
-                local judgment, and a refusal to flatten the brand into someone else&apos;s streetwear template.
+                It means making for the weather, the pace, and the way people move here. It means real context, sharp
+                judgment, and a refusal to flatten the brand into someone else&apos;s streetwear template.
               </p>
             </div>
           </GlassPanel>

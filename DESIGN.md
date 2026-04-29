@@ -1,6 +1,6 @@
 ---
 name: Raptile Studio
-description: Editorial heavyweight storefront for an Indian streetwear label.
+description: High-concept editorial storefront for an Indian streetwear label.
 colors:
   charcoal-ink: "oklch(0.11 0.012 40)"
   warm-shadow: "oklch(0.145 0.015 38)"
@@ -126,19 +126,19 @@ components:
 
 ## 1. Overview
 
-**Creative North Star: "The Material Archive"**
+**Creative North Star: "Polished Disruption"**
 
-Raptile Studio reads like a dark gallery for heavyweight essentials. The system is built to keep the cloth in front, with the interface acting as a quiet frame around it. The page stack is layered, starting with `BackgroundStage`, then `AppProviders`, then `PageTransition`, then the routed content. The homepage is story-led, the collection page is commerce-led, and the about page is a slower editorial narrative, but they all share the same rule: the garment carries the emotion, the UI only sharpens the read.
+Raptile Studio reads like a fashion label with a point of view, not a storefront trying to please everyone. The system is built to keep the cloth in front, with the interface acting as a precise frame around it. The page stack is layered, starting with `BackgroundStage`, then `AppProviders`, then `PageTransition`, then the routed content. The homepage is story-led, the collection page is commerce-led, and the about page is a slower editorial narrative, but they all share the same rule: the garment carries the emotion, the UI sharpens the read.
 
-The visual tone is restrained, tactile, and cinematic. Surfaces sit in warm darkness instead of pure black, accents stay rare, and motion should feel mechanical rather than playful. The system explicitly rejects generic SaaS gradients, glowing dashboard cards, loud streetwear neon, playful DTC pastels, and white-label Shopify templates.
+The visual tone is sharp, polished, and high-concept. Surfaces sit in deep warmth instead of flat black, accents stay deliberate, and motion should feel composed rather than playful. The system explicitly rejects generic AI-slop copy, glowing dashboard cards, loud streetwear neon, playful DTC pastels, and white-label Shopify templates.
 
 **Key Characteristics:**
 - Cloth first, interface second.
-- Warm dark surfaces, not flat black.
-- One amber accent, used sparingly.
+- Sharp surfaces, not flat black.
+- One amber accent, used with intent.
 - Scroll-led storytelling with controlled motion.
-- Commerce surfaces stay legible, compact, and calm.
-- The brand should read as local, not imported theater.
+- Commerce surfaces stay legible, compact, and exact.
+- The brand should read as specific and self-possessed, not generic or borrowed.
 
 ## 2. Colors
 
@@ -163,7 +163,7 @@ The palette is warm, low-chroma, and materially grounded. It should feel like ch
 - **Shadow Ink** (`oklch(0 0 0 / 0.16)`): ambient shadow tone for depth without hard contrast.
 
 ### Named Rules
-**The One Accent Rule.** Amber is reserved for primary actions, active states, and the occasional editorial callout. If it starts appearing everywhere, the system has lost its restraint.
+**The One Accent Rule.** Amber is reserved for primary actions, active states, and the occasional editorial callout. If it starts appearing everywhere, the system has lost its focus.
 
 **The Noise-On-UI Rule.** Texture belongs on panels, shells, and controls only. Product photography stays clean. Never let grain or overlay contaminate the garment image.
 
@@ -229,10 +229,10 @@ Contact, shipping, returns, and size guide content should stay calm and utilitar
 ## 6. Do's and Don'ts
 
 ### Do:
-- **Do** keep product imagery dominant and let the UI stay dark, warm, and restrained.
-- **Do** keep the background stage, page transitions, and navigation shell restrained so the shell supports the cloth.
+- **Do** keep product imagery dominant and let the UI stay dark, warm, and polished.
+- **Do** keep the background stage, page transitions, and navigation shell composed so the shell supports the cloth.
 - **Do** use `noise-surface` and `glass-panel` on controls, headers, footers, and story cards so texture lives on interface elements, not garments.
-- **Do** keep the homepage sequence explicit: Onyx collection first, featured products second, cloth feature storytelling third.
+- **Do** keep the homepage sequence explicit: Onyx collection first, featured products second, fabric story third.
 - **Do** keep the collection grid compact, with responsive columns that cap out at four across on large screens.
 - **Do** preserve full product descriptions on desktop PDPs and keep the information column readable at a glance.
 - **Do** use the logo PNG in the header and about page when available, with a clean fallback wordmark.
@@ -245,6 +245,7 @@ Contact, shipping, returns, and size guide content should stay calm and utilitar
 - **Don't** use loud streetwear neon.
 - **Don't** use playful DTC pastels.
 - **Don't** use white-label Shopify templates.
+- **Don't** let the copy sound like AI slop or "just another clothing brand".
 - **Don't** add decorative amber fill on secondary UI.
 - **Don't** rely on hover gimmicks or icon-card grids.
 - **Don't** let any interface treatment compete with product images.

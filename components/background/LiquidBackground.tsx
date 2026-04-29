@@ -1,313 +1,262 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 
 import type { ThemePalette } from "@/lib/theme-lab";
-import { parseColor } from "@/lib/theme-lab";
+import { mixColor, withAlpha } from "@/lib/theme-lab";
 
-const GRID = 28;
-const SPRING = 0.14;
-const DAMPING = 0.985;
-const AMBIENT_INTERVAL = 90;
-const RESIZE_DEBOUNCE_MS = 150;
-const INERTIA_THRESHOLD = 0.5;
-
-type GridState = {
-  cols: number;
-  rows: number;
-  heights: Float32Array;
-  velocities: Float32Array;
-  source: Float32Array;
+type CellSpec = {
+  left: string;
+  top: string;
+  width: string;
+  height: string;
+  blur: number;
+  opacity: number;
+  duration: number;
+  delay: number;
+  x: number;
+  y: number;
+  scale: number;
+  colorKey: "accent" | "accentStrong" | "shaderWarm" | "shaderMid" | "accentGlow";
 };
 
-function clamp(value: number, min: number, max: number) {
-  return Math.min(max, Math.max(min, value));
-}
+const CELLS: CellSpec[] = [
+  { left: "6%", top: "12%", width: "30vw", height: "24vh", blur: 96, opacity: 0.5, duration: 28, delay: 0, x: 18, y: 10, scale: 1.06, colorKey: "accent" },
+  { left: "26%", top: "18%", width: "38vw", height: "30vh", blur: 118, opacity: 0.36, duration: 34, delay: -4, x: -14, y: 8, scale: 1.04, colorKey: "shaderWarm" },
+  { left: "56%", top: "8%", width: "34vw", height: "28vh", blur: 104, opacity: 0.42, duration: 30, delay: -8, x: 12, y: 12, scale: 1.08, colorKey: "accentStrong" },
+  { left: "14%", top: "60%", width: "42vw", height: "28vh", blur: 124, opacity: 0.4, duration: 38, delay: -12, x: 16, y: -8, scale: 1.05, colorKey: "shaderMid" },
+  { left: "58%", top: "56%", width: "34vw", height: "24vh", blur: 110, opacity: 0.38, duration: 32, delay: -15, x: -18, y: 10, scale: 1.07, colorKey: "accentGlow" },
+] as const;
 
-function clampByte(value: number) {
-  return clamp(Math.round(value), 0, 255);
-}
+const CONTOURS = [
+  "M -120 240 C 90 180, 220 280, 410 232 S 740 170, 1120 230",
+  "M -140 420 C 60 370, 260 480, 520 420 S 820 360, 1140 425",
+  "M -120 612 C 120 560, 300 680, 520 620 S 820 560, 1120 610",
+  "M -100 800 C 120 748, 330 842, 560 806 S 840 754, 1140 800",
+] as const;
 
-function createGrid(width: number, height: number): GridState {
-  const cols = Math.ceil(width / GRID) + 2;
-  const rows = Math.ceil(height / GRID) + 2;
-  const size = cols * rows;
+export default function WeatherCell({ palette }: { palette: ThemePalette }) {
+  const reduceMotion = useReducedMotion() ?? false;
+  const frontTone = mixColor(palette.shaderWarm, palette.accentStrong, 0.38);
 
-  return {
-    cols,
-    rows,
-    heights: new Float32Array(size),
-    velocities: new Float32Array(size),
-    source: new Float32Array(size),
-  };
-}
-
-function getIndex(cols: number, col: number, row: number) {
-  return row * cols + col;
-}
-
-function sampleCell(grid: GridState, gridX: number, gridY: number) {
-  const { cols, rows, heights } = grid;
-  const maxCol = cols - 2;
-  const maxRow = rows - 2;
-  const cellX = clamp(Math.floor(gridX), 0, maxCol);
-  const cellY = clamp(Math.floor(gridY), 0, maxRow);
-  const nextX = cellX + 1;
-  const nextY = cellY + 1;
-  const tx = gridX - cellX;
-  const ty = gridY - cellY;
-
-  const topLeft = heights[getIndex(cols, cellX, cellY)];
-  const topRight = heights[getIndex(cols, nextX, cellY)];
-  const bottomLeft = heights[getIndex(cols, cellX, nextY)];
-  const bottomRight = heights[getIndex(cols, nextX, nextY)];
-
-  const top = topLeft + (topRight - topLeft) * tx;
-  const bottom = bottomLeft + (bottomRight - bottomLeft) * tx;
-  const height = top + (bottom - top) * ty;
-
-  const gradientX = (topRight - topLeft) * (1 - ty) + (bottomRight - bottomLeft) * ty;
-  const gradientY = (bottomLeft - topLeft) * (1 - tx) + (bottomRight - topRight) * tx;
-
-  return { height, gradientX, gradientY };
-}
-
-function ripple(grid: GridState, cx: number, cy: number, strength: number) {
-  const { cols, rows, velocities } = grid;
-  const centerCol = Math.floor(cx / GRID) + 1;
-  const centerRow = Math.floor(cy / GRID) + 1;
-
-  for (let rowOffset = -3; rowOffset <= 3; rowOffset += 1) {
-    for (let colOffset = -3; colOffset <= 3; colOffset += 1) {
-      const row = centerRow + rowOffset;
-      const col = centerCol + colOffset;
-
-      if (row <= 0 || row >= rows - 1 || col <= 0 || col >= cols - 1) {
-        continue;
-      }
-
-      const distance = Math.hypot(rowOffset, colOffset);
-      const falloff = strength / (1 + distance * distance * 0.5);
-      velocities[getIndex(cols, col, row)] += falloff;
-    }
-  }
-}
-
-function stepWave(grid: GridState) {
-  const { cols, rows, heights, velocities, source } = grid;
-  source.set(heights);
-
-  for (let row = 1; row < rows - 1; row += 1) {
-    const rowOffset = row * cols;
-    for (let col = 1; col < cols - 1; col += 1) {
-      const index = rowOffset + col;
-      const average =
-        (source[index - 1] + source[index + 1] + source[index - cols] + source[index + cols]) * 0.25;
-
-      let velocity = velocities[index];
-      velocity += (average - source[index]) * SPRING;
-      velocity *= DAMPING;
-
-      velocities[index] = velocity;
-      heights[index] = source[index] + velocity;
-    }
-  }
-}
-
-function fillStaticFrame(
-  context: CanvasRenderingContext2D,
-  imageData: ImageData,
-  width: number,
-  height: number,
-  baseColor: ReturnType<typeof parseColor>,
-) {
-  const { data } = imageData;
-
-  for (let index = 0; index < width * height; index += 1) {
-    const offset = index * 4;
-    data[offset] = Math.round(baseColor.r);
-    data[offset + 1] = Math.round(baseColor.g);
-    data[offset + 2] = Math.round(baseColor.b);
-    data[offset + 3] = 255;
-  }
-
-  context.putImageData(imageData, 0, 0);
-}
-
-export function LiquidBackground({ palette }: { palette: ThemePalette }) {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-
-    if (!canvas) {
-      return;
-    }
-
-    const context = canvas.getContext("2d", {
-      alpha: false,
-      desynchronized: true,
-    });
-
-    if (!context) {
-      return;
-    }
-
-    const baseColor = parseColor(palette.bg);
-    const accentColor = parseColor(palette.accent);
-    const warmColor = parseColor(palette.shaderWarm);
-    const midColor = parseColor(palette.shaderMid);
-    const prefersReducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let resizeTimer = 0;
-    let animationFrame = 0;
-    let viewportWidth = 1;
-    let viewportHeight = 1;
-    let pixelWidth = 1;
-    let pixelHeight = 1;
-    let devicePixelRatio = 1;
-    let frame = 0;
-    let lastScrollY = window.scrollY;
-    let inertia = 0;
-    let grid = createGrid(viewportWidth, viewportHeight);
-    let imageData = context.createImageData(pixelWidth, pixelHeight);
-    let prefersReducedMotion = prefersReducedMotionQuery.matches;
-
-    const renderStatic = () => {
-      fillStaticFrame(context, imageData, pixelWidth, pixelHeight, baseColor);
-    };
-
-    const resizeCanvas = () => {
-      viewportWidth = Math.max(1, Math.floor(window.innerWidth));
-      viewportHeight = Math.max(1, Math.floor(window.innerHeight));
-      devicePixelRatio = Math.max(1, window.devicePixelRatio || 1);
-      pixelWidth = Math.max(1, Math.floor(viewportWidth * devicePixelRatio));
-      pixelHeight = Math.max(1, Math.floor(viewportHeight * devicePixelRatio));
-
-      canvas.width = pixelWidth;
-      canvas.height = pixelHeight;
-      canvas.style.width = "100%";
-      canvas.style.height = "100%";
-      canvas.style.backgroundColor = palette.bg;
-
-      grid = createGrid(viewportWidth, viewportHeight);
-      imageData = context.createImageData(pixelWidth, pixelHeight);
-
-      if (prefersReducedMotion) {
-        renderStatic();
-      }
-    };
-
-    const renderSurface = () => {
-      const { data } = imageData;
-      const inverseDpr = 1 / devicePixelRatio;
-      const gridScale = 1 / GRID;
-
-      for (let py = 0; py < pixelHeight; py += 1) {
-        const cssY = py * inverseDpr;
-        const gridY = cssY * gridScale + 1;
-
-        for (let px = 0; px < pixelWidth; px += 1) {
-          const cssX = px * inverseDpr;
-          const gridX = cssX * gridScale + 1;
-          const { height, gradientX, gradientY } = sampleCell(grid, gridX, gridY);
-          const spec = Math.max(0, height * 0.6 + gradientX * 0.4 - gradientY * 0.2);
-          const shine = Math.pow(spec, 2.2);
-          const offset = (py * pixelWidth + px) * 4;
-
-          data[offset] = clampByte(baseColor.r + shine * accentColor.r * 0.34 + shine * warmColor.r * 0.18);
-          data[offset + 1] = clampByte(baseColor.g + shine * accentColor.g * 0.26 + shine * warmColor.g * 0.12);
-          data[offset + 2] = clampByte(baseColor.b + shine * accentColor.b * 0.16 + shine * midColor.b * 0.14);
-          data[offset + 3] = 255;
+  return (
+    <div
+      aria-hidden="true"
+      className="fixed inset-0 overflow-hidden"
+      style={{
+        background: `linear-gradient(180deg, ${palette.bgSoft} 0%, ${palette.bg} 42%, ${palette.bgElevated} 100%)`,
+      }}
+    >
+      <motion.div
+        aria-hidden="true"
+        className="absolute inset-[-14%]"
+        style={{
+          backgroundImage: `
+            repeating-linear-gradient(90deg, ${withAlpha(palette.textSubtle, 0.045)} 0 1px, transparent 1px 14vw),
+            repeating-linear-gradient(0deg, ${withAlpha(palette.textSubtle, 0.04)} 0 1px, transparent 1px 18vh)
+          `,
+          mixBlendMode: "soft-light",
+          opacity: 0.4,
+        }}
+        animate={
+          reduceMotion
+            ? { opacity: 0.28 }
+            : {
+                x: [0, 16, 0],
+                y: [0, -10, 0],
+                opacity: [0.22, 0.44, 0.22],
+              }
         }
-      }
+        transition={{
+          duration: 36,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
 
-      context.putImageData(imageData, 0, 0);
-    };
+      <motion.div
+        aria-hidden="true"
+        className="absolute left-1/2 top-[18%] h-[74vmax] w-[74vmax] -translate-x-1/2 rounded-[50%]"
+        style={{
+          background: `radial-gradient(circle at 50% 42%, ${withAlpha(palette.accentStrong, 0.2)} 0%, ${withAlpha(
+            palette.accent,
+            0.1,
+          )} 28%, transparent 60%)`,
+          filter: "blur(62px)",
+          mixBlendMode: "screen",
+        }}
+        animate={
+          reduceMotion
+            ? { opacity: 0.68, y: 0, scale: 1 }
+            : {
+                opacity: [0.48, 0.88, 0.5],
+                y: [0, 18, 0],
+                scale: [1, 1.045, 1.015],
+              }
+        }
+        transition={{
+          duration: 30,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
 
-    const injectScrollRipple = () => {
-      const x = viewportWidth * (0.3 + Math.random() * 0.4);
-      const y = viewportHeight * (0.3 + Math.random() * 0.4);
-      ripple(grid, x, y, inertia * 0.25);
-    };
+      {CELLS.map((cell, index) => {
+        const cellColor = palette[cell.colorKey];
 
-    const injectAmbientRipple = () => {
-      const x = viewportWidth * (0.12 + Math.random() * 0.76);
-      const y = viewportHeight * (0.12 + Math.random() * 0.76);
-      ripple(grid, x, y, 0.6 + Math.random() * 0.4);
-    };
+        return (
+          <motion.div
+            key={`${cell.left}-${cell.top}-${index}`}
+            aria-hidden="true"
+            className="absolute rounded-[50%]"
+            style={{
+              left: cell.left,
+              top: cell.top,
+              width: cell.width,
+              height: cell.height,
+              background: `radial-gradient(circle at 35% 32%, ${withAlpha(cellColor, 0.8)} 0%, ${withAlpha(
+                cellColor,
+                0.42,
+              )} 26%, ${withAlpha(cellColor, 0.16)} 54%, transparent 74%)`,
+              filter: `blur(${cell.blur}px)`,
+              mixBlendMode: "screen",
+            }}
+            animate={
+              reduceMotion
+                ? { opacity: cell.opacity, x: 0, y: 0, scale: cell.scale }
+                : {
+                    opacity: [cell.opacity * 0.82, cell.opacity, cell.opacity * 0.9],
+                    x: [0, cell.x, 0],
+                    y: [0, cell.y, 0],
+                    scale: [cell.scale, cell.scale + 0.03, cell.scale],
+                  }
+            }
+            transition={{
+              duration: cell.duration,
+              delay: cell.delay,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        );
+      })}
 
-    const loop = () => {
-      const currentScrollY = window.scrollY;
-      const scrollVelocity = currentScrollY - lastScrollY;
-      lastScrollY = currentScrollY;
-      inertia += (scrollVelocity - inertia) * 0.08;
+      <motion.div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-[40%] h-[22vh]"
+        style={{
+          background: `linear-gradient(90deg, transparent 0%, ${withAlpha(frontTone, 0.05)} 18%, ${withAlpha(
+            palette.accentStrong,
+            0.14,
+          )} 50%, ${withAlpha(frontTone, 0.05)} 82%, transparent 100%)`,
+          filter: "blur(16px)",
+          mixBlendMode: "screen",
+        }}
+        animate={
+          reduceMotion
+            ? { opacity: 0.45, y: 0 }
+            : {
+                opacity: [0.2, 0.46, 0.2],
+                y: [0, 14, 0],
+              }
+        }
+        transition={{
+          duration: 22,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
 
-      if (Math.abs(inertia) > INERTIA_THRESHOLD) {
-        injectScrollRipple();
-      }
+      <svg
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full"
+        viewBox="0 0 1000 1000"
+        preserveAspectRatio="none"
+      >
+        {CONTOURS.map((path, index) => (
+          <motion.path
+            key={path}
+            d={path}
+            fill="none"
+            opacity={0.26 - index * 0.035}
+            stroke={index % 2 === 0 ? palette.accentStrong : palette.shaderWarm}
+            strokeDasharray="8 24"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={index === 1 ? 1.7 : 1.35}
+            vectorEffect="non-scaling-stroke"
+            animate={
+              reduceMotion
+                ? { strokeDashoffset: 0, opacity: 0.28 - index * 0.035 }
+                : {
+                    strokeDashoffset: [0, -200 - index * 36, -400 - index * 60],
+                    opacity: [0.16, 0.34 - index * 0.035, 0.16],
+                  }
+            }
+            transition={{
+              duration: 26 + index * 3,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          />
+        ))}
 
-      if (frame % AMBIENT_INTERVAL === 0) {
-        injectAmbientRipple();
-      }
+        <motion.path
+          d="M -40 560 C 140 500, 360 610, 540 560 S 860 500, 1080 548"
+          fill="none"
+          stroke={withAlpha(palette.accent, 0.22)}
+          strokeLinecap="round"
+          strokeWidth="1.55"
+          animate={
+            reduceMotion
+              ? { opacity: 0.36, x: 0 }
+              : {
+                  opacity: [0.18, 0.42, 0.18],
+                  x: [0, 14, 0],
+                }
+          }
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      </svg>
 
-      stepWave(grid);
-      renderSurface();
+      <motion.div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(circle at 50% 56%, transparent 18%, ${withAlpha(palette.bg, 0.1)} 66%, ${withAlpha(
+            palette.shaderDeep,
+            0.3,
+          )} 100%)`,
+          mixBlendMode: "multiply",
+        }}
+        animate={
+          reduceMotion
+            ? { opacity: 0.84 }
+            : {
+                opacity: [0.72, 0.9, 0.72],
+              }
+        }
+        transition={{
+          duration: 34,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
 
-      frame += 1;
-      animationFrame = window.requestAnimationFrame(loop);
-    };
-
-    const stopAnimation = () => {
-      if (animationFrame !== 0) {
-        window.cancelAnimationFrame(animationFrame);
-        animationFrame = 0;
-      }
-    };
-
-    const startAnimation = () => {
-      if (animationFrame === 0) {
-        animationFrame = window.requestAnimationFrame(loop);
-      }
-    };
-
-    const handleResize = () => {
-      window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(() => {
-        resizeCanvas();
-      }, RESIZE_DEBOUNCE_MS);
-    };
-
-    const handleReducedMotionChange = (event: MediaQueryListEvent) => {
-      prefersReducedMotion = event.matches;
-      stopAnimation();
-      resizeCanvas();
-
-      if (!prefersReducedMotion) {
-        inertia = 0;
-        lastScrollY = window.scrollY;
-        frame = 0;
-        startAnimation();
-      }
-    };
-
-    resizeCanvas();
-
-    if (prefersReducedMotion) {
-      renderStatic();
-    } else {
-      startAnimation();
-    }
-
-    window.addEventListener("resize", handleResize, { passive: true });
-    prefersReducedMotionQuery.addEventListener("change", handleReducedMotionChange);
-
-    return () => {
-      stopAnimation();
-      window.removeEventListener("resize", handleResize);
-      prefersReducedMotionQuery.removeEventListener("change", handleReducedMotionChange);
-      window.clearTimeout(resizeTimer);
-    };
-  }, [palette]);
-
-  return <canvas ref={canvasRef} aria-hidden className="pointer-events-none fixed inset-0 z-0 block" />;
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 opacity-68"
+        style={{
+          backgroundImage: `url("/noise.png")`,
+          backgroundRepeat: "repeat",
+          backgroundSize: "220px 220px",
+          mixBlendMode: "soft-light",
+        }}
+      />
+    </div>
+  );
 }

@@ -1,5 +1,3 @@
-@import "../components/background/relief.css";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -45,17 +43,17 @@
 }
 
 :root {
-  --charcoal-ink: oklch(0.11 0.012 40);
-  --warm-shadow: oklch(0.145 0.015 38);
-  --ash-lift: oklch(0.18 0.016 40);
-  --parchment: oklch(0.92 0.012 78);
-  --muted-silt: oklch(0.68 0.018 72);
-  --subtle-dust: oklch(0.46 0.015 62);
-  --amber-bronze: oklch(0.69 0.085 48);
-  --amber-bright: oklch(0.75 0.08 50);
-  --ember-glow: oklch(0.64 0.09 46);
-  --amber-haze: oklch(0.69 0.085 48 / 0.12);
-  --sold-out-oxide: oklch(0.38 0.04 40);
+  --charcoal-ink: #120e0c;
+  --warm-shadow: #191411;
+  --ash-lift: #231b17;
+  --parchment: #f3e7d7;
+  --muted-silt: #c6ae94;
+  --subtle-dust: #8a745f;
+  --amber-bronze: #c87f42;
+  --amber-bright: #efb86a;
+  --ember-glow: #a34f26;
+  --amber-haze: rgba(200, 127, 66, 0.12);
+  --sold-out-oxide: #776053;
   --bg: var(--charcoal-ink);
   --bg-soft: var(--warm-shadow);
   --bg-elevated: var(--ash-lift);
@@ -67,15 +65,15 @@
   --accent-glow: var(--ember-glow);
   --accent-subtle: var(--amber-haze);
   --sold-out: var(--sold-out-oxide);
-  --glass-fill: oklch(0.17 0.02 40 / 0.84);
-  --glass-border: oklch(0.92 0.012 80 / 0.1);
-  --glass-highlight: oklch(0.96 0.01 80 / 0.04);
-  --glass-tint-a: oklch(0.3 0.025 42 / 0.18);
-  --glass-tint-b: oklch(0.26 0.02 54 / 0.14);
-  --shader-warm: var(--amber-bronze);
-  --shader-mid: var(--warm-shadow);
-  --shader-deep: var(--charcoal-ink);
-  --glass-shadow: oklch(0 0 0 / 0.16);
+  --glass-fill: rgba(25, 19, 15, 0.84);
+  --glass-border: rgba(243, 231, 215, 0.1);
+  --glass-highlight: rgba(255, 247, 238, 0.06);
+  --glass-tint-a: rgba(200, 127, 66, 0.16);
+  --glass-tint-b: rgba(96, 114, 158, 0.08);
+  --shader-warm: #d29157;
+  --shader-mid: #8f6046;
+  --shader-deep: #0f0b09;
+  --glass-shadow: rgba(0, 0, 0, 0.16);
   --font-display: "Cabinet Grotesk", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
   --space-1: 4px;

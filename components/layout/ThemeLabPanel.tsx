@@ -4,28 +4,59 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 
 import { GlassPanel } from "@/components/ui/GlassPanel";
-import { cn } from "@/lib/utils";
-import { THEME_PALETTES, type ThemeBackgroundId, type ThemePaletteId } from "@/lib/theme-lab";
 import { useThemeLab } from "@/components/providers/ThemeLabProvider";
+import { THEME_PALETTES, type ThemeBackgroundId, type ThemePaletteId } from "@/lib/theme-lab";
+import { cn } from "@/lib/utils";
 
 const PANEL_STORAGE_KEY = "raptile.theme.panel.open";
 
-function BackgroundSwatch({ backgroundId, accent, shaderWarm, shaderMid }: { backgroundId: ThemeBackgroundId; accent: string; shaderWarm: string; shaderMid: string }) {
+function BackgroundSwatch({
+  backgroundId,
+  accent,
+  shaderWarm,
+  shaderMid,
+  accentStrong,
+}: {
+  backgroundId: ThemeBackgroundId;
+  accent: string;
+  shaderWarm: string;
+  shaderMid: string;
+  accentStrong: string;
+}) {
   const swatch = useMemo(() => {
     switch (backgroundId) {
-      case "liquid-drift":
-        return `linear-gradient(135deg, ${shaderWarm} 0%, ${accent} 48%, ${shaderMid} 100%)`;
-      case "quiet-plane":
-        return `linear-gradient(135deg, ${shaderMid} 0%, ${accent} 50%, ${shaderWarm} 100%)`;
-      case "monsoon-veil":
-        return `linear-gradient(135deg, ${accent} 0%, ${shaderMid} 52%, ${shaderWarm} 100%)`;
-      case "signal-field":
-        return `linear-gradient(135deg, ${shaderMid} 0%, ${accent} 42%, ${shaderWarm} 100%)`;
-      case "oxidised-relief":
+      case "loom-register":
+        return `
+          repeating-linear-gradient(90deg, ${accent} 0 1px, transparent 1px 8px),
+          repeating-linear-gradient(0deg, ${shaderWarm} 0 1px, transparent 1px 8px),
+          linear-gradient(135deg, ${shaderMid} 0%, ${accent} 48%, ${shaderWarm} 100%)
+        `;
+      case "darkroom-sweep":
+        return `
+          linear-gradient(124deg, transparent 0 38%, ${accent} 42%, ${accentStrong} 50%, ${shaderWarm} 58%, transparent 64%),
+          linear-gradient(180deg, ${shaderMid} 0%, ${accent} 52%, ${shaderWarm} 100%)
+        `;
+      case "fold-engine":
+        return `
+          linear-gradient(115deg, ${shaderMid} 0 38%, transparent 38% 44%, ${accent} 44% 56%, transparent 56% 62%, ${shaderWarm} 62% 100%),
+          linear-gradient(180deg, ${shaderMid} 0%, ${accentStrong} 52%, ${shaderWarm} 100%)
+        `;
+      case "weather-cell":
+        return `
+          radial-gradient(circle at 28% 32%, ${accentStrong} 0 11%, transparent 12%),
+          radial-gradient(circle at 70% 62%, ${shaderWarm} 0 8%, transparent 9%),
+          radial-gradient(circle at 52% 46%, ${accent} 0 24%, transparent 25%),
+          linear-gradient(135deg, ${shaderMid} 0%, ${accent} 50%, ${shaderWarm} 100%)
+        `;
+      case "press-plate-bloom":
       default:
-        return `linear-gradient(135deg, ${shaderMid} 0%, ${shaderWarm} 48%, ${accent} 100%)`;
+        return `
+          radial-gradient(circle at 50% 50%, ${accentStrong} 0 10%, transparent 11%),
+          radial-gradient(circle at 50% 50%, ${shaderWarm} 0 20%, transparent 21%),
+          linear-gradient(135deg, ${shaderMid} 0%, ${accent} 45%, ${shaderWarm} 100%)
+        `;
     }
-  }, [accent, backgroundId, shaderMid, shaderWarm]);
+  }, [accent, accentStrong, backgroundId, shaderMid, shaderWarm]);
 
   return <span className="theme-lab-swatch theme-lab-swatch--bar" style={{ background: swatch }} />;
 }
@@ -81,7 +112,7 @@ export function ThemeLabPanel() {
   const summary = `${background.label} / ${palette.label}`;
 
   return (
-    <div className="pointer-events-none fixed inset-x-4 bottom-4 z-[115] md:inset-x-auto md:left-4 md:bottom-4 md:w-[min(44rem,calc(100vw-2rem))]">
+    <div className="pointer-events-none fixed inset-x-4 bottom-4 z-[115] md:inset-x-auto md:left-4 md:bottom-4 md:w-[min(46rem,calc(100vw-2rem))]">
       <AnimatePresence mode="wait" initial={false}>
         {isOpen ? (
           <motion.div
@@ -91,10 +122,7 @@ export function ThemeLabPanel() {
             exit={{ opacity: 0, y: 10, scale: 0.99 }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
           >
-            <GlassPanel
-              className="pointer-events-auto max-h-[calc(100vh-2rem)] overflow-auto rounded-[30px] px-4 py-4 md:px-5 md:py-5 scrollbar-thin"
-              style={{ overflow: "auto" }}
-            >
+            <GlassPanel className="pointer-events-auto max-h-[calc(100vh-2rem)] overflow-auto rounded-[30px] px-4 py-4 md:px-5 md:py-5 scrollbar-thin">
               <div className="grid gap-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="grid gap-1">
@@ -103,17 +131,13 @@ export function ThemeLabPanel() {
                       {summary}
                     </div>
                     <div className="t-ui max-w-[34rem] text-[color:var(--text-muted)]">
-                      Internal review mode. The whole store updates in place, so you can compare the 25 background and
-                      palette combinations without leaving the page.
+                      Internal review mode, whole-store shell. Choose one animated background lane and one palette lane
+                      to inspect the 25 combinations in context.
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <button
-                      className="ghost-button rounded-full px-3 py-2"
-                      onClick={resetTheme}
-                      type="button"
-                    >
+                    <button className="ghost-button rounded-full px-3 py-2" onClick={resetTheme} type="button">
                       <span className="t-label">Reset</span>
                     </button>
                     <button
@@ -131,7 +155,7 @@ export function ThemeLabPanel() {
                   <section className="grid gap-2">
                     <div className="flex items-center justify-between gap-3">
                       <div className="t-label text-[color:var(--text-subtle)]">Backgrounds</div>
-                      <div className="t-ui text-[color:var(--text-subtle)]">5 lanes</div>
+                      <div className="t-ui text-[color:var(--text-subtle)]">5 animated lanes</div>
                     </div>
                     <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-5">
                       {backgrounds.map((option) => (
@@ -145,6 +169,7 @@ export function ThemeLabPanel() {
                         >
                           <BackgroundSwatch
                             accent={palette.accent}
+                            accentStrong={palette.accentStrong}
                             backgroundId={option.id}
                             shaderMid={palette.shaderMid}
                             shaderWarm={palette.shaderWarm}
@@ -163,7 +188,7 @@ export function ThemeLabPanel() {
                   <section className="grid gap-2">
                     <div className="flex items-center justify-between gap-3">
                       <div className="t-label text-[color:var(--text-subtle)]">Palettes</div>
-                      <div className="t-ui text-[color:var(--text-subtle)]">5 families</div>
+                      <div className="t-ui text-[color:var(--text-subtle)]">5 color systems</div>
                     </div>
                     <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-5">
                       {palettes.map((option) => (

@@ -1,22 +1,25 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import type { ReactNode } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import type { ComponentType, ReactNode } from "react";
 
-import { LiquidBackground } from "@/components/background/LiquidBackground";
-import OxidisedRelief from "@/components/background/OxidisedRelief";
-import { QuietPlaneBackground } from "@/components/background/QuietPlaneBackground";
-import { SignalFieldBackground } from "@/components/background/SignalFieldBackground";
-import { ShaderBackground } from "@/components/background/ShaderBackground";
+import DarkroomSweep from "@/components/background/ShaderBackground";
+import FoldEngine from "@/components/background/SignalFieldBackground";
+import LoomRegister from "@/components/background/QuietPlaneBackground";
+import PressPlateBloom from "@/components/background/OxidisedRelief";
+import WeatherCell from "@/components/background/LiquidBackground";
 import { useThemeLab } from "@/components/providers/ThemeLabProvider";
+import type { ThemeBackgroundId, ThemePalette } from "@/lib/theme-lab";
 
 function BackdropFrame({ children }: { children: ReactNode }) {
+  const reduceMotion = useReducedMotion() ?? false;
+
   return (
     <motion.div
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
-      initial={{ opacity: 0, scale: 1.01 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 1.005 }}
+      initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 1.01 }}
+      animate={reduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1 }}
+      exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 1.005 }}
       transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}
@@ -24,32 +27,23 @@ function BackdropFrame({ children }: { children: ReactNode }) {
   );
 }
 
+const BACKGROUNDS: Record<ThemeBackgroundId, ComponentType<{ palette: ThemePalette }>> = {
+  "press-plate-bloom": PressPlateBloom,
+  "loom-register": LoomRegister,
+  "darkroom-sweep": DarkroomSweep,
+  "fold-engine": FoldEngine,
+  "weather-cell": WeatherCell,
+} as const;
+
 export function ThemeBackdrop() {
   const { background, palette } = useThemeLab();
+  const Background = BACKGROUNDS[background.id];
 
   return (
     <AnimatePresence mode="wait" initial={false}>
-      {background.id === "oxidised-relief" ? (
-        <BackdropFrame key={background.id}>
-          <OxidisedRelief palette={palette} />
-        </BackdropFrame>
-      ) : background.id === "liquid-drift" ? (
-        <BackdropFrame key={background.id}>
-          <LiquidBackground palette={palette} />
-        </BackdropFrame>
-      ) : background.id === "quiet-plane" ? (
-        <BackdropFrame key={background.id}>
-          <QuietPlaneBackground palette={palette} />
-        </BackdropFrame>
-      ) : background.id === "monsoon-veil" ? (
-        <BackdropFrame key={background.id}>
-          <ShaderBackground palette={palette} />
-        </BackdropFrame>
-      ) : (
-        <BackdropFrame key={background.id}>
-          <SignalFieldBackground palette={palette} />
-        </BackdropFrame>
-      )}
+      <BackdropFrame key={background.id}>
+        <Background palette={palette} />
+      </BackdropFrame>
     </AnimatePresence>
   );
 }

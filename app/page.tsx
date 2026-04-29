@@ -1,4 +1,4 @@
-import { HomePageClient } from "@/components/home/HomePageClient";
+import { HomePageChooser } from "@/components/home/HomePageChooser";
 import { getFeaturedCollection } from "@/lib/collection";
 
 const FALLBACK_COLLECTION_DESCRIPTION =
@@ -8,7 +8,7 @@ export default async function HomePage() {
   const collection = await getFeaturedCollection();
 
   return (
-    <HomePageClient
+    <HomePageChooser
       collectionDescription={collection?.description || FALLBACK_COLLECTION_DESCRIPTION}
       collectionTitle="Onyx Collection"
       products={collection?.products ?? []}

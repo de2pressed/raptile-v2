@@ -71,7 +71,7 @@ function getProductSizes(product: ShopifyProduct) {
 }
 
 function sortSizeValues(values: string[]) {
-  const order = new Map(SIZE_ORDER.map((value, index) => [value, index]));
+  const order = new Map<string, number>(SIZE_ORDER.map((value, index) => [value, index]));
 
   return [...values].sort((left, right) => {
     const leftOrder = order.get(left);

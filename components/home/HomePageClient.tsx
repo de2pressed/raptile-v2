@@ -370,7 +370,7 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
                 <div className="grid gap-3">
                   <Link
                     className="flex items-center justify-between gap-3 rounded-[20px] border border-[color:var(--glass-border)] px-4 py-3 transition duration-200 hover:border-[color:var(--accent)]"
-                    href="/collection#collection-search"
+                    href="/collection"
                   >
                     <span className="t-ui text-[color:var(--text-muted)]">Open the full collection view</span>
                     <ArrowRightIcon className="h-4 w-4 text-[color:var(--text-subtle)]" />
@@ -515,7 +515,7 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
             <div className="space-y-3">
               <div className="t-label text-[color:var(--text-muted)]">Final pass</div>
               <div className="font-display text-[clamp(1.8rem,4vw,3.2rem)] font-bold leading-[0.98] tracking-[-0.04em] text-[color:var(--text)]">
-                Ready to move through the full {collectionTitle.toLowerCase()}?
+                Ready to move through the full {collectionTitle}?
               </div>
               <p className="t-ui max-w-[48ch] leading-6 text-[color:var(--text-muted)]">
                 Open the collection for the full rail, or go straight to sizing before you pick a piece. The cleaner

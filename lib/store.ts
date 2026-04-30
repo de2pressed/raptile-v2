@@ -27,6 +27,8 @@ interface RaptileStore {
   setSelectedVariant: (id: string | null) => void;
   isCollectionSearchVisible: boolean;
   setCollectionSearchVisible: (visible: boolean) => void;
+  accentKey: string;
+  setAccentKey: (key: string) => void;
 }
 
 export const useRaptileStore = create<RaptileStore>((set) => ({
@@ -44,4 +46,6 @@ export const useRaptileStore = create<RaptileStore>((set) => ({
   setSelectedVariant: (id) => set({ selectedVariantId: id }),
   isCollectionSearchVisible: false,
   setCollectionSearchVisible: (visible) => set({ isCollectionSearchVisible: visible }),
+  accentKey: "ember",
+  setAccentKey: (key) => set({ accentKey: key }),
 }));

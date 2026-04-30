@@ -11,6 +11,7 @@ import { ShopifyRuntimeProvider, useShopifyRuntime } from "@/components/provider
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
 import { CartDrawer } from "@/components/shop/CartDrawer";
+import { AccentChooser } from "@/components/ui/AccentChooser";
 import { formatPrice } from "@/lib/commerce";
 import { useRaptileStore } from "@/lib/store";
 import type { ShopifyRuntimeConfig } from "@/lib/shopify-config";
@@ -112,6 +113,7 @@ function AppShell({ children }: PropsWithChildren) {
         <Footer />
       </div>
       <CartDrawer />
+      <AccentChooser />
       {!isConfigured ? (
         <div className="pointer-events-none fixed bottom-4 right-4 z-[120] hidden max-w-[min(18rem,calc(100vw-2rem))] px-0 md:block md:bottom-6 md:right-6">
           <div className="glass-panel rounded-full px-4 py-2 before:rounded-full">

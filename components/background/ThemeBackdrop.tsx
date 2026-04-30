@@ -3,10 +3,13 @@
 import { motion, useReducedMotion } from "framer-motion";
 
 import AuroraWavesBackground from "@/components/background/AuroraWavesBackground";
-import { EMBER_CURRENT } from "@/lib/theme-lab";
+import { useRaptileStore } from "@/lib/store";
+import { buildPaletteFromAccent, getAccentPreset } from "@/lib/theme-lab";
 
 export function ThemeBackdrop() {
   const reduceMotion = useReducedMotion() ?? false;
+  const accentKey = useRaptileStore((s) => s.accentKey);
+  const palette = buildPaletteFromAccent(getAccentPreset(accentKey));
 
   return (
     <motion.div
@@ -15,7 +18,7 @@ export function ThemeBackdrop() {
       animate={reduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1 }}
       transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
     >
-      <AuroraWavesBackground palette={EMBER_CURRENT} />
+      <AuroraWavesBackground palette={palette} />
     </motion.div>
   );
 }

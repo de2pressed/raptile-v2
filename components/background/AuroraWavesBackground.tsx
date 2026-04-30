@@ -3,61 +3,86 @@
 import { motion, useReducedMotion } from "framer-motion";
 
 import type { ThemePalette } from "@/lib/theme-lab";
-import { mixColor, withAlpha } from "@/lib/theme-lab";
+import { withAlpha } from "@/lib/theme-lab";
 
-type RibbonSpec = {
-  start: string;
-  end: string;
-  mid: string;
-  color: keyof Pick<ThemePalette, "accent" | "accentStrong" | "shaderWarm" | "shaderMid">;
+type RibbonConfig = {
+  color: keyof Pick<ThemePalette, "accent" | "accentStrong" | "shaderWarm" | "shaderMid" | "accentGlow">;
   opacity: number;
-  strokeWidth: number;
-  blur: number;
+  top: string;
+  height: string;
+  width: string;
+  left: string;
+  rotate: number;
+  x: [string, string, string];
+  y: [string, string, string];
   duration: number;
 };
 
-const RIBBONS: RibbonSpec[] = [
+const RIBBONS: RibbonConfig[] = [
   {
-    start: "M -120 180 C 180 80, 420 300, 660 160 S 1080 300, 1320 170",
-    end:   "M -120 240 C 180 340, 420 60, 660 260 S 1080 80, 1320 250",
-    mid:   "M -120 210 C 180 210, 420 180, 660 210 S 1080 190, 1320 210",
     color: "accent",
-    opacity: 0.4,
-    strokeWidth: 120,
-    blur: 50,
-    duration: 34,
+    opacity: 0.2,
+    top: "-8%",
+    height: "28vh",
+    width: "130%",
+    left: "-15%",
+    rotate: -2.5,
+    x: ["-2%", "3%", "-2%"],
+    y: ["-1%", "4%", "-1%"],
+    duration: 28,
   },
   {
-    start: "M -120 360 C 150 260, 420 480, 690 340 S 1040 480, 1320 330",
-    end:   "M -120 420 C 150 520, 420 260, 690 440 S 1040 240, 1320 410",
-    mid:   "M -120 390 C 150 390, 420 370, 690 390 S 1040 360, 1320 370",
     color: "accentStrong",
-    opacity: 0.32,
-    strokeWidth: 100,
-    blur: 60,
-    duration: 40,
+    opacity: 0.14,
+    top: "12%",
+    height: "32vh",
+    width: "140%",
+    left: "-20%",
+    rotate: 1.8,
+    x: ["3%", "-4%", "3%"],
+    y: ["2%", "-3%", "2%"],
+    duration: 35,
   },
   {
-    start: "M -120 540 C 180 420, 420 660, 660 520 S 1080 660, 1320 510",
-    end:   "M -120 600 C 180 700, 420 450, 660 610 S 1080 420, 1320 590",
-    mid:   "M -120 570 C 180 560, 420 555, 660 565 S 1080 540, 1320 550",
     color: "shaderWarm",
-    opacity: 0.28,
-    strokeWidth: 90,
-    blur: 55,
+    opacity: 0.24,
+    top: "32%",
+    height: "30vh",
+    width: "135%",
+    left: "-18%",
+    rotate: -1.2,
+    x: ["-3%", "2%", "-3%"],
+    y: ["-2%", "5%", "-2%"],
+    duration: 30,
+  },
+  {
+    color: "shaderMid",
+    opacity: 0.16,
+    top: "52%",
+    height: "26vh",
+    width: "125%",
+    left: "-12%",
+    rotate: 2.2,
+    x: ["2%", "-3%", "2%"],
+    y: ["3%", "-2%", "3%"],
     duration: 38,
   },
   {
-    start: "M -120 720 C 160 610, 420 840, 700 700 S 1080 840, 1320 690",
-    end:   "M -120 780 C 160 880, 420 620, 700 790 S 1080 600, 1320 770",
-    mid:   "M -120 750 C 160 745, 420 730, 700 745 S 1080 720, 1320 730",
-    color: "shaderMid",
-    opacity: 0.22,
-    strokeWidth: 80,
-    blur: 45,
-    duration: 44,
+    color: "accentGlow",
+    opacity: 0.18,
+    top: "70%",
+    height: "30vh",
+    width: "130%",
+    left: "-15%",
+    rotate: -1.8,
+    x: ["-2%", "4%", "-2%"],
+    y: ["-3%", "2%", "-3%"],
+    duration: 32,
   },
 ];
+
+const MASK =
+  "linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.6) 15%, white 30%, white 70%, rgba(255,255,255,0.6) 85%, transparent 100%)";
 
 export default function AuroraWavesBackground({ palette }: { palette: ThemePalette }) {
   const reduceMotion = useReducedMotion() ?? false;
@@ -72,68 +97,83 @@ export default function AuroraWavesBackground({ palette }: { palette: ThemePalet
         }}
       />
 
-      {/* SVG ribbon layer */}
-      <svg
-        aria-hidden="true"
-        className="absolute inset-0 h-full w-full"
-        viewBox="0 0 1200 900"
-        preserveAspectRatio="none"
-      >
-        {RIBBONS.map((ribbon) => {
-          const color = palette[ribbon.color];
+      {/* Ribbon layers */}
+      {RIBBONS.map((ribbon) => {
+        const base = palette[ribbon.color];
 
-          return (
-            <motion.path
-              key={ribbon.start}
-              d={reduceMotion ? ribbon.mid : ribbon.start}
-              fill="none"
-              opacity={ribbon.opacity}
-              stroke={withAlpha(color, 0.9)}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={ribbon.strokeWidth}
-              style={{
-                filter: `blur(${ribbon.blur}px)`,
-              }}
-              animate={
-                reduceMotion
-                  ? { opacity: ribbon.opacity, d: ribbon.mid }
-                  : { d: [ribbon.start, ribbon.end, ribbon.start] }
-              }
-              transition={{
-                duration: ribbon.duration,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-          );
-        })}
-      </svg>
+        return (
+          <motion.div
+            key={`${ribbon.color}-${ribbon.top}`}
+            className="absolute"
+            style={{
+              top: ribbon.top,
+              left: ribbon.left,
+              width: ribbon.width,
+              height: ribbon.height,
+              background: `linear-gradient(90deg, transparent 0%, ${withAlpha(base, ribbon.opacity)} 18%, ${withAlpha(
+                base,
+                ribbon.opacity * 1.3,
+              )} 50%, ${withAlpha(base, ribbon.opacity)} 82%, transparent 100%)`,
+              maskImage: MASK,
+              WebkitMaskImage: MASK,
+              mixBlendMode: "screen",
+              transform: `rotate(${ribbon.rotate}deg)`,
+              transformOrigin: "center center",
+              willChange: "transform",
+            }}
+            animate={
+              reduceMotion
+                ? { x: "0%", y: "0%", opacity: 1 }
+                : {
+                    x: ribbon.x,
+                    y: ribbon.y,
+                    opacity: [1, 1.15, 1],
+                  }
+            }
+            transition={{
+              duration: ribbon.duration,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        );
+      })}
 
       {/* Central accent glow */}
       <div
         className="absolute inset-0"
         style={{
-          background: `radial-gradient(ellipse 70% 50% at 50% 45%, ${withAlpha(palette.accent, 0.1)} 0%, transparent 60%)`,
+          background: `radial-gradient(ellipse 70% 50% at 50% 42%, ${withAlpha(palette.accent, 0.08)} 0%, transparent 65%)`,
         }}
       />
 
-      {/* Top-edge warm bleed */}
+      {/* Top warm bleed */}
       <motion.div
-        className="absolute inset-x-0 top-0 h-[30vh]"
+        className="absolute inset-x-0 top-0 h-[25vh]"
         style={{
-          background: `linear-gradient(180deg, ${withAlpha(palette.accentStrong, 0.08)} 0%, transparent 100%)`,
-          filter: "blur(30px)",
+          background: `linear-gradient(180deg, ${withAlpha(palette.accentStrong, 0.06)} 0%, transparent 100%)`,
         }}
         animate={
           reduceMotion
-            ? { opacity: 0.6 }
-            : { opacity: [0.3, 0.7, 0.3] }
+            ? { opacity: 0.5 }
+            : { opacity: [0.25, 0.6, 0.25] }
         }
         transition={{
-          duration: 20,
+          duration: 18,
           repeat: Infinity,
           ease: "easeInOut",
+        }}
+      />
+
+      {/* Noise texture */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: "url('/noise.png')",
+          backgroundRepeat: "repeat",
+          backgroundSize: "220px 220px",
+          opacity: 0.04,
+          mixBlendMode: "soft-light",
         }}
       />
     </div>

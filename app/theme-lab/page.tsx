@@ -4,38 +4,70 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import type { CSSProperties } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import AuroraWavesBackground from "@/components/background/AuroraWavesBackground";
 import {
-  BACKGROUND_REGISTRY,
-  type BackgroundComponent,
-} from "@/components/background/backgrounds";
-import {
-  BONE_INK,
-  CARBON_FLAME,
-  DESERT_DUSK,
+  CHALK,
   EMBER_CURRENT,
-  MIDNIGHT_SILVER,
-  STORM_SLATE,
+  GRAPHITE,
+  INDIGO,
+  IRON,
+  KHAKI,
+  MONSOON,
+  OLIVE,
+  OXBLOOD,
+  SOOT,
+  TOBACCO,
   THEME_PALETTES,
   parseColor,
   type ThemePalette,
 } from "@/lib/theme-lab";
 
-const THEME_OPTIONS: Array<{ key: string; label: string; palette: ThemePalette }> = [
-  { key: "ember", label: "Ember", palette: EMBER_CURRENT },
-  { key: "midnight", label: "Midnight Silver", palette: MIDNIGHT_SILVER },
-  { key: "bone", label: "Bone Ink", palette: BONE_INK },
-  { key: "storm", label: "Storm Slate", palette: STORM_SLATE },
-  { key: "desert", label: "Desert Dusk", palette: DESERT_DUSK },
-  { key: "carbon", label: "Carbon Flame", palette: CARBON_FLAME },
+const THEME_OPTIONS: Array<{ key: string; label: string; ref: string; palette: ThemePalette }> = [
+  { key: "ember", label: "Ember", ref: "Current production", palette: EMBER_CURRENT },
+  { key: "graphite", label: "Graphite", ref: "Steel & concrete", palette: GRAPHITE },
+  { key: "tobacco", label: "Tobacco", ref: "Aged leather", palette: TOBACCO },
+  { key: "indigo", label: "Indigo", ref: "Raw denim", palette: INDIGO },
+  { key: "olive", label: "Olive", ref: "Military surplus", palette: OLIVE },
+  { key: "oxblood", label: "Oxblood", ref: "Polished leather", palette: OXBLOOD },
+  { key: "chalk", label: "Chalk", ref: "Gallery walls", palette: CHALK },
+  { key: "soot", label: "Soot", ref: "Copper & ash", palette: SOOT },
+  { key: "monsoon", label: "Monsoon", ref: "Wet concrete", palette: MONSOON },
+  { key: "khaki", label: "Khaki", ref: "Desert utility", palette: KHAKI },
+  { key: "iron", label: "Iron", ref: "Rust patina", palette: IRON },
 ];
-
-const BACKGROUND_OPTIONS = Object.entries(BACKGROUND_REGISTRY).map(([key, entry]) => ({
-  key,
-  label: entry.label,
-}));
 
 function isLightPalette(palette: ThemePalette) {
   return parseColor(palette.bg).r > 128;
+}
+
+function buildPaletteStyle(palette: ThemePalette): CSSProperties & Record<string, string> {
+  return {
+    backgroundColor: palette.bg,
+    color: palette.text,
+    "--bg": palette.bg,
+    "--bg-soft": palette.bgSoft,
+    "--bg-elevated": palette.bgElevated,
+    "--text": palette.text,
+    "--text-muted": palette.textMuted,
+    "--text-subtle": palette.textSubtle,
+    "--accent": palette.accent,
+    "--accent-strong": palette.accentStrong,
+    "--accent-glow": palette.accentGlow,
+    "--accent-subtle": palette.accentSubtle,
+    "--sold-out": palette.soldOut,
+    "--glass-fill": palette.glassFill,
+    "--glass-border": palette.glassBorder,
+    "--glass-highlight": palette.glassHighlight,
+    "--glass-tint-a": palette.glassTintWarm,
+    "--glass-tint-b": palette.glassTintCool,
+    "--shader-warm": palette.shaderWarm,
+    "--shader-mid": palette.shaderMid,
+    "--shader-deep": palette.shaderDeep,
+    "--glass-shadow": palette.glassShadow,
+    "--noise-header-opacity": isLightPalette(palette) ? "0.035" : "0.05",
+    "--noise-surface-opacity": isLightPalette(palette) ? "0.035" : "0.05",
+    colorScheme: isLightPalette(palette) ? "light" : "dark",
+  };
 }
 
 function applyPaletteToElement(el: HTMLElement, palette: ThemePalette) {
@@ -64,13 +96,22 @@ function applyPaletteToElement(el: HTMLElement, palette: ThemePalette) {
   el.style.colorScheme = isLightPalette(palette) ? "light" : "dark";
 }
 
-function ThemeSwatch({ palette, active, label, onClick }: {
+function ThemeSwatch({
+  palette,
+  active,
+  label,
+  refText,
+  onClick,
+}: {
   palette: ThemePalette;
   active: boolean;
   label: string;
+  refText: string;
   onClick: () => void;
 }) {
-  const activeRing = active ? `0 0 0 1px ${palette.accent}, 0 0 0 3px color-mix(in oklch, ${palette.accent} 22%, transparent)` : undefined;
+  const activeRing = active
+    ? `0 0 0 1px ${palette.accent}, 0 0 0 3px color-mix(in oklch, ${palette.accent} 22%, transparent)`
+    : undefined;
 
   return (
     <button
@@ -87,48 +128,19 @@ function ThemeSwatch({ palette, active, label, onClick }: {
         <span className="h-5 w-5 rounded-full border border-black/10" style={{ backgroundColor: palette.accent }} />
         <span className="h-5 w-5 rounded-full border border-black/10" style={{ backgroundColor: palette.bg }} />
       </span>
-      <span className="t-label text-[var(--text)]">{label}</span>
+      <span className="min-w-0">
+        <span className="t-label block text-[var(--text)]">{label}</span>
+        <span className="t-ui block text-[var(--text-muted)]">{refText}</span>
+      </span>
     </button>
   );
 }
 
-function BackgroundSwatch({ label, active, accent, onClick }: {
-  label: string;
-  active: boolean;
-  accent: string;
-  onClick: () => void;
-}) {
-  const activeRing = active ? `0 0 0 1px ${accent}, 0 0 0 3px color-mix(in oklch, ${accent} 22%, transparent)` : undefined;
-
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className="glass-panel min-w-[9.5rem] rounded-[20px] border border-[var(--glass-border)] px-3 py-3 text-left transition-transform duration-200 ease-out hover:-translate-y-0.5"
-      style={{
-        boxShadow: activeRing,
-        borderColor: active ? accent : undefined,
-      }}
-    >
-      <span className="t-label text-[var(--text)]">{label}</span>
-    </button>
-  );
-}
-
-function PreviewBody({
-  palette,
-  backgroundKey,
-}: {
-  palette: ThemePalette;
-  backgroundKey: string;
-}) {
-  const Background = (BACKGROUND_REGISTRY[backgroundKey]?.component ?? BACKGROUND_REGISTRY.loom.component) as BackgroundComponent;
-
+function PreviewBody({ palette }: { palette: ThemePalette }) {
   return (
     <div className="relative min-h-full overflow-hidden">
       <div className="pointer-events-none absolute inset-0">
-        <Background palette={palette} />
+        <AuroraWavesBackground palette={palette} />
       </div>
 
       <div className="relative z-10 flex min-h-full flex-col gap-8 p-4 md:p-8 lg:p-10">
@@ -184,10 +196,10 @@ function PreviewBody({
         </section>
 
         <section className="flex flex-wrap gap-3">
-          <button type="button" className="btn-primary">
+          <button type="button" className="btn-primary rounded-full px-5 py-3">
             <span className="t-label">Shop Collection</span>
           </button>
-          <button type="button" className="ghost-button">
+          <button type="button" className="ghost-button rounded-full px-5 py-3">
             <span className="t-label">Read the Story</span>
           </button>
         </section>
@@ -208,45 +220,15 @@ function PreviewBody({
 
 export default function ThemeLabPage() {
   const [activeTheme, setActiveTheme] = useState("ember");
-  const [activeBg, setActiveBg] = useState("loom");
   const previewRef = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useReducedMotion() ?? false;
 
   const activePalette = THEME_PALETTES[activeTheme] ?? EMBER_CURRENT;
-  const currentThemeLabel = THEME_OPTIONS.find((theme) => theme.key === activeTheme)?.label ?? "Ember";
-  const currentBackgroundLabel =
-    BACKGROUND_OPTIONS.find((background) => background.key === activeBg)?.label ?? "Loom (Current)";
+  const currentThemeLabel =
+    THEME_OPTIONS.find((theme) => theme.key === activeTheme)?.label ?? "Ember";
 
-  const previewStyle = useMemo<CSSProperties & Record<string, string>>(
-    () => ({
-      backgroundColor: activePalette.bg,
-      color: activePalette.text,
-      "--bg": activePalette.bg,
-      "--bg-soft": activePalette.bgSoft,
-      "--bg-elevated": activePalette.bgElevated,
-      "--text": activePalette.text,
-      "--text-muted": activePalette.textMuted,
-      "--text-subtle": activePalette.textSubtle,
-      "--accent": activePalette.accent,
-      "--accent-strong": activePalette.accentStrong,
-      "--accent-glow": activePalette.accentGlow,
-      "--accent-subtle": activePalette.accentSubtle,
-      "--sold-out": activePalette.soldOut,
-      "--glass-fill": activePalette.glassFill,
-      "--glass-border": activePalette.glassBorder,
-      "--glass-highlight": activePalette.glassHighlight,
-      "--glass-tint-a": activePalette.glassTintWarm,
-      "--glass-tint-b": activePalette.glassTintCool,
-      "--shader-warm": activePalette.shaderWarm,
-      "--shader-mid": activePalette.shaderMid,
-      "--shader-deep": activePalette.shaderDeep,
-      "--glass-shadow": activePalette.glassShadow,
-      "--noise-header-opacity": isLightPalette(activePalette) ? "0.035" : "0.05",
-      "--noise-surface-opacity": isLightPalette(activePalette) ? "0.035" : "0.05",
-      colorScheme: isLightPalette(activePalette) ? "light" : "dark",
-    }),
-    [activePalette],
-  );
+  const previewStyle = useMemo(() => buildPaletteStyle(activePalette), [activePalette]);
+  const sidebarStyle = useMemo(() => buildPaletteStyle(EMBER_CURRENT), []);
 
   useEffect(() => {
     if (previewRef.current) {
@@ -256,43 +238,29 @@ export default function ThemeLabPage() {
 
   return (
     <div
-      className="fixed inset-0 z-[200] flex h-[100dvh] flex-col overflow-hidden text-[var(--text)]"
+      className="fixed inset-0 z-[200] flex h-[100dvh] flex-col overflow-hidden"
       style={{ backgroundColor: EMBER_CURRENT.bg, color: EMBER_CURRENT.text }}
     >
-      <aside className="sticky top-0 z-30 border-b border-[var(--glass-border)] bg-[var(--bg)]/95 md:fixed md:inset-y-0 md:left-0 md:w-[280px] md:border-b-0 md:border-r">
-        <div className="noise-surface flex h-full flex-col gap-5 p-4 md:p-5">
+      <aside className="sticky top-0 z-30 border-b border-[var(--glass-border)] bg-[var(--bg)]/95 md:fixed md:inset-y-0 md:left-0 md:w-[280px] md:border-b-0 md:border-r" style={sidebarStyle}>
+        <div className="noise-surface flex h-full min-h-0 flex-col gap-5 overflow-y-auto p-4 md:p-5">
           <div className="glass-panel rounded-[28px] p-4">
             <p className="t-label mb-2 text-[var(--text-muted)]">Theme selector</p>
             <div className="flex gap-3 overflow-x-auto pb-1 md:flex-col md:overflow-visible">
-              {THEME_OPTIONS.map(({ key, label, palette }) => (
+              {THEME_OPTIONS.map(({ key, label, ref, palette }) => (
                 <ThemeSwatch
                   key={key}
                   palette={palette}
                   active={activeTheme === key}
                   label={label}
+                  refText={ref}
                   onClick={() => setActiveTheme(key)}
                 />
               ))}
             </div>
           </div>
 
-          <div className="glass-panel rounded-[28px] p-4">
-            <p className="t-label mb-2 text-[var(--text-muted)]">Background selector</p>
-            <div className="flex gap-3 overflow-x-auto pb-1 md:flex-col md:overflow-visible">
-              {BACKGROUND_OPTIONS.map(({ key, label }) => (
-                <BackgroundSwatch
-                  key={key}
-                  label={label}
-                  active={activeBg === key}
-                  accent={activePalette.accent}
-                  onClick={() => setActiveBg(key)}
-                />
-              ))}
-            </div>
-          </div>
-
           <div className="glass-panel rounded-[24px] px-4 py-3">
-            <p className="t-ui text-[var(--text-muted)]">Theme: {currentThemeLabel} × Background: {currentBackgroundLabel}</p>
+            <p className="t-ui text-[var(--text-muted)]">Theme: {currentThemeLabel}</p>
           </div>
         </div>
       </aside>
@@ -301,7 +269,7 @@ export default function ThemeLabPage() {
         <div className="h-full overflow-auto">
           <AnimatePresence mode="sync" initial={false}>
             <motion.div
-              key={`${activeTheme}-${activeBg}`}
+              key={activeTheme}
               ref={previewRef}
               className="relative min-h-full"
               style={previewStyle}
@@ -310,7 +278,7 @@ export default function ThemeLabPage() {
               exit={{ opacity: 0 }}
               transition={{ duration: reduceMotion ? 0 : 0.3, ease: [0.16, 1, 0.3, 1] }}
             >
-              <PreviewBody palette={activePalette} backgroundKey={activeBg} />
+              <PreviewBody palette={activePalette} />
             </motion.div>
           </AnimatePresence>
         </div>

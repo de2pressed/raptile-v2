@@ -11,46 +11,51 @@ type RibbonSpec = {
   mid: string;
   color: keyof Pick<ThemePalette, "accent" | "accentStrong" | "shaderWarm" | "shaderMid">;
   opacity: number;
+  strokeWidth: number;
+  blur: number;
   duration: number;
-  y: number;
 };
 
 const RIBBONS: RibbonSpec[] = [
   {
-    start: "M -120 180 C 180 120, 420 250, 660 180 S 1080 250, 1320 190",
-    end: "M -120 210 C 180 280, 420 90, 660 220 S 1080 120, 1320 210",
-    mid: "M -120 195 C 180 200, 420 170, 660 200 S 1080 190, 1320 200",
+    start: "M -120 180 C 180 80, 420 300, 660 160 S 1080 300, 1320 170",
+    end:   "M -120 240 C 180 340, 420 60, 660 260 S 1080 80, 1320 250",
+    mid:   "M -120 210 C 180 210, 420 180, 660 210 S 1080 190, 1320 210",
     color: "accent",
-    opacity: 0.1,
-    duration: 36,
-    y: 180,
+    opacity: 0.4,
+    strokeWidth: 120,
+    blur: 50,
+    duration: 34,
   },
   {
-    start: "M -120 360 C 150 300, 420 430, 690 360 S 1040 430, 1320 350",
-    end: "M -120 390 C 150 470, 420 300, 690 400 S 1040 290, 1320 380",
-    mid: "M -120 375 C 150 385, 420 365, 690 380 S 1040 360, 1320 365",
+    start: "M -120 360 C 150 260, 420 480, 690 340 S 1040 480, 1320 330",
+    end:   "M -120 420 C 150 520, 420 260, 690 440 S 1040 240, 1320 410",
+    mid:   "M -120 390 C 150 390, 420 370, 690 390 S 1040 360, 1320 370",
     color: "accentStrong",
-    opacity: 0.08,
-    duration: 42,
-    y: 360,
+    opacity: 0.32,
+    strokeWidth: 100,
+    blur: 60,
+    duration: 40,
   },
   {
-    start: "M -120 540 C 180 470, 420 610, 660 540 S 1080 610, 1320 530",
-    end: "M -120 565 C 180 650, 420 490, 660 575 S 1080 470, 1320 555",
-    mid: "M -120 552 C 180 560, 420 540, 660 558 S 1080 540, 1320 544",
+    start: "M -120 540 C 180 420, 420 660, 660 520 S 1080 660, 1320 510",
+    end:   "M -120 600 C 180 700, 420 450, 660 610 S 1080 420, 1320 590",
+    mid:   "M -120 570 C 180 560, 420 555, 660 565 S 1080 540, 1320 550",
     color: "shaderWarm",
-    opacity: 0.07,
-    duration: 39,
-    y: 540,
+    opacity: 0.28,
+    strokeWidth: 90,
+    blur: 55,
+    duration: 38,
   },
   {
-    start: "M -120 720 C 160 660, 420 800, 700 720 S 1080 790, 1320 710",
-    end: "M -120 744 C 160 840, 420 660, 700 750 S 1080 640, 1320 730",
-    mid: "M -120 732 C 160 750, 420 730, 700 736 S 1080 715, 1320 720",
+    start: "M -120 720 C 160 610, 420 840, 700 700 S 1080 840, 1320 690",
+    end:   "M -120 780 C 160 880, 420 620, 700 790 S 1080 600, 1320 770",
+    mid:   "M -120 750 C 160 745, 420 730, 700 745 S 1080 720, 1320 730",
     color: "shaderMid",
-    opacity: 0.06,
-    duration: 45,
-    y: 720,
+    opacity: 0.22,
+    strokeWidth: 80,
+    blur: 45,
+    duration: 44,
   },
 ];
 
@@ -59,14 +64,23 @@ export default function AuroraWavesBackground({ palette }: { palette: ThemePalet
 
   return (
     <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
+      {/* Base fill */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `linear-gradient(180deg, ${palette.bg} 0%, ${palette.bgSoft} 50%, ${palette.bgElevated} 100%)`,
+        }}
+      />
+
+      {/* SVG ribbon layer */}
       <svg
         aria-hidden="true"
         className="absolute inset-0 h-full w-full"
         viewBox="0 0 1200 900"
         preserveAspectRatio="none"
       >
-        {RIBBONS.map((ribbon, index) => {
-          const stroke = mixColor(palette[ribbon.color], palette.bg, 0.08 + index * 0.03);
+        {RIBBONS.map((ribbon) => {
+          const color = palette[ribbon.color];
 
           return (
             <motion.path
@@ -74,15 +88,18 @@ export default function AuroraWavesBackground({ palette }: { palette: ThemePalet
               d={reduceMotion ? ribbon.mid : ribbon.start}
               fill="none"
               opacity={ribbon.opacity}
-              stroke={withAlpha(stroke, 1)}
+              stroke={withAlpha(color, 0.9)}
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth={62 - index * 4}
-              vectorEffect="non-scaling-stroke"
+              strokeWidth={ribbon.strokeWidth}
               style={{
-                filter: "blur(40px)",
+                filter: `blur(${ribbon.blur}px)`,
               }}
-              animate={reduceMotion ? { opacity: ribbon.opacity, d: ribbon.mid } : { d: [ribbon.start, ribbon.end, ribbon.start] }}
+              animate={
+                reduceMotion
+                  ? { opacity: ribbon.opacity, d: ribbon.mid }
+                  : { d: [ribbon.start, ribbon.end, ribbon.start] }
+              }
               transition={{
                 duration: ribbon.duration,
                 repeat: Infinity,
@@ -93,15 +110,30 @@ export default function AuroraWavesBackground({ palette }: { palette: ThemePalet
         })}
       </svg>
 
+      {/* Central accent glow */}
       <div
-        aria-hidden="true"
         className="absolute inset-0"
         style={{
-          background: `radial-gradient(circle at 50% 50%, ${withAlpha(palette.accent, 0.06)} 0%, ${withAlpha(
-            palette.bg,
-            0,
-          )} 65%)`,
-          opacity: 0.65,
+          background: `radial-gradient(ellipse 70% 50% at 50% 45%, ${withAlpha(palette.accent, 0.1)} 0%, transparent 60%)`,
+        }}
+      />
+
+      {/* Top-edge warm bleed */}
+      <motion.div
+        className="absolute inset-x-0 top-0 h-[30vh]"
+        style={{
+          background: `linear-gradient(180deg, ${withAlpha(palette.accentStrong, 0.08)} 0%, transparent 100%)`,
+          filter: "blur(30px)",
+        }}
+        animate={
+          reduceMotion
+            ? { opacity: 0.6 }
+            : { opacity: [0.3, 0.7, 0.3] }
+        }
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "easeInOut",
         }}
       />
     </div>

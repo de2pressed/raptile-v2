@@ -132,14 +132,14 @@ function ProductPreviewCard({ product, label }: { product: ShopifyProduct; label
   return (
     <Link
       aria-label={`Open ${product.title}`}
-      className="group grid grid-cols-[92px_minmax(0,1fr)] gap-3 rounded-[28px] border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] p-3 transition duration-300 ease-[var(--ease-out-expo)] hover:-translate-y-0.5 hover:border-[color:var(--accent)] hover:bg-[color:rgba(255,255,255,0.04)]"
+      className="group grid grid-cols-[92px_minmax(0,1fr)] gap-3 rounded-[28px] border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] p-3 transition duration-300 ease-[var(--ease-out-expo)] hover:border-[color:color-mix(in_oklch,var(--accent)_58%,var(--glass-border))] hover:bg-[color:rgba(255,255,255,0.03)]"
       href={`/products/${product.handle}`}
     >
       <div className="relative aspect-square overflow-hidden rounded-[20px] bg-[color:var(--bg-elevated)]">
         {image ? (
           <Image
             alt={image.altText ?? product.title}
-            className="h-full w-full object-cover transition duration-500 ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
+            className="h-full w-full object-cover transition duration-500 ease-[var(--ease-out-expo)] group-hover:scale-[1.02]"
             fill
             sizes="92px"
             src={shopifyImageUrl(image.url, { width: 220 })}
@@ -170,7 +170,7 @@ function ProductPreviewCard({ product, label }: { product: ShopifyProduct; label
         <div className="flex items-center justify-between gap-3">
           <span className="t-price text-[color:var(--text-muted)]">{price}</span>
           <span className="flex items-center gap-2 t-ui text-[color:var(--text-subtle)]">
-            <span>Open</span>
+            <span>View</span>
             <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
           </span>
         </div>
@@ -201,8 +201,8 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
   }, [products]);
 
   const heroProduct = orderedProducts[0] ?? null;
-  const supportingProducts = orderedProducts.slice(1, 3);
-  const showcaseProducts = orderedProducts.slice(0, Math.min(orderedProducts.length, 6));
+  const supportingProducts = orderedProducts.slice(1, 2);
+  const showcaseProducts = orderedProducts.slice(0, Math.min(orderedProducts.length, 4));
   const storyProduct = orderedProducts[2] ?? orderedProducts[1] ?? heroProduct;
   const heroImage = heroProduct?.images[0] ?? null;
   const storyImage = storyProduct?.images[0] ?? null;
@@ -220,12 +220,12 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
 
   return (
     <div className="mx-auto w-full max-w-[1440px] py-4 md:py-8">
-      <section className="grid gap-8 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:items-center">
+      <section className="grid gap-10 lg:grid-cols-[minmax(0,0.74fr)_minmax(0,1.26fr)] lg:items-center">
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-6 lg:pr-4"
-          initial={{ opacity: 0, y: reducedMotion ? 0 : 18 }}
-          transition={{ duration: reducedMotion ? 0.01 : 0.55, ease: [0.16, 1, 0.3, 1] }}
+          className="space-y-7 lg:pr-8"
+          initial={{ opacity: 0, y: reducedMotion ? 0 : 12 }}
+          transition={{ duration: reducedMotion ? 0.01 : 0.48, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="flex flex-wrap items-center gap-3 t-label text-[color:var(--text-muted)]">
             <span>{collectionTitle}</span>
@@ -236,16 +236,15 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
           </div>
 
           <div className="space-y-4">
-            <h1 className="t-hero max-w-[10ch] text-[color:var(--text)]">
-              Shop heavyweight essentials that stay sharp after the first wear.
+            <h1 className="t-hero max-w-[9ch] text-[color:var(--text)]">
+              Heavyweight essentials, cut to stay sharp.
             </h1>
             <p className="editorial-copy max-w-[37ch]">
               {summarizeText(collectionDescription, 165)} Start with the featured piece, then move through the rest of
-              the drop without losing the shopping flow.
+              the edit without the page fighting for attention.
             </p>
             <p className="t-ui max-w-[40ch] leading-6 text-[color:var(--text-subtle)]">
-              Well executed cloth, a tighter edit, and a homepage that moves you toward product instead of asking for
-              patience.
+              A quieter front page, the same deliberate cloth.
             </p>
           </div>
 
@@ -258,34 +257,33 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
             </Link>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3">
-            {commerceFacts.map((fact) => (
-              <div
-                key={fact.label}
-                className="rounded-[24px] border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] px-4 py-4"
-              >
-                <div className="t-label text-[color:var(--text-muted)]">{fact.label}</div>
-                <div className="mt-3 font-display text-[1.18rem] font-bold leading-[1.06] tracking-[-0.04em] text-[color:var(--text)]">
-                  {fact.value}
+          <GlassPanel className="rounded-[28px] px-4 py-4 md:px-5 md:py-5">
+            <div className="grid gap-4 sm:grid-cols-3">
+              {commerceFacts.map((fact) => (
+                <div key={fact.label} className="space-y-2">
+                  <div className="t-label text-[color:var(--text-muted)]">{fact.label}</div>
+                  <div className="font-display text-[1.05rem] font-semibold leading-[1.08] tracking-[-0.03em] text-[color:var(--text)]">
+                    {fact.value}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </GlassPanel>
 
           <div className="flex flex-wrap items-center gap-4 t-ui text-[color:var(--text-subtle)]">
             <Link className="transition-colors duration-200 hover:text-[color:var(--text)]" href="/size-guide">
               Need fit clarity? Check the size guide.
             </Link>
-            {soldOutCount > 0 ? <span>{soldOutCount} pieces are already gone.</span> : <span>The full drop is live now.</span>}
+            {soldOutCount > 0 ? <span>{soldOutCount} pieces have already moved.</span> : <span>The full drop is live now.</span>}
           </div>
         </motion.div>
 
         <motion.div
           className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(260px,0.42fr)]"
-          initial={{ opacity: 0, y: reducedMotion ? 0 : 20 }}
+          initial={{ opacity: 0, y: reducedMotion ? 0 : 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-10%" }}
-          transition={{ duration: reducedMotion ? 0.01 : 0.5, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: reducedMotion ? 0.01 : 0.45, ease: [0.16, 1, 0.3, 1] }}
         >
           <Link
             aria-label={heroProduct ? `Open ${heroProduct.title}` : "Browse the collection"}
@@ -297,7 +295,7 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
                 <>
                   <Image
                     alt={heroImage.altText ?? heroProduct?.title ?? "Featured Raptile piece"}
-                    className="absolute inset-0 h-full w-full object-cover transition duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
+                    className="absolute inset-0 h-full w-full object-cover transition duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.015]"
                     fill
                     priority
                     quality={88}
@@ -332,7 +330,7 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
                     </div>
 
                     <div className="space-y-2">
-                      <div className="font-display text-[clamp(1.85rem,3.8vw,3rem)] font-bold tracking-[-0.04em] text-[color:var(--text)]">
+                      <div className="font-display text-[clamp(1.75rem,3.4vw,2.65rem)] font-bold tracking-[-0.04em] text-[color:var(--text)]">
                         {heroProduct?.title ?? collectionTitle}
                       </div>
                       <p className="t-ui max-w-[32ch] leading-6 text-[color:var(--text-muted)]">{heroSummary}</p>
@@ -361,9 +359,9 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
             <GlassPanel className="rounded-[28px] px-4 py-4 md:px-5 md:py-5">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <div className="t-label text-[color:var(--text-muted)]">Fast decisions</div>
-                  <div className="font-display text-[1.45rem] font-bold leading-[1.06] tracking-[-0.04em] text-[color:var(--text)]">
-                    Compare the drop, check the fit, then move straight to the right piece.
+                  <div className="t-label text-[color:var(--text-muted)]">Quick route</div>
+                  <div className="font-display text-[1.3rem] font-semibold leading-[1.08] tracking-[-0.03em] text-[color:var(--text)]">
+                    Keep the choice simple: browse the full edit or check fit first.
                   </div>
                 </div>
 
@@ -372,14 +370,14 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
                     className="flex items-center justify-between gap-3 rounded-[20px] border border-[color:var(--glass-border)] px-4 py-3 transition duration-200 hover:border-[color:var(--accent)]"
                     href="/collection"
                   >
-                    <span className="t-ui text-[color:var(--text-muted)]">Open the full collection view</span>
+                    <span className="t-ui text-[color:var(--text-muted)]">Browse the full collection</span>
                     <ArrowRightIcon className="h-4 w-4 text-[color:var(--text-subtle)]" />
                   </Link>
                   <Link
                     className="flex items-center justify-between gap-3 rounded-[20px] border border-[color:var(--glass-border)] px-4 py-3 transition duration-200 hover:border-[color:var(--accent)]"
                     href="/size-guide"
                   >
-                    <span className="t-ui text-[color:var(--text-muted)]">Check the size guide before checkout</span>
+                    <span className="t-ui text-[color:var(--text-muted)]">Check the size guide</span>
                     <ArrowRightIcon className="h-4 w-4 text-[color:var(--text-subtle)]" />
                   </Link>
                 </div>
@@ -393,23 +391,23 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.32fr)_minmax(0,0.68fr)] lg:items-start">
           <motion.div
             className="space-y-4 lg:sticky lg:top-24"
-            initial={{ opacity: 0, y: reducedMotion ? 0 : 18 }}
+            initial={{ opacity: 0, y: reducedMotion ? 0 : 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-10%" }}
-            transition={{ duration: reducedMotion ? 0.01 : 0.45, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: reducedMotion ? 0.01 : 0.42, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="space-y-3">
-              <div className="t-label text-[color:var(--text-muted)]">Shop the release</div>
-              <h2 className="t-display max-w-[11ch] text-[color:var(--text)]">The homepage should already feel like the shop.</h2>
+              <div className="t-label text-[color:var(--text-muted)]">A short edit</div>
+              <h2 className="t-display max-w-[11ch] text-[color:var(--text)]">A smaller selection, kept close to the top.</h2>
               <p className="editorial-copy max-w-[34ch]">
-                Open a piece here first. Move to the collection page when you want the full filter and search pass,
-                not before.
+                The homepage carries a tighter slice of the drop. The full collection page stays there when you want
+                the longer pass.
               </p>
             </div>
 
             <div className="space-y-3 t-ui leading-6 text-[color:var(--text-muted)]">
               <p>Product imagery leads, titles stay readable, and pricing stays visible at a glance.</p>
-              <p>The grid below brings the drop forward without turning the homepage into another generic catalog wall.</p>
+              <p>The page stays lighter by showing fewer pieces with less framing around them.</p>
             </div>
           </motion.div>
 
@@ -438,10 +436,10 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.88fr)] lg:items-center">
           <motion.div
             className="relative min-h-[24rem] overflow-hidden rounded-[34px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] md:min-h-[34rem]"
-            initial={{ opacity: 0, y: reducedMotion ? 0 : 18 }}
+            initial={{ opacity: 0, y: reducedMotion ? 0 : 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-10%" }}
-            transition={{ duration: reducedMotion ? 0.01 : 0.45, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: reducedMotion ? 0.01 : 0.42, ease: [0.16, 1, 0.3, 1] }}
           >
             {storyImage ? (
               <>
@@ -463,12 +461,12 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
               <GlassPanel className="rounded-[28px] px-4 py-4 md:max-w-[24rem] md:px-5 md:py-5">
                 <div className="space-y-2">
                   <div className="t-label text-[color:var(--text-muted)]">Material notes</div>
-                  <div className="font-display text-[1.5rem] font-bold leading-[1.06] tracking-[-0.04em] text-[color:var(--text)]">
-                    The cloth still does the convincing.
+                  <div className="font-display text-[1.35rem] font-semibold leading-[1.08] tracking-[-0.03em] text-[color:var(--text)]">
+                    The cloth still carries the page.
                   </div>
                   <p className="t-ui leading-6 text-[color:var(--text-muted)]">
-                    The homepage is cleaner now, but the fabric story stays close because that is what makes the product
-                    image credible.
+                    The homepage is lighter, but the fabric story stays close because that is what makes the product
+                    image believable.
                   </p>
                 </div>
               </GlassPanel>
@@ -477,17 +475,17 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
 
           <motion.div
             className="space-y-6"
-            initial={{ opacity: 0, y: reducedMotion ? 0 : 18 }}
+            initial={{ opacity: 0, y: reducedMotion ? 0 : 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-10%" }}
-            transition={{ duration: reducedMotion ? 0.01 : 0.45, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: reducedMotion ? 0.01 : 0.42, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="space-y-3">
               <div className="t-label text-[color:var(--text-muted)]">Why this drop lands</div>
-              <h2 className="t-display max-w-[12ch] text-[color:var(--text)]">Built to read well on body, not just on the page.</h2>
+              <h2 className="t-display max-w-[12ch] text-[color:var(--text)]">Built to read well on body, not just in the frame.</h2>
               <p className="editorial-copy max-w-[36ch]">
                 Weight, wash, collar, and release rhythm are what keep the storefront from drifting into surface-only
-                design. The page should sell that clearly.
+                design.
               </p>
             </div>
 
@@ -497,42 +495,24 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-3">
-              <Link className="ghost-button rounded-full px-5 py-3.5 text-[color:var(--text)]" href="/about">
-                <span className="t-label">Read the Story</span>
+            <div className="flex flex-wrap gap-x-6 gap-y-3">
+              <Link
+                className="inline-flex items-center gap-2 t-label text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--text)]"
+                href="/about"
+              >
+                <span>Read the story</span>
+                <ArrowRightIcon className="h-4 w-4" />
               </Link>
-              <Link className="ghost-button rounded-full px-5 py-3.5 text-[color:var(--text)]" href="/size-guide">
-                <span className="t-label">Check Size Guide</span>
+              <Link
+                className="inline-flex items-center gap-2 t-label text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--text)]"
+                href="/size-guide"
+              >
+                <span>Check size guide</span>
+                <ArrowRightIcon className="h-4 w-4" />
               </Link>
             </div>
           </motion.div>
         </div>
-      </section>
-
-      <section className="pt-20 md:pt-24">
-        <GlassPanel className="rounded-[34px] px-5 py-6 md:px-8 md:py-8">
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
-            <div className="space-y-3">
-              <div className="t-label text-[color:var(--text-muted)]">Final pass</div>
-              <div className="font-display text-[clamp(1.8rem,4vw,3.2rem)] font-bold leading-[0.98] tracking-[-0.04em] text-[color:var(--text)]">
-                Ready to move through the full {collectionTitle}?
-              </div>
-              <p className="t-ui max-w-[48ch] leading-6 text-[color:var(--text-muted)]">
-                Open the collection for the full rail, or go straight to sizing before you pick a piece. The cleaner
-                path should start here and finish there.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-3">
-              <Link className="btn-primary rounded-full px-5 py-3.5" href="/collection">
-                <span className="t-label text-[color:var(--bg)]">Shop All Pieces</span>
-              </Link>
-              <Link className="ghost-button rounded-full px-5 py-3.5 text-[color:var(--text)]" href="/size-guide">
-                <span className="t-label">Sizing First</span>
-              </Link>
-            </div>
-          </div>
-        </GlassPanel>
       </section>
     </div>
   );

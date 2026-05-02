@@ -53,12 +53,12 @@ export default function PageTransition({ children }: { children: ReactNode }) {
       <AnimatePresence mode="sync" initial={false}>
         <motion.div
           key={pathname}
-          className="relative min-h-[100dvh] transform-gpu"
-          initial={{ opacity: 0, filter: "blur(14px)", y: 8, scale: 0.995 }}
-          animate={{ opacity: 1, filter: "blur(0px)", y: 0, scale: 1 }}
-          exit={{ opacity: 0, filter: "blur(14px)", y: -6, scale: 0.995 }}
+          className="relative min-h-[100dvh]"
+          initial={{ opacity: 0, filter: "blur(14px)" }}
+          animate={{ opacity: 1, filter: "blur(0px)" }}
+          exit={{ opacity: 0, filter: "blur(14px)" }}
           transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
-          style={{ willChange: "opacity, filter, transform" }}
+          style={{ willChange: "opacity, filter" }}
         >
           {children}
         </motion.div>

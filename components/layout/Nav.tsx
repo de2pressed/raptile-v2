@@ -517,7 +517,7 @@ export function Nav() {
               ) : mobileMode === "menu" ? (
                 <motion.div
                   key="mobile-menu"
-                  className="fixed inset-x-0 top-[var(--header-height)] z-[140] px-4 md:hidden"
+                  className="fixed inset-0 z-[140] md:hidden"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
@@ -525,13 +525,13 @@ export function Nav() {
                 >
                   <button
                     aria-label="Close navigation menu"
-                    className="absolute inset-0 z-0 bg-[color:rgba(5,8,18,0.72)]"
+                    className="absolute inset-0 z-0 bg-[color:rgba(0,0,0,0.6)]"
                     onClick={() => setMobileMode("idle")}
                     type="button"
                   />
 
-                  <div className="noise-surface relative z-[1] max-h-[calc(100svh-var(--header-height)-1rem)] overflow-y-auto rounded-[28px] border border-[color:var(--glass-border)] bg-[color:rgba(8,12,24,0.96)] shadow-[0_24px_70px_rgba(0,0,0,0.34)]">
-                    <div className="px-4 py-4">
+                  <div className="absolute inset-x-0 top-[var(--header-height)] bottom-0 z-[1] border-t border-[color:var(--glass-border)] bg-[color:color-mix(in_oklch,var(--bg-elevated)_94%,var(--bg))] shadow-[0_24px_70px_rgba(0,0,0,0.34)]">
+                    <div className="h-full overflow-y-auto px-4 py-4">
                       <div className="grid gap-4">
                         <div className="flex items-start justify-between gap-4">
                           <div className="space-y-2">

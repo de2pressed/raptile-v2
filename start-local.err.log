@@ -1,0 +1,62 @@
+Image with src "https://cdn.shopify.com/s/files/1/0654/8917/4662/files/ye-white-tilt_1feac166-c98d-43c5-9c8b-dce786045b22.jpg?v=1772802863&width=1480" is using quality "88" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://cdn.shopify.com/s/files/1/0654/8917/4662/files/weeknd-white-back.jpg?v=1772802811&width=220" is using quality "80" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://cdn.shopify.com/s/files/1/0654/8917/4662/files/ye-white-tilt_1feac166-c98d-43c5-9c8b-dce786045b22.jpg?v=1772802863&width=720" is using quality "82" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://cdn.shopify.com/s/files/1/0654/8917/4662/files/weeknd-white-back.jpg?v=1772802811&width=720" is using quality "82" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://cdn.shopify.com/s/files/1/0654/8917/4662/files/asap-black-back.jpg?v=1772809667&width=720" is using quality "82" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://cdn.shopify.com/s/files/1/0654/8917/4662/files/don-black-back.jpg?v=1772809688&width=720" is using quality "82" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://cdn.shopify.com/s/files/1/0654/8917/4662/files/asap-black-back.jpg?v=1772809667&width=1400" is using quality "86" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+ ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+Image with src "https://cdn.shopify.com/s/files/1/0654/8917/4662/files/ye-white-tilt_1feac166-c98d-43c5-9c8b-dce786045b22.jpg?v=1772802863&width=1480" is using quality "88" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://cdn.shopify.com/s/files/1/0654/8917/4662/files/weeknd-white-back.jpg?v=1772802811&width=220" is using quality "80" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://cdn.shopify.com/s/files/1/0654/8917/4662/files/ye-white-tilt_1feac166-c98d-43c5-9c8b-dce786045b22.jpg?v=1772802863&width=720" is using quality "82" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://cdn.shopify.com/s/files/1/0654/8917/4662/files/weeknd-white-back.jpg?v=1772802811&width=720" is using quality "82" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://cdn.shopify.com/s/files/1/0654/8917/4662/files/asap-black-back.jpg?v=1772809667&width=720" is using quality "82" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://cdn.shopify.com/s/files/1/0654/8917/4662/files/don-black-back.jpg?v=1772809688&width=720" is using quality "82" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://cdn.shopify.com/s/files/1/0654/8917/4662/files/asap-black-back.jpg?v=1772809667&width=1400" is using quality "86" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+ ⨯ ./components/home/HomePageClient.tsx
+Error: 
+
+Caused by:
+    0: Failed to read source code from C:\Users\jayan\Desktop\raptile\components\home\HomePageClient.tsx
+    1: The system cannot find the file specified. (os error 2)
+
+Import trace for requested module:
+./components/home/HomePageClient.tsx
+./app/page.tsx
+ ⨯ ./components/shop/ProductCard.tsx
+Error: 
+
+Caused by:
+    0: Failed to read source code from C:\Users\jayan\Desktop\raptile\components\shop\ProductCard.tsx
+    1: The system cannot find the file specified. (os error 2)
+
+Import trace for requested module:
+./components/shop/ProductCard.tsx
+./components/shop/ProductGrid.tsx
+./components/home/HomePageClient.tsx
+ ⨯ ./components/shop/ProductCard.tsx
+Error: 
+
+Caused by:
+    0: Failed to read source code from C:\Users\jayan\Desktop\raptile\components\shop\ProductCard.tsx
+    1: The system cannot find the file specified. (os error 2)
+
+Import trace for requested module:
+./components/shop/ProductCard.tsx
+./components/shop/ProductGrid.tsx
+./components/home/HomePageClient.tsx

@@ -11,3 +11,49 @@
  ✓ Ready in 2.9s
  ○ Compiling / ...
  ✓ Compiled / in 10.6s (1596 modules)
+ GET / 200 in 12454ms
+ GET / 200 in 256ms
+ GET / 200 in 301ms
+ ○ Compiling /cart ...
+ ✓ Compiled /cart in 1435ms (1604 modules)
+ GET /cart 200 in 1746ms
+ GET / 200 in 447ms
+ GET /cart 200 in 200ms
+ GET /cart 200 in 46ms
+ GET /cart 200 in 47ms
+ ○ Compiling /collection ...
+ ✓ Compiled /collection in 873ms (1600 modules)
+ GET /collection 200 in 1108ms
+ GET /collection 200 in 82ms
+ GET /collection 200 in 66ms
+ GET /collection 200 in 59ms
+ ○ Compiling /products/[handle] ...
+ ✓ Compiled /products/[handle] in 1179ms (1633 modules)
+ GET /products/ye-oversized-drop-shoulder-t-shirt-240-gsm-heavyweight 200 in 2485ms
+ GET /products/ye-oversized-drop-shoulder-t-shirt-240-gsm-heavyweight 200 in 100ms
+ GET /products/ye-oversized-drop-shoulder-t-shirt-240-gsm-heavyweight 200 in 84ms
+ GET /products/ye-oversized-drop-shoulder-t-shirt-240-gsm-heavyweight 200 in 85ms
+ GET /products/ye-oversized-drop-shoulder-t-shirt-240-gsm-heavyweight 200 in 89ms
+ GET /products/ye-oversized-drop-shoulder-t-shirt-240-gsm-heavyweight 200 in 91ms
+ ○ Compiling /about ...
+ ✓ Compiled /about in 942ms (1641 modules)
+ GET /about 200 in 1407ms
+ GET /about 200 in 246ms
+ GET /about 200 in 243ms
+ GET /about 200 in 246ms
+ GET /about 200 in 235ms
+ GET /about 200 in 237ms
+ GET /about 200 in 170ms
+ GET /about 200 in 94ms
+ GET /about 200 in 86ms
+ ○ Compiling /contact ...
+ ✓ Compiled /contact in 1000ms (1650 modules)
+ GET /contact 200 in 1237ms
+ GET /about 200 in 104ms
+ GET / 200 in 84ms
+ GET / 200 in 55ms
+ GET / 200 in 826ms
+ ✓ Compiled in 2s (1651 modules)
+ ✓ Compiled in 655ms (1651 modules)
+ ✓ Compiled in 1208ms (1651 modules)
+ ✓ Compiled in 1143ms (1651 modules)

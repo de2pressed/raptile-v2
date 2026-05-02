@@ -610,12 +610,29 @@ button {
 }
 
 .squircle-frame {
-  border-radius: 34px;
-  clip-path: inset(0 round 34px);
+  --squircle-radius: 34px;
+  --squircle-image-radius: 28px;
+  border-radius: var(--squircle-radius);
+  clip-path: inset(0 round var(--squircle-radius));
 }
 
 .squircle-frame img {
-  border-radius: 28px;
+  border-radius: var(--squircle-image-radius);
+}
+
+.squircle-frame--lg {
+  --squircle-radius: 34px;
+  --squircle-image-radius: 28px;
+}
+
+.squircle-frame--sm {
+  --squircle-radius: 20px;
+  --squircle-image-radius: 16px;
+}
+
+.squircle-frame--xs {
+  --squircle-radius: 16px;
+  --squircle-image-radius: 12px;
 }
 
 @keyframes shimmer {

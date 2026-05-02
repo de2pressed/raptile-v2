@@ -8,7 +8,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { ProductGrid } from "@/components/shop/ProductGrid";
-import { GlassPanel } from "@/components/ui/GlassPanel";
 import { ArrowRightIcon } from "@/components/ui/icons";
 import type { ShopifyProduct } from "@/lib/commerce";
 import { formatPrice } from "@/lib/commerce";
@@ -25,24 +24,42 @@ const SIZE_ORDER = ["XS", "S", "M", "L", "XL", "XXL", "3XL"] as const;
 
 const MATERIAL_NOTES = [
   {
-    label: "01 / Weight",
-    title: "240gsm body, enough weight to keep the silhouette upright.",
-    body: "The cloth holds its line on body, so the product image is still believable once the piece is worn in.",
+    label: "Weight",
+    title: "240gsm cloth keeps the tee standing up on body.",
+    body: "The fabric holds shape cleanly, so the product page reads closer to how the piece actually lands when worn.",
   },
   {
-    label: "02 / Finish",
-    title: "Double bio washed, softer on first wear without losing edge.",
-    body: "The hand-feel lands easier, but the structure stays sharp. That balance matters more than loud styling.",
+    label: "Finish",
+    title: "Double bio wash softens the hand without flattening the structure.",
+    body: "The first wear feels easier, but the surface still looks controlled instead of collapsing into another basic.",
   },
   {
-    label: "03 / Collar",
-    title: "Heavy rib at the neck keeps the piece looking cleaner for longer.",
-    body: "The collar does more than frame the tee, it keeps repeat wear from turning the shape into another basic.",
+    label: "Fit",
+    title: "Sizing should be read before checkout, not guessed from the photo.",
+    body: "The route stays short: open the guide, compare the measurements, and order with the intended volume in mind.",
+  },
+] as const;
+
+const SUPPORT_LINKS = [
+  {
+    href: "/size-guide",
+    label: "Size guide",
+    body: "Measurements first, then checkout.",
   },
   {
-    label: "04 / Release",
-    title: "Short-run drops keep the page tighter and the collection more intentional.",
-    body: "A small edit reads better, shops faster, and avoids the usual wall of product noise.",
+    href: "/shipping",
+    label: "Shipping",
+    body: "Delivery expectations without filler.",
+  },
+  {
+    href: "/returns",
+    label: "Returns",
+    body: "Read the policy before the order lands.",
+  },
+  {
+    href: "/contact",
+    label: "Contact",
+    body: "Ask for a second read on fit or fabric.",
   },
 ] as const;
 
@@ -124,7 +141,7 @@ function getCollectionSizeSummary(products: ShopifyProduct[]) {
   return `${values[0]} to ${values[values.length - 1]}`;
 }
 
-function ProductPreviewCard({ product, label }: { product: ShopifyProduct; label: string }) {
+function QuickPickCard({ product, index }: { product: ShopifyProduct; index: number }) {
   const image = product.images[0] ?? null;
   const price = formatPrice(product.priceRange.minVariantPrice.amount);
   const status = product.availableForSale ? "Ready now" : "Sold out";
@@ -132,18 +149,18 @@ function ProductPreviewCard({ product, label }: { product: ShopifyProduct; label
   return (
     <Link
       aria-label={`Open ${product.title}`}
-      className="group grid grid-cols-[92px_minmax(0,1fr)] gap-3 rounded-[28px] border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] p-3 transition duration-300 ease-[var(--ease-out-expo)] hover:border-[color:color-mix(in_oklch,var(--accent)_58%,var(--glass-border))] hover:bg-[color:rgba(255,255,255,0.03)]"
+      className="group grid grid-cols-[84px_minmax(0,1fr)] gap-3 rounded-[24px] border border-[color:var(--glass-border)] bg-[color:color-mix(in_oklch,var(--bg-elevated)_92%,var(--bg))] p-3 transition duration-300 ease-[var(--ease-out-expo)] hover:border-[color:color-mix(in_oklch,var(--text)_28%,var(--glass-border))] hover:bg-[color:color-mix(in_oklch,var(--bg-elevated)_96%,var(--bg))]"
       href={`/products/${product.handle}`}
     >
-      <div className="relative aspect-square overflow-hidden rounded-[20px] bg-[color:var(--bg-elevated)]">
+      <div className="relative aspect-square overflow-hidden rounded-[18px] bg-[color:var(--bg-soft)]">
         {image ? (
           <Image
             alt={image.altText ?? product.title}
-            className="h-full w-full object-cover transition duration-500 ease-[var(--ease-out-expo)] group-hover:scale-[1.02]"
+            className="h-full w-full object-cover object-center transition duration-500 ease-[var(--ease-out-expo)] group-hover:scale-[1.02]"
             fill
-            sizes="92px"
+            quality={82}
+            sizes="84px"
             src={shopifyImageUrl(image.url, { width: 220 })}
-            quality={80}
           />
         ) : (
           <div className="absolute inset-0 image-skeleton" />
@@ -152,7 +169,7 @@ function ProductPreviewCard({ product, label }: { product: ShopifyProduct; label
 
       <div className="min-w-0 space-y-2">
         <div className="flex items-center justify-between gap-3">
-          <span className="t-label text-[color:var(--text-muted)]">{label}</span>
+          <span className="t-label text-[color:var(--text-subtle)]">{String(index + 1).padStart(2, "0")}</span>
           <span
             className={cn(
               "t-ui",
@@ -163,13 +180,11 @@ function ProductPreviewCard({ product, label }: { product: ShopifyProduct; label
           </span>
         </div>
 
-        <div className="font-display text-[1.1rem] font-bold leading-[1.02] tracking-[-0.04em] text-[color:var(--text)]">
-          {product.title}
-        </div>
+        <div className="t-product min-w-0 text-[color:var(--text)]">{product.title}</div>
 
         <div className="flex items-center justify-between gap-3">
           <span className="t-price text-[color:var(--text-muted)]">{price}</span>
-          <span className="flex items-center gap-2 t-ui text-[color:var(--text-subtle)]">
+          <span className="inline-flex items-center gap-2 t-ui text-[color:var(--text-subtle)]">
             <span>View</span>
             <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
           </span>
@@ -181,7 +196,7 @@ function ProductPreviewCard({ product, label }: { product: ShopifyProduct; label
 
 function MaterialNote({ label, title, body }: { label: string; title: string; body: string }) {
   return (
-    <article className="border-t border-[color:color-mix(in_oklch,var(--glass-border)_88%,transparent)] pt-4 first:border-t-0 first:pt-0">
+    <article className="border-t border-[color:var(--glass-border)] pt-4 first:border-t-0 first:pt-0">
       <div className="space-y-2">
         <div className="t-label text-[color:var(--text-muted)]">{label}</div>
         <div className="font-display text-[1.2rem] font-bold leading-[1.08] tracking-[-0.04em] text-[color:var(--text)]">
@@ -193,6 +208,21 @@ function MaterialNote({ label, title, body }: { label: string; title: string; bo
   );
 }
 
+function SupportShortcut({ href, label, body }: { href: string; label: string; body: string }) {
+  return (
+    <Link
+      className="group grid gap-2 rounded-[22px] border border-[color:var(--glass-border)] bg-[color:color-mix(in_oklch,var(--bg-elevated)_90%,var(--bg))] px-4 py-4 transition duration-200 ease-[var(--ease-out-expo)] hover:border-[color:color-mix(in_oklch,var(--text)_28%,var(--glass-border))] hover:bg-[color:color-mix(in_oklch,var(--bg-elevated)_96%,var(--bg))]"
+      href={href}
+    >
+      <div className="flex items-center justify-between gap-3">
+        <span className="t-label text-[color:var(--text)]">{label}</span>
+        <ArrowRightIcon className="h-4 w-4 text-[color:var(--text-subtle)] transition-transform duration-200 group-hover:translate-x-0.5" />
+      </div>
+      <p className="t-ui max-w-[28ch] leading-6 text-[color:var(--text-muted)]">{body}</p>
+    </Link>
+  );
+}
+
 export function HomePageClient({ collectionTitle, collectionDescription, products }: HomePageClientProps) {
   const reducedMotion = useReducedMotion();
 
@@ -201,15 +231,17 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
   }, [products]);
 
   const heroProduct = orderedProducts[0] ?? null;
-  const supportingProducts = orderedProducts.slice(1, 2);
-  const showcaseProducts = orderedProducts.slice(0, Math.min(orderedProducts.length, 4));
-  const storyProduct = orderedProducts[2] ?? orderedProducts[1] ?? heroProduct;
   const heroImage = heroProduct?.images[0] ?? null;
-  const storyImage = storyProduct?.images[0] ?? null;
   const heroHref = heroProduct ? `/products/${heroProduct.handle}` : "/collection";
   const heroSummary = heroProduct
     ? summarizeText(heroProduct.description || collectionDescription, 140)
     : "The collection preview sharpens up as soon as the first live piece lands.";
+  const quickPickProducts = orderedProducts.slice(1, 4);
+  const showcaseProducts = orderedProducts.slice(0, Math.min(orderedProducts.length, 4));
+  const storyProduct = orderedProducts[1] ?? heroProduct;
+  const storyImage = storyProduct?.images[0] ?? null;
+  const storyHref = storyProduct ? `/products/${storyProduct.handle}` : "/collection";
+  const storySummary = summarizeText(storyProduct?.description || collectionDescription, 150);
   const availableCount = products.filter((product) => product.availableForSale).length;
   const soldOutCount = Math.max(0, products.length - availableCount);
   const commerceFacts = [
@@ -219,13 +251,13 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
   ];
 
   return (
-    <div className="mx-auto w-full max-w-[1440px] py-4 md:py-8">
-      <section className="grid gap-10 lg:grid-cols-[minmax(0,0.74fr)_minmax(0,1.26fr)] lg:items-center">
+    <div className="mx-auto w-full max-w-[1440px] pb-14 pt-4 md:pb-20 md:pt-6">
+      <section className="grid gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-10">
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-7 lg:pr-8"
+          className="grid content-start gap-6 md:gap-7 lg:pr-8"
           initial={{ opacity: 0, y: reducedMotion ? 0 : 12 }}
-          transition={{ duration: reducedMotion ? 0.01 : 0.48, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: reducedMotion ? 0.01 : 0.42, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="flex flex-wrap items-center gap-3 t-label text-[color:var(--text-muted)]">
             <span>{collectionTitle}</span>
@@ -236,256 +268,210 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
           </div>
 
           <div className="space-y-4">
-            <h1 className="t-hero max-w-[9ch] text-[color:var(--text)]">
-              Heavyweight essentials, cut to stay sharp.
-            </h1>
-            <p className="editorial-copy max-w-[37ch]">
-              {summarizeText(collectionDescription, 165)} Start with the featured piece, then move through the rest of
-              the edit without the page fighting for attention.
+            <h1 className="t-hero max-w-[8ch] text-[color:var(--text)]">Heavyweight essentials. Straight to the piece.</h1>
+            <p className="editorial-copy max-w-[38ch]">
+              {summarizeText(collectionDescription, 155)} Silhouette, price, and fit stay visible from the first screen.
             </p>
-            <p className="t-ui max-w-[40ch] leading-6 text-[color:var(--text-subtle)]">
-              A quieter front page, the same deliberate cloth.
+            <p className="t-ui max-w-[42ch] leading-6 text-[color:var(--text-subtle)]">
+              The front page stays restrained so the garments, the route into product, and the mobile read stay clean.
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-3">
-            <Link className="btn-primary rounded-full px-5 py-3.5" href="/collection">
-              <span className="t-label text-[color:var(--bg)]">Shop Collection</span>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Link className="btn-primary rounded-full px-5 py-3.5 text-center" href="/collection">
+              <span className="t-label text-[color:var(--bg)]">Shop collection</span>
             </Link>
-            <Link className="ghost-button rounded-full px-5 py-3.5 text-[color:var(--text)]" href={heroHref}>
-              <span className="t-label">{heroProduct ? "Open Featured Piece" : "Browse Preview"}</span>
+            <Link className="ghost-button rounded-full px-5 py-3.5 text-center text-[color:var(--text)]" href={heroHref}>
+              <span className="t-label">{heroProduct ? "Open featured piece" : "Browse preview"}</span>
             </Link>
           </div>
 
-          <GlassPanel className="rounded-[28px] px-4 py-4 md:px-5 md:py-5">
-            <div className="grid gap-4 sm:grid-cols-3">
-              {commerceFacts.map((fact) => (
-                <div key={fact.label} className="space-y-2">
-                  <div className="t-label text-[color:var(--text-muted)]">{fact.label}</div>
-                  <div className="font-display text-[1.05rem] font-semibold leading-[1.08] tracking-[-0.03em] text-[color:var(--text)]">
-                    {fact.value}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </GlassPanel>
+          <dl className="grid gap-4 border-y border-[color:var(--glass-border)] py-5 sm:grid-cols-3">
+            {commerceFacts.map((fact) => (
+              <div key={fact.label} className="space-y-2">
+                <dt className="t-label text-[color:var(--text-muted)]">{fact.label}</dt>
+                <dd className="font-display text-[1.05rem] font-semibold leading-[1.08] tracking-[-0.03em] text-[color:var(--text)]">
+                  {fact.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
 
-          <div className="flex flex-wrap items-center gap-4 t-ui text-[color:var(--text-subtle)]">
+          <div className="flex flex-wrap items-center gap-4 t-ui leading-6 text-[color:var(--text-subtle)]">
             <Link className="transition-colors duration-200 hover:text-[color:var(--text)]" href="/size-guide">
-              Need fit clarity? Check the size guide.
+              Fit clarity lives in the size guide.
             </Link>
-            {soldOutCount > 0 ? <span>{soldOutCount} pieces have already moved.</span> : <span>The full drop is live now.</span>}
+            <span>{soldOutCount > 0 ? `${soldOutCount} pieces have already moved.` : "The current drop is live now."}</span>
           </div>
         </motion.div>
 
         <motion.div
-          className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(260px,0.42fr)]"
+          className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_260px]"
           initial={{ opacity: 0, y: reducedMotion ? 0 : 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-10%" }}
-          transition={{ duration: reducedMotion ? 0.01 : 0.45, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: reducedMotion ? 0.01 : 0.42, ease: [0.16, 1, 0.3, 1] }}
         >
           <Link
             aria-label={heroProduct ? `Open ${heroProduct.title}` : "Browse the collection"}
-            className="group block overflow-hidden rounded-[34px] md:rounded-[40px]"
+            className="group block"
             href={heroHref}
           >
-            <div className="relative min-h-[28rem] overflow-hidden rounded-[34px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] md:min-h-[36rem] md:rounded-[40px] xl:min-h-[44rem]">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[32px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] md:aspect-[5/6] xl:aspect-[4/5]">
               {heroImage ? (
                 <>
                   <Image
                     alt={heroImage.altText ?? heroProduct?.title ?? "Featured Raptile piece"}
-                    className="absolute inset-0 h-full w-full object-cover transition duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.015]"
+                    className="absolute inset-0 h-full w-full object-cover object-center transition duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.015]"
                     fill
                     priority
                     quality={88}
-                    sizes="(min-width: 1280px) 46vw, 100vw"
+                    sizes="(min-width: 1280px) 48vw, 100vw"
                     src={shopifyImageUrl(heroImage.url, { width: 1480 })}
                   />
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--bg)_6%,transparent)_0%,transparent_40%,color-mix(in_oklch,var(--bg)_76%,transparent)_100%)]" />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--bg)_4%,transparent)_0%,transparent_36%,color-mix(in_oklch,var(--bg)_82%,transparent)_100%)]" />
                 </>
               ) : (
                 <div className="absolute inset-0 image-skeleton" />
               )}
 
-              <div className="absolute left-4 top-4 md:left-6 md:top-6">
-                <span className="t-label rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(14,14,14,0.5)] px-3 py-2 text-[color:var(--text)] backdrop-blur-md">
-                  {heroProduct ? "Featured piece" : "Collection preview"}
+              <div className="absolute left-4 top-4 md:left-5 md:top-5">
+                <span className="t-label rounded-full border border-[color:color-mix(in_oklch,var(--glass-border)_90%,transparent)] bg-[color:rgba(10,10,10,0.72)] px-3 py-2 text-[color:var(--text)] backdrop-blur-sm">
+                  {heroProduct?.availableForSale ? "Featured piece" : heroProduct ? "Sold out piece" : "Collection preview"}
                 </span>
               </div>
 
-              <div className="absolute inset-x-0 bottom-0 p-4 md:p-6">
-                <GlassPanel className="rounded-[28px] px-4 py-4 md:max-w-[30rem] md:px-5 md:py-5">
-                  <div className="grid gap-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="t-label text-[color:var(--text-muted)]">Open now</div>
-                      <div
-                        className={cn(
-                          "t-ui",
-                          heroProduct?.availableForSale ? "text-[color:var(--text-subtle)]" : "text-[color:var(--sold-out)]",
-                        )}
-                      >
-                        {heroProduct?.availableForSale ? "Ready now" : heroProduct ? "Sold out" : "Preview"}
-                      </div>
-                    </div>
+              <div className="absolute inset-x-0 bottom-0 grid gap-4 p-4 md:p-6">
+                <div className="flex items-center justify-between gap-3">
+                  <span
+                    className={cn(
+                      "t-ui",
+                      heroProduct?.availableForSale ? "text-[color:var(--text-subtle)]" : "text-[color:var(--sold-out)]",
+                    )}
+                  >
+                    {heroProduct?.availableForSale ? "Ready now" : heroProduct ? "Sold out" : "Preview"}
+                  </span>
+                  <span className="t-price text-[color:var(--text)]">
+                    {heroProduct ? formatPrice(heroProduct.priceRange.minVariantPrice.amount) : "Collection preview"}
+                  </span>
+                </div>
 
-                    <div className="space-y-2">
-                      <div className="font-display text-[clamp(1.75rem,3.4vw,2.65rem)] font-bold tracking-[-0.04em] text-[color:var(--text)]">
-                        {heroProduct?.title ?? collectionTitle}
-                      </div>
-                      <p className="t-ui max-w-[32ch] leading-6 text-[color:var(--text-muted)]">{heroSummary}</p>
+                <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+                  <div className="space-y-2">
+                    <div className="font-display text-[clamp(1.6rem,3.2vw,2.65rem)] font-bold leading-[0.98] tracking-[-0.04em] text-[color:var(--text)]">
+                      {heroProduct?.title ?? collectionTitle}
                     </div>
-
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="t-price text-[color:var(--text)]">
-                        {heroProduct ? formatPrice(heroProduct.priceRange.minVariantPrice.amount) : "Collection preview"}
-                      </div>
-                      <div className="flex items-center gap-2 t-label text-[color:var(--text-muted)]">
-                        <span>{heroProduct ? "Open piece" : "Browse collection"}</span>
-                        <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-                      </div>
-                    </div>
+                    <p className="t-ui max-w-[34ch] leading-6 text-[color:var(--text-muted)]">{heroSummary}</p>
                   </div>
-                </GlassPanel>
+
+                  <div className="inline-flex items-center gap-2 t-label text-[color:var(--text-muted)] sm:justify-self-end">
+                    <span>{heroProduct ? "Open piece" : "Browse collection"}</span>
+                    <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </div>
+                </div>
               </div>
             </div>
           </Link>
 
-          <div className="grid content-start gap-4">
-            {supportingProducts.map((product, index) => (
-              <ProductPreviewCard key={product.id} label={`Edit ${String(index + 1).padStart(2, "0")}`} product={product} />
-            ))}
-
-            <GlassPanel className="rounded-[28px] px-4 py-4 md:px-5 md:py-5">
-              <div className="space-y-4">
+          <div className="grid content-start gap-3 sm:grid-cols-3 xl:grid-cols-1">
+            {quickPickProducts.length > 0 ? (
+              quickPickProducts.map((product, index) => <QuickPickCard key={product.id} index={index} product={product} />)
+            ) : (
+              <div className="rounded-[24px] border border-[color:var(--glass-border)] bg-[color:color-mix(in_oklch,var(--bg-elevated)_92%,var(--bg))] p-4">
                 <div className="space-y-2">
-                  <div className="t-label text-[color:var(--text-muted)]">Quick route</div>
-                  <div className="font-display text-[1.3rem] font-semibold leading-[1.08] tracking-[-0.03em] text-[color:var(--text)]">
-                    Keep the choice simple: browse the full edit or check fit first.
-                  </div>
-                </div>
-
-                <div className="grid gap-3">
-                  <Link
-                    className="flex items-center justify-between gap-3 rounded-[20px] border border-[color:var(--glass-border)] px-4 py-3 transition duration-200 hover:border-[color:var(--accent)]"
-                    href="/collection"
-                  >
-                    <span className="t-ui text-[color:var(--text-muted)]">Browse the full collection</span>
-                    <ArrowRightIcon className="h-4 w-4 text-[color:var(--text-subtle)]" />
-                  </Link>
-                  <Link
-                    className="flex items-center justify-between gap-3 rounded-[20px] border border-[color:var(--glass-border)] px-4 py-3 transition duration-200 hover:border-[color:var(--accent)]"
-                    href="/size-guide"
-                  >
-                    <span className="t-ui text-[color:var(--text-muted)]">Check the size guide</span>
-                    <ArrowRightIcon className="h-4 w-4 text-[color:var(--text-subtle)]" />
-                  </Link>
+                  <div className="t-label text-[color:var(--text-muted)]">Collection preview</div>
+                  <p className="t-ui max-w-[28ch] leading-6 text-[color:var(--text-subtle)]">
+                    More quick picks appear here as soon as additional pieces are live in the selected collection.
+                  </p>
                 </div>
               </div>
-            </GlassPanel>
+            )}
           </div>
         </motion.div>
       </section>
 
-      <section className="scroll-mt-24 pt-20 md:pt-24" id="shop-now">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,0.32fr)_minmax(0,0.68fr)] lg:items-start">
-          <motion.div
-            className="space-y-4 lg:sticky lg:top-24"
-            initial={{ opacity: 0, y: reducedMotion ? 0 : 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10%" }}
-            transition={{ duration: reducedMotion ? 0.01 : 0.42, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="space-y-3">
-              <div className="t-label text-[color:var(--text-muted)]">A short edit</div>
-              <h2 className="t-display max-w-[11ch] text-[color:var(--text)]">A smaller selection, kept close to the top.</h2>
-              <p className="editorial-copy max-w-[34ch]">
-                The homepage carries a tighter slice of the drop. The full collection page stays there when you want
-                the longer pass.
-              </p>
-            </div>
-
-            <div className="space-y-3 t-ui leading-6 text-[color:var(--text-muted)]">
-              <p>Product imagery leads, titles stay readable, and pricing stays visible at a glance.</p>
-              <p>The page stays lighter by showing fewer pieces with less framing around them.</p>
-            </div>
-          </motion.div>
-
-          <div className="space-y-5">
-            <ProductGrid products={showcaseProducts} />
-
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="t-ui text-[color:var(--text-subtle)]">
-                {products.length > showcaseProducts.length
-                  ? `${products.length - showcaseProducts.length} more pieces continue on the collection page.`
-                  : "The current release is fully visible from the homepage."}
-              </div>
-              <Link
-                className="inline-flex items-center gap-2 t-label text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--text)]"
-                href="/collection"
-              >
-                <span>Browse all pieces</span>
-                <ArrowRightIcon className="h-4 w-4" />
-              </Link>
-            </div>
+      <section className="scroll-mt-24 pt-14 md:pt-20" id="shop-now">
+        <div className="flex flex-col gap-4 border-b border-[color:var(--glass-border)] pb-5 md:flex-row md:items-end md:justify-between">
+          <div className="space-y-3">
+            <div className="t-label text-[color:var(--text-muted)]">Shop the drop</div>
+            <h2 className="t-display max-w-[10ch] text-[color:var(--text)]">A short edit on the homepage. The rest stays one click away.</h2>
           </div>
+
+          <Link
+            className="inline-flex items-center gap-2 t-label text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--text)]"
+            href="/collection"
+          >
+            <span>Browse all pieces</span>
+            <ArrowRightIcon className="h-4 w-4" />
+          </Link>
+        </div>
+
+        <div className="pt-6">
+          <ProductGrid products={showcaseProducts} />
+        </div>
+
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="t-ui text-[color:var(--text-subtle)]">
+            {products.length > showcaseProducts.length
+              ? `${products.length - showcaseProducts.length} more pieces continue on the collection page.`
+              : "The current release is fully visible from the homepage."}
+          </div>
+          <Link
+            className="inline-flex items-center gap-2 t-label text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--text)]"
+            href="/size-guide"
+          >
+            <span>Check fit first</span>
+            <ArrowRightIcon className="h-4 w-4" />
+          </Link>
         </div>
       </section>
 
-      <section className="pt-20 md:pt-28">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.88fr)] lg:items-center">
-          <motion.div
-            className="relative min-h-[24rem] overflow-hidden rounded-[34px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] md:min-h-[34rem]"
-            initial={{ opacity: 0, y: reducedMotion ? 0 : 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10%" }}
-            transition={{ duration: reducedMotion ? 0.01 : 0.42, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {storyImage ? (
-              <>
-                <Image
-                  alt={storyImage.altText ?? storyProduct?.title ?? "Raptile Studio garment detail"}
-                  className="absolute inset-0 h-full w-full object-cover"
-                  fill
-                  quality={86}
-                  sizes="(min-width: 1024px) 48vw, 100vw"
-                  src={shopifyImageUrl(storyImage.url, { width: 1400 })}
-                />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_18%,color-mix(in_oklch,var(--bg)_78%,transparent)_100%)]" />
-              </>
-            ) : (
-              <div className="absolute inset-0 image-skeleton" />
-            )}
+      <section className="pt-16 md:pt-24">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] lg:items-start">
+          <Link aria-label={storyProduct ? `Open ${storyProduct.title}` : "Browse the collection"} className="group block" href={storyHref}>
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[30px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] md:aspect-[5/6]">
+              {storyImage ? (
+                <>
+                  <Image
+                    alt={storyImage.altText ?? storyProduct?.title ?? "Raptile Studio garment detail"}
+                    className="absolute inset-0 h-full w-full object-cover object-center transition duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.015]"
+                    fill
+                    quality={86}
+                    sizes="(min-width: 1024px) 48vw, 100vw"
+                    src={shopifyImageUrl(storyImage.url, { width: 1400 })}
+                  />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_22%,color-mix(in_oklch,var(--bg)_84%,transparent)_100%)]" />
+                </>
+              ) : (
+                <div className="absolute inset-0 image-skeleton" />
+              )}
 
-            <div className="absolute inset-x-0 bottom-0 p-4 md:p-6">
-              <GlassPanel className="rounded-[28px] px-4 py-4 md:max-w-[24rem] md:px-5 md:py-5">
-                <div className="space-y-2">
-                  <div className="t-label text-[color:var(--text-muted)]">Material notes</div>
-                  <div className="font-display text-[1.35rem] font-semibold leading-[1.08] tracking-[-0.03em] text-[color:var(--text)]">
-                    The cloth still carries the page.
+              <div className="absolute inset-x-0 bottom-0 p-4 md:p-6">
+                <div className="max-w-[22rem] rounded-[24px] border border-[color:color-mix(in_oklch,var(--glass-border)_88%,transparent)] bg-[color:rgba(10,10,10,0.7)] px-4 py-4 backdrop-blur-sm">
+                  <div className="space-y-2">
+                    <div className="t-label text-[color:var(--text-muted)]">Fabric read</div>
+                    <div className="font-display text-[1.35rem] font-semibold leading-[1.05] tracking-[-0.03em] text-[color:var(--text)]">
+                      {storyProduct?.title ?? collectionTitle}
+                    </div>
+                    <p className="t-ui leading-6 text-[color:var(--text-muted)]">{storySummary}</p>
                   </div>
-                  <p className="t-ui leading-6 text-[color:var(--text-muted)]">
-                    The homepage is lighter, but the fabric story stays close because that is what makes the product
-                    image believable.
-                  </p>
                 </div>
-              </GlassPanel>
+              </div>
             </div>
-          </motion.div>
+          </Link>
 
           <motion.div
-            className="space-y-6"
+            className="grid gap-6"
             initial={{ opacity: 0, y: reducedMotion ? 0 : 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-10%" }}
             transition={{ duration: reducedMotion ? 0.01 : 0.42, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="space-y-3">
-              <div className="t-label text-[color:var(--text-muted)]">Why this drop lands</div>
-              <h2 className="t-display max-w-[12ch] text-[color:var(--text)]">Built to read well on body, not just in the frame.</h2>
-              <p className="editorial-copy max-w-[36ch]">
-                Weight, wash, collar, and release rhythm are what keep the storefront from drifting into surface-only
-                design.
+              <div className="t-label text-[color:var(--text-muted)]">Before checkout</div>
+              <h2 className="t-display max-w-[10ch] text-[color:var(--text)]">Fit, finish, and support stay close.</h2>
+              <p className="editorial-copy max-w-[38ch]">
+                A short read on cloth and sizing, followed by the service routes people actually need before ordering.
               </p>
             </div>
 
@@ -495,21 +481,10 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-x-6 gap-y-3">
-              <Link
-                className="inline-flex items-center gap-2 t-label text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--text)]"
-                href="/about"
-              >
-                <span>Read the story</span>
-                <ArrowRightIcon className="h-4 w-4" />
-              </Link>
-              <Link
-                className="inline-flex items-center gap-2 t-label text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--text)]"
-                href="/size-guide"
-              >
-                <span>Check size guide</span>
-                <ArrowRightIcon className="h-4 w-4" />
-              </Link>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {SUPPORT_LINKS.map((link) => (
+                <SupportShortcut body={link.body} href={link.href} key={link.href} label={link.label} />
+              ))}
             </div>
           </motion.div>
         </div>

@@ -296,7 +296,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 <button
                   key={`${image.url}-${index}`}
                   className={cn(
-                    "squircle-frame relative h-[68px] w-[68px] overflow-hidden border bg-[color:var(--bg-elevated)] transition duration-200",
+                    "squircle-frame squircle-frame--sm relative h-[68px] w-[68px] overflow-hidden border bg-[color:var(--bg-elevated)] transition duration-200",
                     active
                       ? "border-[color:var(--accent)] bg-[color:var(--glass-fill)]"
                       : "border-[color:var(--glass-border)] hover:border-[color:var(--accent)]",
@@ -318,7 +318,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
           <div className="min-w-0">
             <div
-              className="squircle-frame relative aspect-square w-full overflow-hidden bg-[color:var(--bg-elevated)] md:aspect-auto md:h-[calc(100svh-var(--header-height)-2rem)] md:max-h-[calc(100svh-var(--header-height)-2rem)] lg:h-[calc(100svh-var(--header-height)-2rem)]"
+              className="squircle-frame squircle-frame--lg relative aspect-square w-full overflow-hidden bg-[color:var(--bg-elevated)] md:aspect-auto md:h-[calc(100svh-var(--header-height)-2rem)] md:max-h-[calc(100svh-var(--header-height)-2rem)] lg:h-[calc(100svh-var(--header-height)-2rem)]"
               onTouchCancel={finishTouch}
               onTouchEnd={finishTouch}
               onTouchMove={handleTouchMove}
@@ -362,18 +362,28 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             </div>
 
             {displayImages.length > 1 ? (
-              <div className="mt-4 flex items-center justify-center gap-2 lg:hidden">
+              <div className="hide-scrollbar mt-4 flex gap-2 overflow-x-auto pb-1 lg:hidden">
                 {displayImages.map((image, index) => (
                   <button
-                    key={`dot-${image.url}-${index}`}
+                    key={`thumb-${image.url}-${index}`}
                     aria-label={`View image ${index + 1}`}
                     className={cn(
-                      "h-2.5 rounded-full transition-all duration-200",
-                      index === selectedImageIndex ? "w-6 bg-[color:var(--accent)]" : "w-2.5 bg-[color:var(--glass-border)]",
+                      "squircle-frame squircle-frame--xs relative h-14 w-14 shrink-0 overflow-hidden border bg-[color:var(--bg-elevated)] transition duration-200",
+                      index === selectedImageIndex
+                        ? "border-[color:var(--accent)] bg-[color:var(--glass-fill)]"
+                        : "border-[color:var(--glass-border)] hover:border-[color:var(--accent)]",
                     )}
                     onClick={() => setSelectedImageIndex(index)}
                     type="button"
-                  />
+                  >
+                    <Image
+                      alt={image.altText ?? product.title}
+                      className="h-full w-full object-cover bg-[color:var(--bg-elevated)]"
+                      fill
+                      sizes="56px"
+                      src={shopifyImageUrl(image.url, { width: 160 })}
+                    />
+                  </button>
                 ))}
               </div>
             ) : null}

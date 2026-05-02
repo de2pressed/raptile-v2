@@ -172,8 +172,8 @@ export function CollectionPageClient({ collectionTitle, collectionDescription, p
             >
               {collectionTitle}
             </div>
-            <p className="editorial-copy max-w-[34ch]">{collectionDescription}</p>
-            <div className="t-ui max-w-[34ch] leading-6 text-[color:var(--text-muted)]">
+            <p className="editorial-copy hidden max-w-[34ch] md:block">{collectionDescription}</p>
+            <div className="t-ui hidden max-w-[34ch] leading-6 text-[color:var(--text-muted)] md:block">
               Weight, wash, and silhouette stay close to the garment. The interface stays exact and quiet.
             </div>
           </div>
@@ -183,7 +183,7 @@ export function CollectionPageClient({ collectionTitle, collectionDescription, p
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
                   <div className="t-label text-[color:var(--text-muted)]">Search and sort</div>
-                  <div className="t-ui text-[color:var(--text-subtle)]">
+                  <div className="t-ui hidden text-[color:var(--text-subtle)] md:block">
                     Narrow the release without losing the point of view.
                   </div>
                 </div>
@@ -200,7 +200,7 @@ export function CollectionPageClient({ collectionTitle, collectionDescription, p
                       setQuery(nextQuery);
                       updateQueryParams({ query: nextQuery });
                     }}
-                    placeholder="Search product names, fits, details"
+                    placeholder="Search products"
                     value={query}
                   />
                   <div className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--text-subtle)]">

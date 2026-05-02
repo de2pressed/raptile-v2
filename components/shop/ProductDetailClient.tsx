@@ -3,7 +3,6 @@
 import { AnimatePresence, LazyMotion, domAnimation, useReducedMotion } from "framer-motion";
 import * as motion from "framer-motion/client";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { TouchEvent } from "react";
 
@@ -27,16 +26,6 @@ const SIZE_PRIORITY = ["M", "S", "L", "XL", "XXL"];
 
 interface ProductDetailClientProps {
   product: ShopifyProduct;
-}
-
-function summarizeText(value: string, maxLength: number) {
-  const normalized = value.replace(/\s+/g, " ").trim();
-
-  if (normalized.length <= maxLength) {
-    return normalized;
-  }
-
-  return `${normalized.slice(0, Math.max(0, maxLength - 3)).trimEnd()}...`;
 }
 
 function getAvailableSizesForSelection(
@@ -63,6 +52,11 @@ function pickDefaultSize(availableSizes: string[]) {
   }
 
   return availableSizes[0] ?? null;
+}
+
+function getVariantTitle(variant: ProductVariant) {
+  const parts = variant.selectedOptions.map((option) => option.value.trim()).filter(Boolean);
+  return parts.length > 0 ? parts.join(" / ") : "Default";
 }
 
 export function ProductDetailClient({ product }: ProductDetailClientProps) {
@@ -204,6 +198,19 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const selectedImage = displayImages[selectedImageIndex] ?? displayImages[0] ?? null;
   const selectedImageWidth = selectedImage?.width ?? 1400;
   const selectedImageHeight = selectedImage?.height ?? 1600;
+  const selectedVariantLabel = selectedVariant ? getVariantTitle(selectedVariant) : "Default";
+  const addedCartLinePreview = selectedVariant
+    ? {
+        quantity: 1,
+        title: product.title,
+        handle: product.handle,
+        variantTitle: selectedVariantLabel,
+        merchandiseId: selectedVariant.id,
+        price: formatPrice(selectedVariant.price.amount),
+        imageUrl: selectedImage?.url ?? product.images[0]?.url,
+        imageAlt: selectedImage?.altText ?? product.images[0]?.altText ?? product.title,
+      }
+    : null;
   const soldOut = !product.availableForSale || (selectedVariant ? !selectedVariant.availableForSale : false);
   const emptySelectionLabel = hasSizeOptions ? "Select a size" : "Add to Cart";
 
@@ -232,7 +239,6 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   };
 
   const description = product.description.trim();
-  const storySummary = summarizeText(description || product.description, 180);
 
   const handleTouchStart = (event: TouchEvent<HTMLDivElement>) => {
     if (displayImages.length < 2) {
@@ -496,6 +502,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               ) : (
                 <AddToCartButton
                   emptySelectionLabel={emptySelectionLabel}
+                  previewLine={addedCartLinePreview}
                   soldOut={soldOut}
                   variantId={selectedVariant?.id ?? null}
                 />
@@ -508,42 +515,39 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           </div>
         </div>
 
-        <div className="mt-10 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)]">
+        <div className="mt-10">
           <GlassPanel className="rounded-[34px] px-5 py-5 md:px-6 md:py-6">
-            <div className="space-y-4">
-              <div className="t-label text-[color:var(--text-muted)]">Fabric notes</div>
-              <p className="editorial-copy max-w-[34ch]">{storySummary}</p>
-              <div className="flex flex-wrap gap-2">
+            <div className="grid gap-5">
+              <div className="flex items-end justify-between gap-4">
+                <div className="t-label text-[color:var(--text-muted)]">Fabric notes</div>
+                <button
+                  className="ghost-button hidden rounded-full px-5 py-3 md:inline-flex"
+                  onClick={() => setIsSizeChartOpen(true)}
+                  type="button"
+                >
+                  <span className="t-label">Size chart</span>
+                </button>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {fabricSignals.map((item) => (
-                  <span
+                  <div
                     key={item}
-                    className="inline-flex items-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] px-4 py-2 t-ui text-[color:var(--text-muted)]"
+                    className="rounded-[22px] border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] px-4 py-4"
                   >
-                    {item}
-                  </span>
+                    <div className="t-ui text-[color:var(--text-muted)]">{item}</div>
+                  </div>
                 ))}
               </div>
-            </div>
-          </GlassPanel>
 
-          <GlassPanel className="rounded-[34px] px-5 py-5 md:px-6 md:py-6">
-            <div className="space-y-4">
-              <div className="t-label text-[color:var(--text-muted)]">Need fit help?</div>
-              <p className="t-ui leading-7 text-[color:var(--text-muted)]">
-                Use the size chart below or contact the studio if you want a second read before ordering. The product
-                page stays direct, but support is one click away.
-              </p>
-              <div className="flex flex-wrap gap-3">
+              <div className="md:hidden">
                 <button
-                  className="ghost-button rounded-full px-5 py-3"
+                  className="ghost-button w-full rounded-full px-5 py-3"
                   onClick={() => setIsSizeChartOpen(true)}
                   type="button"
                 >
                   <span className="t-label">Open size chart</span>
                 </button>
-                <Link className="ghost-button rounded-full px-5 py-3 text-[color:var(--text)]" href="/contact">
-                  <span className="t-label">Contact the studio</span>
-                </Link>
               </div>
             </div>
           </GlassPanel>

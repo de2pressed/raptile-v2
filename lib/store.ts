@@ -12,6 +12,17 @@ export interface CartLine {
   imageAlt?: string | null;
 }
 
+export interface CartLinePreview {
+  quantity: number;
+  title: string;
+  handle: string;
+  variantTitle: string;
+  merchandiseId: string;
+  price: string;
+  imageUrl?: string;
+  imageAlt?: string | null;
+}
+
 interface RaptileStore {
   cartId: string | null;
   cartLines: CartLine[];
@@ -21,6 +32,8 @@ interface RaptileStore {
   setCartData: (payload: { cartId: string | null; cartLines: CartLine[]; cartTotal: string }) => void;
   lastAddedMerchandiseId: string | null;
   setLastAddedMerchandiseId: (id: string | null) => void;
+  lastAddedCartLinePreview: CartLinePreview | null;
+  setLastAddedCartLinePreview: (line: CartLinePreview | null) => void;
   isSpecDrawerOpen: boolean;
   setSpecDrawerOpen: (open: boolean) => void;
   selectedVariantId: string | null;
@@ -38,6 +51,8 @@ export const useRaptileStore = create<RaptileStore>((set) => ({
   setCartData: ({ cartId, cartLines, cartTotal }) => set({ cartId, cartLines, cartTotal }),
   lastAddedMerchandiseId: null,
   setLastAddedMerchandiseId: (id) => set({ lastAddedMerchandiseId: id }),
+  lastAddedCartLinePreview: null,
+  setLastAddedCartLinePreview: (line) => set({ lastAddedCartLinePreview: line }),
   isSpecDrawerOpen: false,
   setSpecDrawerOpen: (open) => set({ isSpecDrawerOpen: open }),
   selectedVariantId: null,

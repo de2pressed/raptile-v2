@@ -4,6 +4,7 @@ import { useCart } from "@shopify/hydrogen-react";
 import { useEffect, useRef, useState } from "react";
 
 import { useShopifyRuntime } from "@/components/providers/ShopifyRuntimeContext";
+import type { CartLinePreview } from "@/lib/store";
 import { useRaptileStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +14,7 @@ interface AddToCartButtonProps {
   compact?: boolean;
   className?: string;
   emptySelectionLabel?: string;
+  previewLine?: CartLinePreview | null;
 }
 
 interface AddToCartButtonFrameProps {
@@ -63,14 +65,17 @@ function AddToCartButtonFrame({
 function AddToCartButtonAction({
   className,
   compact,
+  previewLine,
   resolvedVariantId,
 }: {
   className?: string;
   compact: boolean;
+  previewLine?: CartLinePreview | null;
   resolvedVariantId: string;
 }) {
   const cart = useCart();
   const setLastAddedMerchandiseId = useRaptileStore((state) => state.setLastAddedMerchandiseId);
+  const setLastAddedCartLinePreview = useRaptileStore((state) => state.setLastAddedCartLinePreview);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const successTimeoutRef = useRef<number | null>(null);
@@ -87,6 +92,10 @@ function AddToCartButtonAction({
     setIsLoading(true);
 
     try {
+      if (previewLine) {
+        setLastAddedCartLinePreview(previewLine);
+      }
+
       await cart.linesAdd([{ merchandiseId: resolvedVariantId, quantity: 1 }]);
       setIsSuccess(true);
       setLastAddedMerchandiseId(resolvedVariantId);
@@ -98,9 +107,11 @@ function AddToCartButtonAction({
       successTimeoutRef.current = window.setTimeout(() => setIsSuccess(false), 1200);
       closeDrawerTimeoutRef.current = window.setTimeout(() => {
         useRaptileStore.getState().setCartOpen(false);
+        setLastAddedCartLinePreview(null);
       }, 2200);
     } catch (error) {
       console.error("Cart error:", error);
+      setLastAddedCartLinePreview(null);
     } finally {
       setIsLoading(false);
     }
@@ -126,6 +137,7 @@ export function AddToCartButton({
   compact = false,
   className,
   emptySelectionLabel = "Select a size",
+  previewLine = null,
 }: AddToCartButtonProps) {
   const { isConfigured } = useShopifyRuntime();
   const fallbackVariantId = useRaptileStore((state) => state.selectedVariantId);
@@ -138,5 +150,12 @@ export function AddToCartButton({
     return <AddToCartButtonFrame className={className} compact={compact} disabled label={label} />;
   }
 
-  return <AddToCartButtonAction className={className} compact={compact} resolvedVariantId={resolvedVariantId} />;
+  return (
+    <AddToCartButtonAction
+      className={className}
+      compact={compact}
+      previewLine={previewLine}
+      resolvedVariantId={resolvedVariantId}
+    />
+  );
 }

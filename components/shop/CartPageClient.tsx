@@ -85,10 +85,10 @@ function CartPageClientConnected() {
                     {line.imageUrl ? (
                       <Image
                         alt={line.imageAlt ?? line.title}
-                        className="h-full w-full object-cover"
+                        className="h-full w-full object-contain p-1.5"
                         fill
                         sizes="(max-width: 767px) 84px, 112px"
-                        src={shopifyImageUrl(line.imageUrl, { width: 120, height: 150, crop: "center" })}
+                        src={shopifyImageUrl(line.imageUrl, { width: 220 })}
                       />
                     ) : null}
                   </div>

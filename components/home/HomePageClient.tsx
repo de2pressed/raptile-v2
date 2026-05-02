@@ -141,59 +141,6 @@ function getCollectionSizeSummary(products: ShopifyProduct[]) {
   return `${values[0]} to ${values[values.length - 1]}`;
 }
 
-function QuickPickCard({ product, index }: { product: ShopifyProduct; index: number }) {
-  const image = product.images[0] ?? null;
-  const price = formatPrice(product.priceRange.minVariantPrice.amount);
-  const status = product.availableForSale ? "Ready now" : "Sold out";
-
-  return (
-    <Link
-      aria-label={`Open ${product.title}`}
-      className="group grid grid-cols-[84px_minmax(0,1fr)] gap-3 rounded-[24px] border border-[color:var(--glass-border)] bg-[color:color-mix(in_oklch,var(--bg-elevated)_92%,var(--bg))] p-3 transition duration-300 ease-[var(--ease-out-expo)] hover:border-[color:color-mix(in_oklch,var(--text)_28%,var(--glass-border))] hover:bg-[color:color-mix(in_oklch,var(--bg-elevated)_96%,var(--bg))]"
-      href={`/products/${product.handle}`}
-    >
-      <div className="relative aspect-square overflow-hidden rounded-[18px] bg-[color:var(--bg-soft)]">
-        {image ? (
-          <Image
-            alt={image.altText ?? product.title}
-            className="h-full w-full object-cover object-center transition duration-500 ease-[var(--ease-out-expo)] group-hover:scale-[1.02]"
-            fill
-            quality={82}
-            sizes="84px"
-            src={shopifyImageUrl(image.url, { width: 220 })}
-          />
-        ) : (
-          <div className="absolute inset-0 image-skeleton" />
-        )}
-      </div>
-
-      <div className="min-w-0 space-y-2">
-        <div className="flex items-center justify-between gap-3">
-          <span className="t-label text-[color:var(--text-subtle)]">{String(index + 1).padStart(2, "0")}</span>
-          <span
-            className={cn(
-              "t-ui",
-              product.availableForSale ? "text-[color:var(--text-subtle)]" : "text-[color:var(--sold-out)]",
-            )}
-          >
-            {status}
-          </span>
-        </div>
-
-        <div className="t-product min-w-0 text-[color:var(--text)]">{product.title}</div>
-
-        <div className="flex items-center justify-between gap-3">
-          <span className="t-price text-[color:var(--text-muted)]">{price}</span>
-          <span className="inline-flex items-center gap-2 t-ui text-[color:var(--text-subtle)]">
-            <span>View</span>
-            <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-          </span>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
 function MaterialNote({ label, title, body }: { label: string; title: string; body: string }) {
   return (
     <article className="border-t border-[color:var(--glass-border)] pt-4 first:border-t-0 first:pt-0">
@@ -234,14 +181,13 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
   const heroImage = heroProduct?.images[0] ?? null;
   const heroHref = heroProduct ? `/products/${heroProduct.handle}` : "/collection";
   const heroSummary = heroProduct
-    ? summarizeText(heroProduct.description || collectionDescription, 140)
+    ? summarizeText(heroProduct.description || collectionDescription, 120)
     : "The collection preview sharpens up as soon as the first live piece lands.";
-  const quickPickProducts = orderedProducts.slice(1, 4);
   const showcaseProducts = orderedProducts.slice(0, Math.min(orderedProducts.length, 4));
   const storyProduct = orderedProducts[1] ?? heroProduct;
   const storyImage = storyProduct?.images[0] ?? null;
   const storyHref = storyProduct ? `/products/${storyProduct.handle}` : "/collection";
-  const storySummary = summarizeText(storyProduct?.description || collectionDescription, 150);
+  const storySummary = summarizeText(storyProduct?.description || collectionDescription, 120);
   const availableCount = products.filter((product) => product.availableForSale).length;
   const soldOutCount = Math.max(0, products.length - availableCount);
   const commerceFacts = [
@@ -252,10 +198,10 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
 
   return (
     <div className="mx-auto w-full max-w-[1440px] pb-14 pt-4 md:pb-20 md:pt-6">
-      <section className="grid gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-10">
+      <section className="grid gap-7 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-10">
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="grid content-start gap-6 md:gap-7 lg:pr-8"
+          className="order-2 grid content-start gap-6 md:gap-7 lg:order-1 lg:pr-8"
           initial={{ opacity: 0, y: reducedMotion ? 0 : 12 }}
           transition={{ duration: reducedMotion ? 0.01 : 0.42, ease: [0.16, 1, 0.3, 1] }}
         >
@@ -270,9 +216,9 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
           <div className="space-y-4">
             <h1 className="t-hero max-w-[8ch] text-[color:var(--text)]">Heavyweight essentials. Straight to the piece.</h1>
             <p className="editorial-copy max-w-[38ch]">
-              {summarizeText(collectionDescription, 155)} Silhouette, price, and fit stay visible from the first screen.
+              {summarizeText(collectionDescription, 135)} Silhouette, price, and fit stay visible from the first screen.
             </p>
-            <p className="t-ui max-w-[42ch] leading-6 text-[color:var(--text-subtle)]">
+            <p className="t-ui hidden max-w-[42ch] leading-6 text-[color:var(--text-subtle)] md:block">
               The front page stays restrained so the garments, the route into product, and the mobile read stay clean.
             </p>
           </div>
@@ -306,7 +252,7 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
         </motion.div>
 
         <motion.div
-          className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_260px]"
+          className="order-1 lg:order-2"
           initial={{ opacity: 0, y: reducedMotion ? 0 : 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-10%" }}
@@ -372,21 +318,6 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
               </div>
             </div>
           </Link>
-
-          <div className="grid content-start gap-3 sm:grid-cols-3 xl:grid-cols-1">
-            {quickPickProducts.length > 0 ? (
-              quickPickProducts.map((product, index) => <QuickPickCard key={product.id} index={index} product={product} />)
-            ) : (
-              <div className="rounded-[24px] border border-[color:var(--glass-border)] bg-[color:color-mix(in_oklch,var(--bg-elevated)_92%,var(--bg))] p-4">
-                <div className="space-y-2">
-                  <div className="t-label text-[color:var(--text-muted)]">Collection preview</div>
-                  <p className="t-ui max-w-[28ch] leading-6 text-[color:var(--text-subtle)]">
-                    More quick picks appear here as soon as additional pieces are live in the selected collection.
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
         </motion.div>
       </section>
 

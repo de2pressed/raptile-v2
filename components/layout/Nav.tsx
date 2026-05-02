@@ -21,15 +21,6 @@ const desktopLinks = [
   { href: "/contact", label: "Contact" },
 ];
 
-const mobileLinks = [
-  ...desktopLinks,
-  { href: "/shipping", label: "Shipping" },
-  { href: "/returns", label: "Returns" },
-  { href: "/size-guide", label: "Size Guide" },
-  { href: "/privacy", label: "Privacy Policy" },
-  { href: "/terms", label: "Terms" },
-];
-
 const secondaryLinks = [
   { href: "/shipping", label: "Shipping" },
   { href: "/returns", label: "Returns" },
@@ -37,6 +28,17 @@ const secondaryLinks = [
   { href: "/privacy", label: "Privacy" },
   { href: "/terms", label: "Terms" },
 ];
+
+const mobileMenuSections = [
+  {
+    label: "Browse",
+    links: desktopLinks,
+  },
+  {
+    label: "Support",
+    links: secondaryLinks,
+  },
+] as const;
 
 function isActiveLink(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -207,6 +209,22 @@ export function Nav() {
     }
   }, [mobileMode]);
 
+  useEffect(() => {
+    if (mobileMode !== "menu") {
+      return;
+    }
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+    };
+  }, [mobileMode]);
+
   const openDesktopSearch = () => {
     setMobileMode("idle");
     setDesktopSearchOpen(true);
@@ -314,7 +332,7 @@ export function Nav() {
 
   return (
     <LazyMotion features={domAnimation}>
-      <nav className="site-header noise-surface sticky top-0 z-[100] border-b border-[color:var(--glass-border)]">
+      <nav className="site-header noise-surface sticky top-0 z-[100] relative border-b border-[color:var(--glass-border)]">
         <div className="site-header-inner relative z-[1] mx-auto max-w-[1440px] px-4 py-2.5 md:px-6 md:py-3">
           <div className="hidden md:grid grid-cols-[auto_1fr_auto] items-center gap-5">
             <BrandLogo size="sm" className="site-header-logo shrink-0" />
@@ -445,12 +463,12 @@ export function Nav() {
 
                     <button
                       aria-expanded={mobileMode === "menu"}
-                      aria-label="Open navigation menu"
+                      aria-label={mobileMode === "menu" ? "Close navigation menu" : "Open navigation menu"}
                       className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]"
                       onClick={openMobileMenu}
                       type="button"
                     >
-                      <MenuIcon className="h-4 w-4" />
+                      {mobileMode === "menu" ? <CloseIcon className="h-4 w-4" /> : <MenuIcon className="h-4 w-4" />}
                     </button>
                   </div>
                 </motion.div>
@@ -499,56 +517,83 @@ export function Nav() {
               ) : mobileMode === "menu" ? (
                 <motion.div
                   key="mobile-menu"
-                  className="mt-4 grid gap-5 overflow-hidden border-t border-[color:var(--glass-border)] pt-4"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
+                  className="absolute inset-x-0 top-full z-[2] border-b border-[color:var(--glass-border)] border-t border-[color:var(--glass-border)] bg-[color:rgba(8,12,24,0.96)] md:hidden"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <div className="grid gap-4">
-                    <div className="grid gap-3">
-                      {mobileLinks.map((link) => {
-                        const active = isActiveLink(pathname, link.href);
-
-                        return (
-                          <Link
-                            key={link.href}
-                            href={link.href}
-                            className={cn(
-                              "flex items-center justify-between rounded-[20px] border px-4 py-4 transition duration-200",
-                              active
-                                ? "border-[color:var(--accent)] bg-[color:var(--accent-subtle)] text-[color:var(--text)]"
-                                : "border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] text-[color:var(--text-muted)] hover:border-[color:var(--accent)] hover:text-[color:var(--text)]",
-                            )}
-                            onClick={() => setMobileMode("idle")}
-                          >
-                            <span className="font-display text-[1.25rem] font-semibold tracking-[-0.04em]">{link.label}</span>
-                            <ArrowRightIcon className="h-4 w-4" />
-                          </Link>
-                        );
-                      })}
-                    </div>
-
-                    <div className="grid gap-4 border-t border-[color:var(--glass-border)] pt-4 md:grid-cols-2">
-                      <div className="grid gap-2">
-                        <div className="t-label text-[color:var(--text-muted)]">Secondary links</div>
-                        <div className="flex flex-wrap gap-2">
-                          {secondaryLinks.map((link) => (
-                            <Link
-                              key={link.href}
-                              className="ghost-button rounded-full px-4 py-2"
-                              href={link.href}
-                              onClick={() => setMobileMode("idle")}
-                            >
-                              <span className="t-label">{link.label}</span>
-                            </Link>
-                          ))}
+                  <div className="max-h-[calc(100svh-var(--header-height)-12px)] overflow-y-auto px-4 py-4">
+                    <div className="grid gap-4">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="space-y-2">
+                          <div className="t-label text-[color:var(--text-muted)]">Menu</div>
+                          <div className="font-display text-[1.6rem] font-bold tracking-[-0.04em] text-[color:var(--text)]">
+                            Navigate the store
+                          </div>
                         </div>
+                        <button
+                          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]"
+                          onClick={() => setMobileMode("idle")}
+                          type="button"
+                        >
+                          <CloseIcon className="h-4 w-4" />
+                        </button>
                       </div>
 
-                      <p className="t-ui max-w-[24rem] text-[color:var(--text-muted)]">
-                        Creative essentials from India. Heavyweight fits, precise cuts, slower drops.
-                      </p>
+                      <div className="grid gap-4">
+                        {mobileMenuSections.map((section) => (
+                          <div key={section.label} className="grid gap-3">
+                            <div className="t-label text-[color:var(--text-muted)]">{section.label}</div>
+                            <div className="grid gap-3 sm:grid-cols-2">
+                              {section.links.map((link) => {
+                                const active = isActiveLink(pathname, link.href);
+
+                                return (
+                                  <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className={cn(
+                                      "flex items-center justify-between rounded-[22px] border px-4 py-4 transition duration-200",
+                                      active
+                                        ? "border-[color:var(--accent)] bg-[color:var(--accent-subtle)] text-[color:var(--text)]"
+                                        : "border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] text-[color:var(--text-muted)] hover:border-[color:var(--accent)] hover:text-[color:var(--text)]",
+                                    )}
+                                    onClick={() => setMobileMode("idle")}
+                                  >
+                                    <span className="font-display text-[1.05rem] font-semibold tracking-[-0.03em]">
+                                      {link.label}
+                                    </span>
+                                    <ArrowRightIcon className="h-4 w-4 shrink-0" />
+                                  </Link>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="grid gap-3 border-t border-[color:var(--glass-border)] pt-4">
+                        <p className="t-ui max-w-[26rem] text-[color:var(--text-muted)]">
+                          Heavyweight fits, precise cuts, and direct support routes. No extra page wandering.
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          <Link
+                            className="ghost-button rounded-full px-4 py-2"
+                            href="/collection"
+                            onClick={() => setMobileMode("idle")}
+                          >
+                            <span className="t-label">Shop now</span>
+                          </Link>
+                          <Link
+                            className="ghost-button rounded-full px-4 py-2"
+                            href="/size-guide"
+                            onClick={() => setMobileMode("idle")}
+                          >
+                            <span className="t-label">Size guide</span>
+                          </Link>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </motion.div>

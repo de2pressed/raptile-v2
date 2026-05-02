@@ -13,14 +13,16 @@ export function CartDrawer() {
   const cartLines = useRaptileStore((state) => state.cartLines);
   const isCartOpen = useRaptileStore((state) => state.isCartOpen);
   const lastAddedMerchandiseId = useRaptileStore((state) => state.lastAddedMerchandiseId);
+  const previewLine = useRaptileStore((state) => state.lastAddedCartLinePreview);
   const setCartOpen = useRaptileStore((state) => state.setCartOpen);
 
   const addedLine = useMemo(
     () =>
       cartLines.find((line) => line.merchandiseId === lastAddedMerchandiseId) ??
+      previewLine ??
       cartLines[cartLines.length - 1] ??
       null,
-    [cartLines, lastAddedMerchandiseId],
+    [cartLines, lastAddedMerchandiseId, previewLine],
   );
 
   return (
@@ -72,10 +74,10 @@ export function CartDrawer() {
                             {addedLine.imageUrl ? (
                               <Image
                                 alt={addedLine.imageAlt ?? addedLine.title}
-                                className="h-full w-full object-cover"
+                                className="h-full w-full object-contain p-1.5"
                                 fill
                                 sizes="80px"
-                                src={shopifyImageUrl(addedLine.imageUrl, { width: 160 })}
+                                src={shopifyImageUrl(addedLine.imageUrl, { width: 220 })}
                               />
                             ) : null}
                           </div>

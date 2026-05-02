@@ -20,8 +20,6 @@ interface HomePageClientProps {
   products: ShopifyProduct[];
 }
 
-const SIZE_ORDER = ["XS", "S", "M", "L", "XL", "XXL", "3XL"] as const;
-
 const MATERIAL_NOTES = [
   {
     label: "Weight",
@@ -73,74 +71,6 @@ function summarizeText(value: string, maxLength: number) {
   return `${normalized.slice(0, Math.max(0, maxLength - 3)).trimEnd()}...`;
 }
 
-function getProductSizes(product: ShopifyProduct) {
-  const sizes = new Set<string>();
-
-  for (const variant of product.variants) {
-    for (const option of variant.selectedOptions) {
-      if (option.name.trim().toLowerCase() === "size" && option.value.trim()) {
-        sizes.add(option.value.trim().toUpperCase());
-      }
-    }
-  }
-
-  return Array.from(sizes);
-}
-
-function sortSizeValues(values: string[]) {
-  const order = new Map<string, number>(SIZE_ORDER.map((value, index) => [value, index]));
-
-  return [...values].sort((left, right) => {
-    const leftOrder = order.get(left);
-    const rightOrder = order.get(right);
-
-    if (leftOrder !== undefined || rightOrder !== undefined) {
-      return (leftOrder ?? Number.MAX_SAFE_INTEGER) - (rightOrder ?? Number.MAX_SAFE_INTEGER);
-    }
-
-    return left.localeCompare(right);
-  });
-}
-
-function getCollectionPriceSummary(products: ShopifyProduct[]) {
-  if (!products.length) {
-    return "Collection preview";
-  }
-
-  const values = products
-    .map((product) => Number(product.priceRange.minVariantPrice.amount))
-    .filter((value) => Number.isFinite(value));
-
-  if (!values.length) {
-    return "Collection preview";
-  }
-
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-
-  if (min === max) {
-    return formatPrice(min);
-  }
-
-  return `${formatPrice(min)} - ${formatPrice(max)}`;
-}
-
-function getCollectionSizeSummary(products: ShopifyProduct[]) {
-  const values = sortSizeValues(
-    Array.from(new Set(products.flatMap((product) => getProductSizes(product).map((value) => value.toUpperCase())))),
-  );
-
-  if (!values.length) {
-    return "Guide available";
-  }
-
-  if (values.length === 1) {
-    return values[0];
-  }
-
-  return `${values[0]} to ${values[values.length - 1]}`;
-}
-
 function MaterialNote({ label, title, body }: { label: string; title: string; body: string }) {
   return (
     <article className="border-t border-[color:var(--glass-border)] pt-4 first:border-t-0 first:pt-0">
@@ -188,17 +118,10 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
   const storyImage = storyProduct?.images[0] ?? null;
   const storyHref = storyProduct ? `/products/${storyProduct.handle}` : "/collection";
   const storySummary = summarizeText(storyProduct?.description || collectionDescription, 120);
-  const availableCount = products.filter((product) => product.availableForSale).length;
-  const soldOutCount = Math.max(0, products.length - availableCount);
-  const commerceFacts = [
-    { label: "Price span", value: getCollectionPriceSummary(orderedProducts) },
-    { label: "Sizing", value: getCollectionSizeSummary(orderedProducts) },
-    { label: "Live now", value: `${availableCount} of ${products.length || 0} pieces` },
-  ];
 
   return (
     <div className="mx-auto w-full max-w-[1440px] pb-14 pt-4 md:pb-20 md:pt-6">
-      <section className="grid gap-7 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-10">
+      <section className="grid gap-7 lg:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)] lg:gap-10">
         <motion.div
           animate={{ opacity: 1, y: 0 }}
           className="order-2 grid content-start gap-6 md:gap-7 lg:order-1 lg:pr-8"
@@ -232,23 +155,6 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
             </Link>
           </div>
 
-          <dl className="grid gap-4 border-y border-[color:var(--glass-border)] py-5 sm:grid-cols-3">
-            {commerceFacts.map((fact) => (
-              <div key={fact.label} className="space-y-2">
-                <dt className="t-label text-[color:var(--text-muted)]">{fact.label}</dt>
-                <dd className="font-display text-[1.05rem] font-semibold leading-[1.08] tracking-[-0.03em] text-[color:var(--text)]">
-                  {fact.value}
-                </dd>
-              </div>
-            ))}
-          </dl>
-
-          <div className="flex flex-wrap items-center gap-4 t-ui leading-6 text-[color:var(--text-subtle)]">
-            <Link className="transition-colors duration-200 hover:text-[color:var(--text)]" href="/size-guide">
-              Fit clarity lives in the size guide.
-            </Link>
-            <span>{soldOutCount > 0 ? `${soldOutCount} pieces have already moved.` : "The current drop is live now."}</span>
-          </div>
         </motion.div>
 
         <motion.div
@@ -263,7 +169,7 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
             className="group block"
             href={heroHref}
           >
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[32px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] md:aspect-[5/6] xl:aspect-[4/5]">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[32px] border border-[color:var(--glass-border)] bg-[color:var(--bg-elevated)] md:aspect-[5/6] xl:aspect-square">
               {heroImage ? (
                 <>
                   <Image
@@ -325,7 +231,7 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
         <div className="flex flex-col gap-4 border-b border-[color:var(--glass-border)] pb-5 md:flex-row md:items-end md:justify-between">
           <div className="space-y-3">
             <div className="t-label text-[color:var(--text-muted)]">Shop the drop</div>
-            <h2 className="t-display max-w-[10ch] text-[color:var(--text)]">A short edit on the homepage. The rest stays one click away.</h2>
+            <h2 className="t-display max-w-[10ch] text-[color:var(--text)]">Featured Products</h2>
           </div>
 
           <Link
@@ -342,11 +248,6 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
         </div>
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-          <div className="t-ui text-[color:var(--text-subtle)]">
-            {products.length > showcaseProducts.length
-              ? `${products.length - showcaseProducts.length} more pieces continue on the collection page.`
-              : "The current release is fully visible from the homepage."}
-          </div>
           <Link
             className="inline-flex items-center gap-2 t-label text-[color:var(--text-muted)] transition-colors duration-200 hover:text-[color:var(--text)]"
             href="/size-guide"

@@ -5,13 +5,6 @@ import { GlassPanel } from "@/components/ui/GlassPanel";
 import { ArrowRightIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
-const heroSignals = [
-  "Two students / one cleaner standard",
-  "Indian weather / exact fits",
-  "Heavyweight cloth / precise wash",
-  "Identity comes from silhouette, not noise",
-] as const;
-
 const processNotes = [
   "Built in India, finished with intent.",
   "Heavyweight cloth and exact wash.",
@@ -127,17 +120,6 @@ export default function AboutPage() {
             <Link className="ghost-button rounded-full px-5 py-3.5 text-[color:var(--text)]" href="/contact">
               <span className="t-label">Contact the Studio</span>
             </Link>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            {heroSignals.map((signal) => (
-              <span
-                key={signal}
-                className="inline-flex items-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] px-4 py-2 t-ui text-[color:var(--text-muted)]"
-              >
-                {signal}
-              </span>
-            ))}
           </div>
         </div>
 

@@ -173,9 +173,6 @@ export function CollectionPageClient({ collectionTitle, collectionDescription, p
               {collectionTitle}
             </div>
             <p className="editorial-copy hidden max-w-[34ch] md:block">{collectionDescription}</p>
-            <div className="t-ui hidden max-w-[34ch] leading-6 text-[color:var(--text-muted)] md:block">
-              Weight, wash, and silhouette stay close to the garment. The interface stays exact and quiet.
-            </div>
           </div>
 
           <GlassPanel className="rounded-[34px] px-5 py-5 md:px-6 md:py-6">

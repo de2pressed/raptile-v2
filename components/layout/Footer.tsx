@@ -74,7 +74,7 @@ export function Footer() {
           </div>
 
           <form className="grid gap-4" onSubmit={handleSubmit}>
-            <div className="space-y-3">
+            <div className="space-y-3 max-w-[30rem]">
               <div className="t-label text-[color:var(--text-muted)]">Newsletter</div>
               <h2 className="font-display text-3xl font-bold tracking-[-0.04em] text-[color:var(--text)]">
                 Be first when the next drop lands.
@@ -84,16 +84,20 @@ export function Footer() {
               </p>
             </div>
 
-            <div className="flex flex-col gap-2 sm:flex-row">
+            <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-stretch">
               <input
                 autoComplete="email"
-                className="contact-input h-12 flex-1 rounded-full"
+                className="contact-input h-12 rounded-full"
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="Email address"
                 type="email"
                 value={email}
               />
-              <button className="btn-primary rounded-full px-5 py-3.5" disabled={status === "loading"} type="submit">
+              <button
+                className="btn-primary h-12 rounded-full px-6 sm:min-w-[9.5rem]"
+                disabled={status === "loading"}
+                type="submit"
+              >
                 <span className="t-label text-[color:var(--bg)]">{status === "loading" ? "Joining" : "Sign Up"}</span>
               </button>
             </div>

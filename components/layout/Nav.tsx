@@ -517,81 +517,90 @@ export function Nav() {
               ) : mobileMode === "menu" ? (
                 <motion.div
                   key="mobile-menu"
-                  className="absolute inset-x-0 top-full z-[2] border-b border-[color:var(--glass-border)] border-t border-[color:var(--glass-border)] bg-[color:rgba(8,12,24,0.96)] md:hidden"
+                  className="fixed inset-x-0 top-[var(--header-height)] z-[140] px-4 md:hidden"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <div className="max-h-[calc(100svh-var(--header-height)-12px)] overflow-y-auto px-4 py-4">
-                    <div className="grid gap-4">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="space-y-2">
-                          <div className="t-label text-[color:var(--text-muted)]">Menu</div>
-                          <div className="font-display text-[1.6rem] font-bold tracking-[-0.04em] text-[color:var(--text)]">
-                            Navigate the store
-                          </div>
-                        </div>
-                        <button
-                          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]"
-                          onClick={() => setMobileMode("idle")}
-                          type="button"
-                        >
-                          <CloseIcon className="h-4 w-4" />
-                        </button>
-                      </div>
+                  <button
+                    aria-label="Close navigation menu"
+                    className="absolute inset-0 z-0 bg-[color:rgba(5,8,18,0.72)]"
+                    onClick={() => setMobileMode("idle")}
+                    type="button"
+                  />
 
+                  <div className="noise-surface relative z-[1] max-h-[calc(100svh-var(--header-height)-1rem)] overflow-y-auto rounded-[28px] border border-[color:var(--glass-border)] bg-[color:rgba(8,12,24,0.96)] shadow-[0_24px_70px_rgba(0,0,0,0.34)]">
+                    <div className="px-4 py-4">
                       <div className="grid gap-4">
-                        {mobileMenuSections.map((section) => (
-                          <div key={section.label} className="grid gap-3">
-                            <div className="t-label text-[color:var(--text-muted)]">{section.label}</div>
-                            <div className="grid gap-3 sm:grid-cols-2">
-                              {section.links.map((link) => {
-                                const active = isActiveLink(pathname, link.href);
-
-                                return (
-                                  <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    className={cn(
-                                      "flex items-center justify-between rounded-[22px] border px-4 py-4 transition duration-200",
-                                      active
-                                        ? "border-[color:var(--accent)] bg-[color:var(--accent-subtle)] text-[color:var(--text)]"
-                                        : "border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] text-[color:var(--text-muted)] hover:border-[color:var(--accent)] hover:text-[color:var(--text)]",
-                                    )}
-                                    onClick={() => setMobileMode("idle")}
-                                  >
-                                    <span className="font-display text-[1.05rem] font-semibold tracking-[-0.03em]">
-                                      {link.label}
-                                    </span>
-                                    <ArrowRightIcon className="h-4 w-4 shrink-0" />
-                                  </Link>
-                                );
-                              })}
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="space-y-2">
+                            <div className="t-label text-[color:var(--text-muted)]">Menu</div>
+                            <div className="font-display text-[1.6rem] font-bold tracking-[-0.04em] text-[color:var(--text)]">
+                              Navigate the store
                             </div>
                           </div>
-                        ))}
-                      </div>
+                          <button
+                            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]"
+                            onClick={() => setMobileMode("idle")}
+                            type="button"
+                          >
+                            <CloseIcon className="h-4 w-4" />
+                          </button>
+                        </div>
 
-                      <div className="grid gap-3 border-t border-[color:var(--glass-border)] pt-4">
-                        <p className="t-ui max-w-[26rem] text-[color:var(--text-muted)]">
-                          Heavyweight fits, precise cuts, and direct support routes. No extra page wandering.
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                          <Link
-                            className="ghost-button rounded-full px-4 py-2"
-                            href="/collection"
-                            onClick={() => setMobileMode("idle")}
-                          >
-                            <span className="t-label">Shop now</span>
-                          </Link>
-                          <Link
-                            className="ghost-button rounded-full px-4 py-2"
-                            href="/size-guide"
-                            onClick={() => setMobileMode("idle")}
-                          >
-                            <span className="t-label">Size guide</span>
-                          </Link>
+                        <div className="grid gap-4">
+                          {mobileMenuSections.map((section) => (
+                            <div key={section.label} className="grid gap-3">
+                              <div className="t-label text-[color:var(--text-muted)]">{section.label}</div>
+                              <div className="grid gap-3 sm:grid-cols-2">
+                                {section.links.map((link) => {
+                                  const active = isActiveLink(pathname, link.href);
+
+                                  return (
+                                    <Link
+                                      key={link.href}
+                                      href={link.href}
+                                      className={cn(
+                                        "flex items-center justify-between rounded-[22px] border px-4 py-4 transition duration-200",
+                                        active
+                                          ? "border-[color:var(--accent)] bg-[color:var(--accent-subtle)] text-[color:var(--text)]"
+                                          : "border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] text-[color:var(--text-muted)] hover:border-[color:var(--accent)] hover:text-[color:var(--text)]",
+                                      )}
+                                      onClick={() => setMobileMode("idle")}
+                                    >
+                                      <span className="font-display text-[1.05rem] font-semibold tracking-[-0.03em]">
+                                        {link.label}
+                                      </span>
+                                      <ArrowRightIcon className="h-4 w-4 shrink-0" />
+                                    </Link>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="grid gap-3 border-t border-[color:var(--glass-border)] pt-4">
+                          <p className="t-ui max-w-[26rem] text-[color:var(--text-muted)]">
+                            Heavyweight fits, precise cuts, and direct support routes. No extra page wandering.
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            <Link
+                              className="ghost-button rounded-full px-4 py-2"
+                              href="/collection"
+                              onClick={() => setMobileMode("idle")}
+                            >
+                              <span className="t-label">Shop now</span>
+                            </Link>
+                            <Link
+                              className="ghost-button rounded-full px-4 py-2"
+                              href="/size-guide"
+                              onClick={() => setMobileMode("idle")}
+                            >
+                              <span className="t-label">Size guide</span>
+                            </Link>
+                          </div>
                         </div>
                       </div>
                     </div>

@@ -8,6 +8,7 @@ import { useEffect, useRef } from "react";
 
 import { ShopifyRuntimeProvider, useShopifyRuntime } from "@/components/providers/ShopifyRuntimeContext";
 import { Footer } from "@/components/layout/Footer";
+import { MobileNavOverlay } from "@/components/layout/MobileNavOverlay";
 import { Nav } from "@/components/layout/Nav";
 import { CartDrawer } from "@/components/shop/CartDrawer";
 import { formatPrice } from "@/lib/commerce";
@@ -109,6 +110,7 @@ function AppShell({ children }: PropsWithChildren) {
         <main className="flex-1 px-4 md:px-6">{children}</main>
         <Footer />
       </div>
+      <MobileNavOverlay />
       <CartDrawer />
       {!isConfigured ? (
         <div className="pointer-events-none fixed bottom-4 right-4 z-[120] hidden max-w-[min(18rem,calc(100vw-2rem))] px-0 md:block md:bottom-6 md:right-6">

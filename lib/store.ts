@@ -40,6 +40,8 @@ interface RaptileStore {
   setSelectedVariant: (id: string | null) => void;
   isCollectionSearchVisible: boolean;
   setCollectionSearchVisible: (visible: boolean) => void;
+  isMobileNavOpen: boolean;
+  setMobileNavOpen: (open: boolean) => void;
 }
 
 export const useRaptileStore = create<RaptileStore>((set) => ({
@@ -59,4 +61,6 @@ export const useRaptileStore = create<RaptileStore>((set) => ({
   setSelectedVariant: (id) => set({ selectedVariantId: id }),
   isCollectionSearchVisible: false,
   setCollectionSearchVisible: (visible) => set({ isCollectionSearchVisible: visible }),
+  isMobileNavOpen: false,
+  setMobileNavOpen: (open) => set({ isMobileNavOpen: open }),
 }));

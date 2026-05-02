@@ -15,14 +15,14 @@ import { useRaptileStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { shopifyImageUrl } from "@/lib/utils/shopifyImage";
 
-const desktopLinks = [
+export const desktopLinks = [
   { href: "/", label: "Home" },
   { href: "/collection", label: "Collection" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
 
-const secondaryLinks = [
+export const secondaryLinks = [
   { href: "/shipping", label: "Shipping" },
   { href: "/returns", label: "Returns" },
   { href: "/size-guide", label: "Size Guide" },
@@ -30,7 +30,7 @@ const secondaryLinks = [
   { href: "/terms", label: "Terms" },
 ];
 
-const mobileMenuSections = [
+export const mobileMenuSections = [
   {
     label: "Browse",
     links: desktopLinks,
@@ -41,7 +41,7 @@ const mobileMenuSections = [
   },
 ] as const;
 
-function isActiveLink(pathname: string, href: string) {
+export function isActiveLink(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);
 }
 
@@ -128,6 +128,8 @@ export function Nav() {
   const router = useRouter();
   const cartCount = useRaptileStore((state) => state.cartLines.reduce((total, line) => total + line.quantity, 0));
   const isCollectionSearchVisible = useRaptileStore((state) => state.isCollectionSearchVisible);
+  const isMobileNavOpen = useRaptileStore((state) => state.isMobileNavOpen);
+  const setMobileNavOpen = useRaptileStore((state) => state.setMobileNavOpen);
   const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
   const [mobileMode, setMobileMode] = useState<"idle" | "search" | "menu">("idle");
   const [searchQuery, setSearchQuery] = useState("");
@@ -141,10 +143,11 @@ export function Nav() {
 
   useEffect(() => {
     setDesktopSearchOpen(false);
+    setMobileNavOpen(false);
     setMobileMode("idle");
     setSearchQuery("");
     setSearchResults([]);
-  }, [pathname]);
+  }, [pathname, setMobileNavOpen]);
 
   useEffect(() => {
     const active = desktopSearchOpen || mobileMode === "search";
@@ -188,6 +191,7 @@ export function Nav() {
       }
 
       setDesktopSearchOpen(false);
+      setMobileNavOpen(false);
       setMobileMode("idle");
       setSearchQuery("");
     };
@@ -197,7 +201,7 @@ export function Nav() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [setMobileNavOpen]);
 
   useEffect(() => {
     if (desktopSearchOpen) {
@@ -215,40 +219,28 @@ export function Nav() {
     setIsMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (mobileMode !== "menu") {
-      return;
-    }
-
-    const previousBodyOverflow = document.body.style.overflow;
-    const previousHtmlOverflow = document.documentElement.style.overflow;
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = previousBodyOverflow;
-      document.documentElement.style.overflow = previousHtmlOverflow;
-    };
-  }, [mobileMode]);
-
   const openDesktopSearch = () => {
     setMobileMode("idle");
+    setMobileNavOpen(false);
     setDesktopSearchOpen(true);
   };
 
   const openMobileSearch = () => {
     setDesktopSearchOpen(false);
+    setMobileNavOpen(false);
     setMobileMode("search");
   };
 
   const openMobileMenu = () => {
     setDesktopSearchOpen(false);
-    setMobileMode((current) => (current === "menu" ? "idle" : "menu"));
+    setMobileMode("idle");
+    setMobileNavOpen(!isMobileNavOpen);
   };
 
   const submitSearch = () => {
     const trimmed = searchQuery.trim();
     setDesktopSearchOpen(false);
+    setMobileNavOpen(false);
     setMobileMode("idle");
     router.push(trimmed ? `/collection?q=${encodeURIComponent(trimmed)}` : "/collection");
   };
@@ -566,13 +558,13 @@ export function Nav() {
                     </Link>
 
                     <button
-                      aria-expanded={mobileMode === "menu"}
-                      aria-label={mobileMode === "menu" ? "Close navigation menu" : "Open navigation menu"}
+                      aria-expanded={isMobileNavOpen}
+                      aria-label={isMobileNavOpen ? "Close navigation menu" : "Open navigation menu"}
                       className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]"
                       onClick={openMobileMenu}
                       type="button"
                     >
-                      {mobileMode === "menu" ? <CloseIcon className="h-4 w-4" /> : <MenuIcon className="h-4 w-4" />}
+                      {isMobileNavOpen ? <CloseIcon className="h-4 w-4" /> : <MenuIcon className="h-4 w-4" />}
                     </button>
                   </div>
                 </motion.div>

@@ -5,28 +5,28 @@
 brand
 
 ## Users
-Style-conscious shoppers in India, mostly on mobile but sometimes on desktop, browsing a small release of heavyweight tees and related essentials. They compare fit, color, and size, read the brand story, and expect the storefront to feel as considered as the clothing itself.
+Style-conscious shoppers in India, mostly on mobile, arriving through drops, shared product links, or the homepage. They want heavyweight essentials that feel edited rather than loud. They compare silhouette, fabric, size, and finish, and they expect the storefront to feel as disciplined as the garments.
 
 ## Product Purpose
-Raptile Studio is a headless Shopify storefront for an Indian streetwear label built around heavyweight essentials and short-run releases. The site exists to make the brand feel like a serious creative label: original, exacting, and polished enough to stand apart without leaning on hype. It keeps the commercial path clear across discovery, product detail, cart, and support pages. Success looks like a storefront that feels unmistakably specific and fully resolved, while core commerce actions such as color selection, size selection, add to cart, and checkout remain obvious and reliable.
+Raptile Studio is a headless Shopify storefront for an Indian streetwear label built around heavyweight tees and short-run releases. The site should read like a black editorial surface with commerce built into it, not like a promotional store wrapped in trend effects. It exists to make the label feel exact, serious, and culturally self-possessed while keeping product discovery, sizing, add to cart, and checkout friction low. Success looks like a visitor understanding the point of view immediately, trusting the product details, and moving through the store without visual noise or copy bloat.
 
 ## Brand Personality
-Creative, exacting, and a little defiant. The voice should feel like a label that knows the rules and breaks them with control. It should read slowly and land sharply. Visual drama comes from garment photography, contrast, pacing, and precision, not from loud UI chrome or trend-chasing decoration.
+Dark, deliberate, and exact. The voice should feel edited, not chatty. It should suggest control, restraint, and confidence without sounding cold or corporate. The garment carries most of the attitude. The interface and copy should sharpen that impression through pacing, contrast, and silence.
 
 ## Voice Cues
-- Use phrases like `well executed`, `polished to the brim`, and `be the trend` when the brand needs a confident line.
-- Keep sentences compact, high-contrast, and deliberate.
-- Let the writing feel finished, not improvised.
+- Keep sentences compact, sparse, and fully intentional.
+- Use confident lines like `well executed` and `polished to the brim` sparingly, only when the surrounding copy stays quiet.
+- Prefer language that sounds cut, finished, and specific, not hyped or ornamental.
 
 ## Anti-references
-Do not let the storefront drift into AI slop, "just another clothing brand" copy, generic SaaS gradients, glowing dashboard cards, loud streetwear neon, playful DTC pastels, or white-label Shopify templates. Avoid decorative amber fill on secondary UI, hover gimmicks, icon-card grids, and any interface treatment that competes with the product images. Do not fall back to thin tech-minimal sameness or copy that sounds borrowed from a trend deck.
+Do not let the storefront drift into amber-luxury warmth, neon streetwear noise, overbuilt cyber-futurism, generic glass-card SaaS UI, playful DTC polish, or white-label Shopify merchandising blocks. Avoid AI slop, "just another clothing brand" copy, stacked promo badges, icon-card grids, fake exclusivity language, and any interface treatment that turns the shell into the main character. Do not confuse editorial minimalism with sterile startup minimalism or empty black-box cool.
 
 ## Design Principles
-1. Cloth leads, UI supports: garment photography, fit, and texture should carry the emotional weight.
-2. Editorial story, obvious commerce: the brand can feel composed and high-concept without obscuring search, cart, sizing, and checkout.
-3. Specificity matters: the site should feel original, sharp, and minimal where it helps, not like a template with a better font.
-4. Motion should feel controlled: transitions, fades, and overlays should add rhythm, not attention-seeking movement.
-5. Every support surface still speaks for the brand: shipping, returns, size guide, and contact pages should stay calm, useful, and consistent.
+1. Editorial first, commerce clear: the site should feel like a pared-back fashion story while size, price, fit, and checkout stay immediate.
+2. Black creates focus: darkness exists to remove noise and concentrate attention on cloth, type, and pacing.
+3. Silence is part of the brand: fewer panels, fewer accents, and fewer words usually make the stronger statement.
+4. Plain before glass: matte planes are the default. Glass appears only when it clarifies hierarchy or gives the shell atmospheric separation.
+5. Precision over drama: motion, cropping, spacing, and microcopy should feel finished, not performative.
 
 ## Accessibility & Inclusion
-Support reduced-motion users across all page and component transitions. Maintain strong contrast on dark surfaces, preserve keyboard focus visibility on all interactive controls, use hover color changes as enhancement rather than the sole state indicator, and keep mobile typography above cramped thresholds so browsing and purchasing remain readable on small screens. Support pages such as sizing, shipping, returns, privacy, and contact should remain legible at speed.
+Maintain strong contrast on near-black surfaces, preserve visible keyboard focus on every interactive element, and ensure glass or blur never reduces legibility. Support reduced-motion users across page transitions and scroll-led sections. Keep editorial text narrow but readable on mobile, avoid hiding core commerce information inside overlays, and make support flows such as contact, shipping, returns, privacy, and size guidance easy to read in bright environments as well as dark ones.

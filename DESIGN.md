@@ -1,75 +1,73 @@
 ---
 name: Raptile Studio
-description: High-concept editorial storefront for an Indian streetwear label.
+description: Black editorial storefront for an Indian streetwear label.
 colors:
-  charcoal-ink: "oklch(0.11 0.012 40)"
-  warm-shadow: "oklch(0.145 0.015 40)"
-  ash-lift: "oklch(0.19 0.016 40)"
-  parchment: "oklch(0.94 0.01 84)"
-  muted-silt: "oklch(0.72 0.018 74)"
-  subtle-dust: "oklch(0.5 0.014 70)"
-  amber-bronze: "oklch(0.71 0.08 48)"
-  amber-bright: "oklch(0.88 0.03 76)"
-  ember-glow: "oklch(0.58 0.08 42)"
-  amber-haze: "oklch(0.71 0.08 48 / 0.12)"
-  sold-out-oxide: "oklch(0.42 0.035 42)"
-  glass-fill: "oklch(0.17 0.014 40 / 0.84)"
-  glass-border: "oklch(0.94 0.01 82 / 0.1)"
-  glass-highlight: "oklch(0.99 0.004 82 / 0.04)"
-  glass-tint-warm: "oklch(0.3 0.03 44 / 0.18)"
-  glass-tint-cool: "oklch(0.24 0.02 56 / 0.14)"
-  shadow-ink: "oklch(0 0 0 / 0.18)"
+  stage-black: "oklch(0.11 0.004 255)"
+  panel-black: "oklch(0.145 0.005 255)"
+  graphite-plane: "oklch(0.19 0.006 255)"
+  chalk: "oklch(0.93 0.008 90)"
+  smoke: "oklch(0.72 0.01 255)"
+  steel: "oklch(0.52 0.008 255)"
+  frost: "oklch(0.86 0.01 250)"
+  focus-ice: "oklch(0.78 0.022 235)"
+  dim-oxide: "oklch(0.42 0.015 30)"
+  glass-fill: "oklch(0.17 0.006 255 / 0.72)"
+  glass-border: "oklch(0.94 0.008 250 / 0.14)"
+  glass-highlight: "oklch(0.98 0.004 90 / 0.05)"
+  glass-haze-top: "oklch(0.34 0.01 250 / 0.16)"
+  glass-haze-bottom: "oklch(0.24 0.008 255 / 0.1)"
+  shadow-depth: "oklch(0 0 0 / 0.3)"
 typography:
   display:
     fontFamily: "Cabinet Grotesk, sans-serif"
-    fontSize: "clamp(2rem, 8vw, 7rem)"
-    fontWeight: 800
-    lineHeight: 0.95
-    letterSpacing: "-0.03em"
+    fontSize: "clamp(2.2rem, 7vw, 6.4rem)"
+    fontWeight: 700
+    lineHeight: 0.93
+    letterSpacing: "-0.035em"
   headline:
     fontFamily: "Cabinet Grotesk, sans-serif"
-    fontSize: "clamp(1.6rem, 5vw, 4rem)"
-    fontWeight: 700
-    lineHeight: 1.02
+    fontSize: "clamp(1.5rem, 4.2vw, 3.5rem)"
+    fontWeight: 600
+    lineHeight: 1
     letterSpacing: "-0.03em"
   product:
     fontFamily: "Cabinet Grotesk, sans-serif"
-    fontSize: "clamp(0.95rem, 2vw, 1.4rem)"
+    fontSize: "clamp(1rem, 1.8vw, 1.22rem)"
     fontWeight: 500
-    lineHeight: 1.12
-    letterSpacing: "0"
+    lineHeight: 1.16
+    letterSpacing: "-0.01em"
   body:
     fontFamily: "Cabinet Grotesk, sans-serif"
     fontSize: "0.98rem"
     fontWeight: 400
-    lineHeight: 1.85
+    lineHeight: 1.78
     letterSpacing: "0"
   label:
     fontFamily: "JetBrains Mono, monospace"
-    fontSize: "0.65rem"
+    fontSize: "0.66rem"
     fontWeight: 700
     lineHeight: 1
-    letterSpacing: "0.15em"
+    letterSpacing: "0.14em"
   mono:
     fontFamily: "JetBrains Mono, monospace"
-    fontSize: "0.75rem"
+    fontSize: "0.78rem"
     fontWeight: 400
-    lineHeight: 1.6
+    lineHeight: 1.55
     letterSpacing: "0"
   price:
     fontFamily: "JetBrains Mono, monospace"
-    fontSize: "0.9rem"
+    fontSize: "0.84rem"
     fontWeight: 400
     lineHeight: 1.2
     letterSpacing: "0"
 rounded:
-  sm: "18px"
-  md: "24px"
-  lg: "28px"
-  xl: "30px"
-  2xl: "32px"
-  3xl: "34px"
-  4xl: "38px"
+  sm: "12px"
+  md: "16px"
+  lg: "20px"
+  xl: "24px"
+  2xl: "28px"
+  3xl: "32px"
+  4xl: "36px"
   pill: "9999px"
 spacing:
   xs: "4px"
@@ -81,44 +79,44 @@ spacing:
   3xl: "48px"
   4xl: "64px"
   5xl: "96px"
+  6xl: "128px"
 components:
   button-primary:
-    backgroundColor: "{colors.amber-bronze}"
-    textColor: "{colors.charcoal-ink}"
+    backgroundColor: "{colors.chalk}"
+    textColor: "{colors.stage-black}"
     typography: "{typography.label}"
-    rounded: "{rounded.pill}"
-    padding: "12px 20px"
+    rounded: "{rounded.md}"
+    padding: "12px 18px"
   button-ghost:
-    backgroundColor: "{colors.glass-fill}"
-    textColor: "{colors.parchment}"
+    backgroundColor: "transparent"
+    textColor: "{colors.chalk}"
     typography: "{typography.label}"
-    rounded: "{rounded.pill}"
-    padding: "12px 20px"
-  chip:
-    backgroundColor: "{colors.warm-shadow}"
-    textColor: "{colors.muted-silt}"
-    typography: "{typography.label}"
-    rounded: "{rounded.pill}"
-    padding: "8px 16px"
-  glass-panel:
-    backgroundColor: "{colors.glass-fill}"
-    textColor: "{colors.parchment}"
+    rounded: "{rounded.md}"
+    padding: "12px 18px"
+  panel-plain:
+    backgroundColor: "{colors.panel-black}"
+    textColor: "{colors.chalk}"
     rounded: "{rounded.lg}"
     padding: "24px"
+  glass-panel:
+    backgroundColor: "{colors.glass-fill}"
+    textColor: "{colors.chalk}"
+    rounded: "{rounded.xl}"
+    padding: "24px"
   product-card:
-    backgroundColor: "{colors.ash-lift}"
-    textColor: "{colors.parchment}"
+    backgroundColor: "transparent"
+    textColor: "{colors.chalk}"
     rounded: "{rounded.lg}"
-    padding: "16px"
+    padding: "0"
   nav-shell:
-    backgroundColor: "{colors.warm-shadow}"
-    textColor: "{colors.parchment}"
-    height: "84px"
-    padding: "16px"
-  brand-logo:
-    width: "216px"
+    backgroundColor: "{colors.stage-black}"
+    textColor: "{colors.chalk}"
     height: "72px"
-    rounded: "{rounded.pill}"
+    padding: "16px 20px"
+  brand-logo:
+    width: "188px"
+    height: "56px"
+    rounded: "{rounded.sm}"
     typography: "{typography.headline}"
 ---
 
@@ -126,46 +124,52 @@ components:
 
 ## 1. Overview
 
-**Creative North Star: "Polished Disruption"**
+**Creative North Star: "Noir Precision"**
 
-Raptile Studio reads like a fashion label with a point of view, not a storefront trying to please everyone. The system is built to keep the cloth in front, with the interface acting as a precise frame around it. The page stack is layered, starting with `BackgroundStage`, then `AppProviders`, then `PageTransition`, then the routed content. The homepage is story-led, the collection page is commerce-led, and the about page is a slower editorial narrative, but they all share the same rule: the garment carries the emotion, the UI sharpens the read.
+Raptile Studio should move away from smoked-warm disruption and into a colder, darker editorial frame. The site reads like a fashion spread on a black field: fewer containers, wider negative space, sharper type, and product imagery carrying the emotional charge.
 
-The visual tone is sharp, polished, and high-concept. Surfaces sit in smoked warmth instead of flat black, accents stay deliberate, and motion should feel composed rather than playful. The system explicitly rejects generic AI-slop copy, glowing dashboard cards, loud streetwear neon, playful DTC pastels, and white-label Shopify templates.
+The shell stays almost silent. Most structure comes from spacing, alignment, and thin tone shifts between `stage-black`, `panel-black`, and `graphite-plane`. Plain panels are the baseline. Glass is reserved for the header, drawers, search, or any surface that truly benefits from layered separation.
+
+Commerce stays obvious, but it should feel integrated into the editorial rhythm rather than bolted on as promo UI. The visual system explicitly rejects warm metallic accents, generic glow, overused blur, and merchandising clutter.
 
 **Key Characteristics:**
-- Cloth first, interface second.
-- Sharp surfaces, not flat black.
-- One ember accent, used with intent.
-- Scroll-led storytelling with controlled motion.
-- Commerce surfaces stay legible, compact, and exact.
-- The brand should read as specific and self-possessed, not generic or borrowed.
+- Near-black canvas with pale type.
+- Plain planes first, glass second.
+- Monochrome system with one cold focus note.
+- Large image fields and narrow copy measures.
+- Sparse motion and deliberate pacing.
+- Commerce clarity without promo noise.
 
 ## 2. Colors
 
-The palette is warm, low-chroma, and materially grounded. It should feel like charred walnut, smoked copper, and softened parchment under low evening light.
+The palette is restrained and nearly monochrome. It should feel like black studio paper, graphite, frosted acrylic, and a trace of cold light.
 
 ### Primary
-- **Ember Bronze** (`oklch(0.71 0.08 48)`): the primary call-to-action color, active states, and rare emphasis. It should read as metal under warm light, not neon.
+- **Chalk** (`oklch(0.93 0.008 90)`): the default high-contrast action fill, inverse button state, and strongest text color against the black field.
+- **Focus Ice** (`oklch(0.78 0.022 235)`): a rare active-state and focus tone used for rings, selected states, and subtle link emphasis. Keep it under 10% of the interface.
 
 ### Neutral
-- **Charcoal Ink** (`oklch(0.11 0.012 40)`): root background and the darkest canvas for the entire storefront.
-- **Warm Shadow** (`oklch(0.145 0.015 38)`): sticky header, footer, and deep UI beds where a softer dark is needed.
-- **Ash Lift** (`oklch(0.18 0.016 40)`): elevated panels, product image stages, and secondary surfaces.
-- **Parchment** (`oklch(0.92 0.012 78)`): primary text and high-contrast copy.
-- **Muted Silt** (`oklch(0.68 0.018 72)`): body copy, helper text, and metadata.
-- **Subtle Dust** (`oklch(0.46 0.015 62)`): labels, dividers, and secondary annotations.
-- **Sold-Out Oxide** (`oklch(0.38 0.04 40)`): the restrained status tone for unavailable product states.
-- **Glass Fill** (`oklch(0.17 0.02 40 / 0.84)`): translucent panel fill on buttons, cards, and the navigation shell.
-- **Glass Border** (`oklch(0.92 0.012 80 / 0.1)`): thin borders for all surfaces, never heavy or overdrawn.
-- **Glass Highlight** (`oklch(0.96 0.01 80 / 0.04)`): inset highlight that gives the glass panels a controlled lift.
-- **Warm Tint** (`oklch(0.3 0.025 42 / 0.18)`): warm upper sheen on layered UI surfaces.
-- **Cool Tint** (`oklch(0.26 0.02 54 / 0.14)`): cooler lower sheen that keeps the dark palette from flattening.
-- **Shadow Ink** (`oklch(0 0 0 / 0.16)`): ambient shadow tone for depth without hard contrast.
+- **Stage Black** (`oklch(0.11 0.004 255)`): root background and the dominant canvas for the storefront.
+- **Panel Black** (`oklch(0.145 0.005 255)`): the default matte surface for content blocks, forms, and quiet framed zones.
+- **Graphite Plane** (`oklch(0.19 0.006 255)`): lifted image stages, media beds, and the occasional secondary surface.
+- **Chalk** (`oklch(0.93 0.008 90)`): primary text, key separators, and high-contrast UI.
+- **Smoke** (`oklch(0.72 0.01 255)`): body copy, support copy, and secondary metadata.
+- **Steel** (`oklch(0.52 0.008 255)`): labels, secondary dividers, and low-priority annotations.
+- **Frost** (`oklch(0.86 0.01 250)`): hairlines, subtle edges, and lifted outlines on black surfaces.
+- **Dim Oxide** (`oklch(0.42 0.015 30)`): restrained unavailable or low-energy state treatment.
+- **Glass Fill** (`oklch(0.17 0.006 255 / 0.72)`): translucent shell fill used sparingly on header, search, or utility layers.
+- **Glass Border** (`oklch(0.94 0.008 250 / 0.14)`): one-pixel glass outline for layered surfaces.
+- **Glass Highlight** (`oklch(0.98 0.004 90 / 0.05)`): a soft inset lift that prevents glass from turning muddy.
+- **Glass Haze Top** (`oklch(0.34 0.01 250 / 0.16)`): upper tint for restrained glass depth.
+- **Glass Haze Bottom** (`oklch(0.24 0.008 255 / 0.1)`): lower tint that keeps transparent surfaces grounded.
+- **Shadow Depth** (`oklch(0 0 0 / 0.3)`): deep structural shadow, used minimally.
 
 ### Named Rules
-**The One Accent Rule.** Ember is reserved for primary actions, active states, and the occasional editorial callout. If it starts appearing everywhere, the system has lost its focus.
+**The Black Is the Field Rule.** The background should read as one continuous stage, not a patchwork of competing dark tones.
 
-**The Noise-On-UI Rule.** Texture belongs on panels, shells, and controls only. Product photography stays clean. Never let grain or overlay contaminate the garment image.
+**The Plain Before Glass Rule.** If a matte plane solves the hierarchy, do not blur it.
+
+**The No Decorative Texture Rule.** Grain, haze, or noise should stay microscopic and atmospheric. Never place visible texture on garment imagery.
 
 ## 3. Typography
 
@@ -173,83 +177,79 @@ The palette is warm, low-chroma, and materially grounded. It should feel like ch
 **Body Font:** Cabinet Grotesk, sans-serif  
 **Label / Mono Font:** JetBrains Mono, monospace
 
-The pairing is compact and editorial. Cabinet Grotesk gives the storefront its confident, fashion-led presence, while JetBrains Mono handles the technical layer, prices, labels, and system metadata.
+The pairing stays compact and controlled. Cabinet Grotesk gives the store its editorial authority through proportion and spacing rather than exaggerated flair. JetBrains Mono handles the technical layer quietly: prices, labels, inventory states, and utility copy.
 
 ### Hierarchy
-- **Display** (`800`, `clamp(2rem, 8vw, 7rem)`, `0.95`): used for hero headlines, story section titles, and the strongest brand statements.
-- **Headline** (`700`, `clamp(1.6rem, 5vw, 4rem)`, `1.02`): used for section leads and dense editorial headings.
-- **Product** (`500`, `clamp(0.95rem, 2vw, 1.4rem)`, `1.12`): used on product cards and supporting product copy where the title must stay compact.
-- **Body** (`400`, `0.98rem`, `1.85`): used for descriptive paragraphs and support text. Keep it readable and spacious, not dense.
-- **Label** (`700`, `0.65rem`, `0.15em`, uppercase): used for UI labels, badges, CTA captions, and system signals.
-- **Mono** (`400`, `0.75rem`, `1.6`): used for helper lines, feature notes, and technical detail.
-- **Price** (`400`, `0.9rem`, `1.2`): used for product pricing and commerce metadata.
+- **Display** (`700`, `clamp(2.2rem, 7vw, 6.4rem)`, `0.93`): hero headlines, section leads, and the strongest brand lines.
+- **Headline** (`600`, `clamp(1.5rem, 4.2vw, 3.5rem)`, `1`): editorial headings, collection intros, and focused content breaks.
+- **Product** (`500`, `clamp(1rem, 1.8vw, 1.22rem)`, `1.16`): product names and compact commerce copy.
+- **Body** (`400`, `0.98rem`, `1.78`): supporting paragraphs and service information. Keep it airy and narrow.
+- **Label** (`700`, `0.66rem`, `0.14em`, uppercase): navigation links, CTAs, badges, and UI states.
+- **Mono** (`400`, `0.78rem`, `1.55`): technical helper text, metadata, and compact supporting notes.
+- **Price** (`400`, `0.84rem`, `1.2`): price and tight commerce metadata.
 
 ### Named Rules
-**The Mono Layer Is Functional Only.** Use JetBrains Mono for prices, labels, and technical states. It should never take over longform content or become decorative noise.
+**The Column Stays Narrow Rule.** Editorial paragraphs should usually sit between 36ch and 44ch.
 
-**The Headline Must Stay Slim.** Large type is about presence, not width. Keep display lines short enough to feel composed on desktop and mobile.
+**The Mono Layer Whispers Rule.** Use mono for utility and evidence, never for decorative personality.
 
 ## 4. Elevation
 
-This system uses a hybrid of tonal layering and very soft shadow, not dramatic depth. Most separation comes from warm surface shifts, borders, blur, and inset highlights. Shadows should feel ambient and structural, never heavy enough to overpower garment imagery.
+This system is flatter than the previous direction. Separation comes from tone, line, and spacing first. Blur and shadow only appear when a live shell has to sit over imagery or motion.
 
 ### Shadow Vocabulary
-- **Ambient Lift** (`0 18px 48px oklch(0 0 0 / 0.16)`): used for large panels such as the nav shell, hero frames, and glass cards.
-- **Soft Lift** (`0 10px 24px oklch(0 0 0 / 0.16)`): used for smaller callouts and compact UI surfaces.
-- **Inset Sheen** (`inset 0 1px 0 oklch(0.96 0.01 80 / 0.04)`): used to keep panels feeling polished without looking glossy.
+- **Matte Edge** (`inset 0 1px 0 oklch(0.94 0.008 250 / 0.06)`): a quiet internal edge for plain black surfaces.
+- **Glass Float** (`0 18px 44px oklch(0 0 0 / 0.3)`): reserved lift for glass shells and elevated utilities.
+- **Focus Halo** (`0 0 0 2px oklch(0.78 0.022 235 / 0.18)`): keyboard focus and selected state treatment.
 
 ### Named Rules
-**The Flat By Default Rule.** Resting surfaces should read as layered planes, not floating widgets. Depth appears only when the component needs it.
+**The Matte By Default Rule.** Most surfaces should feel printed or machined, not floating.
 
-**The Shadow Never Competes Rule.** If the shadow becomes noticeable before the garment does, it is too strong.
+**The Blur Must Justify Itself Rule.** Blur is only allowed when content visibly moves behind the surface and the separation materially helps.
 
 ## 5. Components
 
 ### Buttons
-Buttons are rounded pills with clear hierarchy. Primary buttons use ember fill, dark text, and a slight lift on hover. Ghost buttons use glass fill, muted text, and a thin border. Focus states rely on an ember halo rather than a loud outline. Keep the padding generous enough to feel tactile, but not so large that the button becomes a decorative block.
+Primary buttons should be chalk-filled rectangles with modest radii, dark text, and no ornamental shadow. Secondary buttons are outline or transparent on plain sections, and glass only when placed over imagery or moving backgrounds. Hover effects are minimal: one step brighter or darker, one-pixel lift at most.
 
-### Cards and Panels
-Glass panels are the main container language for navigation, footers, info blocks, and support surfaces. They use a 28px to 34px corner radius, a thin border, blur, and the noise treatment on the panel itself. Product cards are simpler and tighter, with square imagery, a 28px frame, and compact metadata below. The collection grid should stay disciplined, with up to four cards across on large screens, never a sprawling wall of oversized tiles.
+### Panels
+Use two panel types. `panel-plain` is the default for content sections, product info, support pages, and editorial captions. `glass-panel` is reserved for the navigation shell, compact utilities, and occasional overlay surfaces. Never stack multiple glass cards inside each other. If a page can work with type and spacing alone, remove the panel.
+
+### Product Cards
+Product cards should almost disappear. Prefer a framed image stage, generous negative space, and two or three lines of metadata over fully boxed merchandise tiles. The image can sit on `graphite-plane` or the black field, and the metadata sits beneath with clear price and availability.
 
 ### Navigation and Logo
-The header is intentionally taller than a generic ecommerce bar. `Nav` uses a sticky, full-width glass shell with predictive search on desktop, a mode-switching mobile header, and compact cart badges that stay informational rather than loud. The logo component resolves `/logo/logo.png` and falls back to a wordmark if the asset fails, so the brand remains legible even when the image is unavailable.
+The header is slimmer and quieter than the current warm-shell direction. It can live as a plain black band or a restrained glass shell when it overlays photography. Links stay small, uppercase, and quiet. The logo should read crisp and compact, never oversized.
 
 ### Application Shell
-The global shell is always present: `BackgroundStage` supplies atmosphere, `PageTransition` keeps route changes controlled, and `AppProviders` handles Shopify and time-accent context. This layer should feel like stagecraft, not decoration.
+The shell should feel architectural, not atmospheric. Background treatments stay nearly solid black, transitions are mostly fades or short cross-dissolves, and any persistent stage effect should be subtle enough to disappear behind product images and copy.
 
 ### Product Detail
-The PDP is a split editorial layout: a large image stage, a thumbnail rail on desktop when needed, and a fixed-width information column that stays readable. The description must remain fully visible on desktop, without an internal scroll trap. The image stage should feel generous and centered, with object containment that respects the garment shape.
+The PDP should read like a gallery wall paired with an information column. The media stage gets scale and breathing room, and the purchase column stays calm, aligned, and direct. Use a plain panel around copy or controls only when the raw black field stops being legible.
 
 ### Story Sections
-The homepage and about page both rely on the scroll narrative pattern. One side stays pinned, the other side advances through steps that explain weight, wash, shape, and release rhythm. This is the main place to stage cloth facts like 240gsm and double bio washed, because the information should feel woven into the story, not dumped into a spec sheet. The story asset set and `ScrollNarrative` should always support the garment, never compete with it.
+Storytelling stays editorial but more distilled. Use fewer pinned modules, fewer frames, and longer uninterrupted black runs between sections. Copy blocks should feel like captions in a spread, not marketing cards explaining every thought.
 
 ### Support Surfaces
-Contact, shipping, returns, and size guide content should stay calm and utilitarian. Use the same glass language, but lower the visual temperature. `SupportPageFrame`, `ContactForm`, and `SizeChartTable` should all stay readable, sparse, and low-drama. The job is clarity, not performance.
+Shipping, returns, size guide, privacy, and contact pages should be stripped back to plain panels, hairlines, and readable form fields. If glass appears here, it should be soft and functional, never decorative.
 
 ## 6. Do's and Don'ts
 
 ### Do:
-- **Do** keep product imagery dominant and let the UI stay dark, warm, and polished.
-- **Do** keep the background stage, page transitions, and navigation shell composed so the shell supports the cloth.
-- **Do** use `noise-surface` and `glass-panel` on controls, headers, footers, and story cards so texture lives on interface elements, not garments.
-- **Do** keep the homepage sequence explicit: Onyx collection first, featured products second, fabric story third.
-- **Do** keep the collection grid compact, with responsive columns that cap out at four across on large screens.
-- **Do** preserve full product descriptions on desktop PDPs and keep the information column readable at a glance.
-- **Do** use the logo PNG in the header and about page when available, with a clean fallback wordmark.
-- **Do** keep body text tinted, never pure black or pure white.
-- **Do** use motion for scroll pacing, state change, and transition polish, not for spectacle.
+- **Do** keep the site predominantly black, with just enough tone separation to guide the eye.
+- **Do** let product imagery, silhouette, and spacing carry most of the emotion.
+- **Do** use `panel-plain` as the default structure and reserve `glass-panel` for shell or utility layers.
+- **Do** keep copy blocks narrow, headlines short, and CTAs obvious through contrast.
+- **Do** make support and commerce surfaces feel edited, not promotional.
+- **Do** keep motion quiet and quick enough to disappear.
+- **Do** use the cold focus tone only for focus, active state, or rare emphasis.
 
 ### Don't:
-- **Don't** use generic SaaS gradients.
-- **Don't** use glowing dashboard cards.
-- **Don't** use loud streetwear neon.
-- **Don't** use playful DTC pastels.
-- **Don't** use white-label Shopify templates.
-- **Don't** let the copy sound like AI slop or "just another clothing brand".
-- **Don't** add decorative amber fill on secondary UI.
-- **Don't** rely on hover gimmicks or icon-card grids.
-- **Don't** let any interface treatment compete with product images.
-- **Don't** place noise overlay on product images, on the homepage, on collection cards, or anywhere else the garments should read cleanly.
-- **Don't** clamp the PDP description into a hidden scroll region on desktop.
-- **Don't** let the header collapse into a thin strip that feels underweighted.
-- **Don't** let product cards grow so large that four of them fill the entire laptop viewport.
+- **Don't** warm the palette with amber, bronze, or brown luxury cues.
+- **Don't** turn every section into a rounded card.
+- **Don't** stack glass on glass or use blur as a default styling shortcut.
+- **Don't** use glowing highlights, visible grain, or cinematic haze on product imagery.
+- **Don't** fill the homepage with badges, metrics, icon grids, or promo strips.
+- **Don't** let editorial minimalism become sterile emptiness, the product and copy still need tension.
+- **Don't** hide critical commerce actions behind hover-only or gesture-dependent affordances.
+- **Don't** let the shell become louder than the garment.

@@ -23,14 +23,14 @@ const config: Config = {
       },
       boxShadow: {
         glow: "0 0 24px var(--glass-shadow)",
-        amber: "0 0 24px color-mix(in oklch, var(--accent-glow) 45%, transparent)",
+        soft: "0 0 24px color-mix(in oklch, var(--accent-glow) 45%, transparent)",
       },
       keyframes: {
         blink: {
           "0%, 49%": { opacity: "1" },
           "50%, 100%": { opacity: "0" },
         },
-        pulseAmber: {
+        pulseNeutral: {
           "0%, 100%": { boxShadow: "0 0 0 0 color-mix(in oklch, var(--accent-glow) 0%, transparent)" },
           "50%": { boxShadow: "0 0 0 1px color-mix(in oklch, var(--accent-glow) 50%, transparent), 0 0 24px color-mix(in oklch, var(--accent-glow) 30%, transparent)" },
         },
@@ -41,7 +41,7 @@ const config: Config = {
       },
       animation: {
         blink: "blink 1.15s steps(2, jump-none) infinite",
-        "pulse-amber": "pulseAmber 4s ease-in-out infinite",
+        "pulse-neutral": "pulseNeutral 4s ease-in-out infinite",
         drift: "floatDrift 7s ease-in-out infinite",
       },
     },

@@ -43,37 +43,37 @@
 }
 
 :root {
-  --charcoal-ink: oklch(0.11 0.012 40);
-  --warm-shadow: oklch(0.145 0.015 40);
-  --ash-lift: oklch(0.19 0.016 40);
-  --parchment: oklch(0.94 0.01 84);
-  --muted-silt: oklch(0.72 0.018 74);
-  --subtle-dust: oklch(0.5 0.014 70);
-  --amber-bronze: oklch(0.71 0.08 48);
-  --amber-bright: oklch(0.88 0.03 76);
-  --ember-glow: oklch(0.58 0.08 42);
-  --amber-haze: oklch(0.71 0.08 48 / 0.12);
-  --sold-out-oxide: oklch(0.42 0.035 42);
-  --bg: var(--charcoal-ink);
-  --bg-soft: var(--warm-shadow);
-  --bg-elevated: var(--ash-lift);
-  --text: var(--parchment);
-  --text-muted: var(--muted-silt);
-  --text-subtle: var(--subtle-dust);
-  --accent: var(--amber-bronze);
-  --accent-strong: var(--amber-bright);
-  --accent-glow: var(--ember-glow);
-  --accent-subtle: var(--amber-haze);
-  --sold-out: var(--sold-out-oxide);
-  --glass-fill: oklch(0.17 0.014 40 / 0.84);
-  --glass-border: oklch(0.94 0.01 82 / 0.1);
-  --glass-highlight: oklch(0.99 0.004 82 / 0.04);
-  --glass-tint-a: oklch(0.3 0.03 44 / 0.18);
-  --glass-tint-b: oklch(0.24 0.02 56 / 0.14);
-  --shader-warm: oklch(0.74 0.08 48);
-  --shader-mid: oklch(0.47 0.04 45);
-  --shader-deep: oklch(0.08 0.012 40);
-  --glass-shadow: oklch(0 0 0 / 0.18);
+  --ink-deep: oklch(0.06 0.002 255);
+  --ink-shadow: oklch(0.078 0.002 255);
+  --ink-lift: oklch(0.115 0.002 255);
+  --paper: oklch(0.972 0.004 95);
+  --paper-muted: oklch(0.76 0.004 255);
+  --paper-subtle: oklch(0.52 0.003 255);
+  --paper-bright: oklch(0.91 0.003 255);
+  --paper-strong: oklch(0.985 0.002 95);
+  --paper-glow: oklch(0.8 0.004 250);
+  --paper-haze: oklch(0.95 0.003 250 / 0.14);
+  --oxide: oklch(0.4 0.004 255);
+  --bg: var(--ink-deep);
+  --bg-soft: var(--ink-shadow);
+  --bg-elevated: var(--ink-lift);
+  --text: var(--paper);
+  --text-muted: var(--paper-muted);
+  --text-subtle: var(--paper-subtle);
+  --accent: var(--paper-bright);
+  --accent-strong: var(--paper-strong);
+  --accent-glow: var(--paper-glow);
+  --accent-subtle: var(--paper-haze);
+  --sold-out: var(--oxide);
+  --glass-fill: oklch(0.09 0.002 255 / 0.96);
+  --glass-border: oklch(0.94 0.003 255 / 0.08);
+  --glass-highlight: oklch(1 0 0 / 0.05);
+  --glass-tint-a: oklch(0.23 0.003 255 / 0.08);
+  --glass-tint-b: oklch(0.14 0.002 255 / 0.06);
+  --shader-soft: oklch(0.76 0.003 250);
+  --shader-mid: oklch(0.42 0.003 250);
+  --shader-deep: oklch(0.05 0.002 255);
+  --glass-shadow: oklch(0 0 0 / 0.55);
   --font-display: "Cabinet Grotesk", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
   --space-1: 4px;
@@ -90,10 +90,10 @@
   --duration-fast: 120ms;
   --duration-base: 250ms;
   --duration-slow: 400ms;
-  --glass-blur-panel: 28px;
-  --glass-blur-heavy: 22px;
-  --glass-blur-shell: 28px;
-  --noise-header-opacity: 0.05;
+  --glass-blur-panel: 0px;
+  --glass-blur-heavy: 0px;
+  --glass-blur-shell: 0px;
+  --noise-header-opacity: 0;
   --noise-surface-opacity: var(--noise-header-opacity);
   --header-height: 64px;
   --header-compact-height: 54px;
@@ -106,7 +106,7 @@
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: color-mix(in oklch, var(--accent) 68%, var(--bg-soft)) color-mix(in oklch, var(--bg) 76%, transparent);
+  scrollbar-color: color-mix(in oklch, var(--text) 28%, var(--bg-soft)) color-mix(in oklch, var(--bg) 82%, transparent);
 }
 
 ::-webkit-scrollbar {
@@ -115,22 +115,20 @@
 }
 
 ::-webkit-scrollbar-track {
-  background:
-    linear-gradient(180deg, color-mix(in oklch, var(--bg-soft) 70%, var(--bg)), var(--bg)),
-    var(--bg);
+  background: var(--bg);
 }
 
 ::-webkit-scrollbar-thumb {
   border: 3px solid color-mix(in oklch, var(--bg) 92%, transparent);
   border-radius: 999px;
   background:
-    linear-gradient(180deg, color-mix(in oklch, var(--accent-strong) 88%, var(--text-muted)), var(--accent-glow));
-  box-shadow: inset 0 1px 0 color-mix(in oklch, var(--text) 18%, transparent);
+    linear-gradient(180deg, color-mix(in oklch, var(--accent-strong) 72%, var(--text-muted)), color-mix(in oklch, var(--text) 65%, var(--accent-glow)));
+  box-shadow: inset 0 1px 0 color-mix(in oklch, var(--text) 12%, transparent);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background:
-    linear-gradient(180deg, var(--accent-strong), color-mix(in oklch, var(--accent-glow) 88%, var(--accent)));
+    linear-gradient(180deg, var(--accent-strong), color-mix(in oklch, var(--text) 70%, var(--accent-glow)));
 }
 
 html {
@@ -166,7 +164,7 @@ button {
 }
 
 ::selection {
-  background: color-mix(in oklch, var(--accent-subtle) 85%, transparent);
+  background: color-mix(in oklch, var(--accent-subtle) 100%, transparent);
   color: var(--text);
 }
 
@@ -227,18 +225,16 @@ button {
 .glass-panel {
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(var(--glass-blur-panel)) saturate(136%);
-  -webkit-backdrop-filter: blur(var(--glass-blur-panel)) saturate(136%);
   background:
     linear-gradient(
       180deg,
-      color-mix(in oklch, var(--glass-fill) 58%, transparent) 0%,
-      color-mix(in oklch, var(--glass-fill) 76%, var(--bg-soft)) 100%
+      color-mix(in oklch, var(--glass-fill) 82%, var(--bg)) 0%,
+      color-mix(in oklch, var(--bg-soft) 92%, var(--bg)) 100%
     );
   border: 1px solid var(--glass-border);
   box-shadow:
-    inset 0 1px 0 color-mix(in oklch, var(--glass-highlight) 88%, transparent),
-    0 24px 60px color-mix(in oklch, var(--glass-shadow) 76%, transparent);
+    inset 0 1px 0 color-mix(in oklch, var(--glass-highlight) 72%, transparent),
+    0 24px 60px color-mix(in oklch, var(--glass-shadow) 72%, transparent);
   isolation: isolate;
 }
 
@@ -248,8 +244,8 @@ button {
   inset: 0;
   border-radius: inherit;
   background:
-    linear-gradient(160deg, color-mix(in oklch, var(--glass-tint-a) 75%, transparent) 0%, transparent 46%),
-    linear-gradient(210deg, transparent 0%, color-mix(in oklch, var(--glass-tint-b) 70%, transparent) 100%);
+    linear-gradient(160deg, color-mix(in oklch, var(--glass-highlight) 30%, transparent) 0%, transparent 46%),
+    linear-gradient(210deg, transparent 0%, color-mix(in oklch, var(--glass-tint-b) 55%, transparent) 100%);
   pointer-events: none;
   z-index: 0;
 }
@@ -260,11 +256,10 @@ button {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background-image: url("/noise.png");
-  background-repeat: repeat;
-  background-size: 220px 220px;
+  background: none;
+  background-image: none;
   opacity: var(--noise-surface-opacity);
-  mix-blend-mode: soft-light;
+  mix-blend-mode: normal;
   pointer-events: none;
   z-index: 0;
 }
@@ -279,9 +274,7 @@ button {
   position: sticky;
   top: 0;
   min-height: var(--header-height);
-  background: color-mix(in oklch, var(--glass-fill) 82%, transparent);
-  backdrop-filter: blur(var(--glass-blur-shell)) saturate(136%);
-  -webkit-backdrop-filter: blur(var(--glass-blur-shell)) saturate(136%);
+  background: color-mix(in oklch, var(--bg-soft) 92%, var(--bg));
   transition:
     min-height 320ms var(--ease-out-expo),
     border-color 320ms var(--ease-out-expo),
@@ -291,9 +284,9 @@ button {
 
 .site-header[data-scrolled="true"] {
   min-height: var(--header-compact-height);
-  border-color: color-mix(in oklch, var(--accent) 18%, var(--glass-border));
-  background: color-mix(in oklch, var(--glass-fill) 92%, var(--bg-soft));
-  box-shadow: 0 22px 56px color-mix(in oklch, var(--bg) 42%, transparent);
+  border-color: color-mix(in oklch, var(--glass-border) 88%, var(--bg));
+  background: color-mix(in oklch, var(--bg-elevated) 92%, var(--bg));
+  box-shadow: 0 20px 48px color-mix(in oklch, var(--glass-shadow) 64%, transparent);
 }
 
 .site-header-inner {
@@ -341,8 +334,8 @@ button {
 }
 
 .glass-panel-heavy {
-  backdrop-filter: blur(var(--glass-blur-heavy)) saturate(136%);
-  -webkit-backdrop-filter: blur(var(--glass-blur-heavy)) saturate(136%);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .mono-rule {
@@ -353,18 +346,18 @@ button {
   user-select: none;
 }
 
-.amber-border {
-  border-color: var(--accent);
+.neutral-border {
+  border-color: color-mix(in oklch, var(--text) 24%, var(--glass-border));
   box-shadow:
-    inset 0 1px 0 color-mix(in oklch, var(--accent-strong) 24%, transparent),
-    0 10px 24px color-mix(in oklch, var(--accent-glow) 12%, transparent);
+    inset 0 1px 0 color-mix(in oklch, var(--text) 24%, transparent),
+    0 10px 24px color-mix(in oklch, var(--glass-shadow) 22%, transparent);
 }
 
 .tech-card {
-  border: 1px solid color-mix(in oklch, var(--glass-border) 90%, transparent);
+  border: 1px solid color-mix(in oklch, var(--glass-border) 84%, transparent);
   background:
-    linear-gradient(135deg, color-mix(in oklch, var(--glass-tint-a) 85%, transparent), transparent 45%),
-    color-mix(in oklch, var(--bg-soft) 84%, transparent);
+    linear-gradient(135deg, color-mix(in oklch, var(--glass-highlight) 18%, transparent), transparent 52%),
+    color-mix(in oklch, var(--bg-soft) 92%, var(--bg));
 }
 
 .btn-primary {
@@ -373,14 +366,14 @@ button {
   isolation: isolate;
   border: none;
   background:
-    linear-gradient(145deg, color-mix(in oklch, var(--accent-strong) 54%, transparent), transparent 45%),
+    linear-gradient(145deg, color-mix(in oklch, var(--glass-highlight) 56%, transparent), transparent 42%),
     var(--accent);
   color: var(--bg);
   font-family: var(--font-display);
   font-weight: 700;
   box-shadow:
-    inset 0 1px 0 color-mix(in oklch, var(--text) 18%, transparent),
-    0 14px 34px color-mix(in oklch, var(--glass-shadow) 82%, transparent);
+    inset 0 1px 0 color-mix(in oklch, var(--text) 22%, transparent),
+    0 14px 34px color-mix(in oklch, var(--glass-shadow) 78%, transparent);
   transition:
     background var(--duration-base) var(--ease-out-expo),
     transform var(--duration-base) var(--ease-out-expo),
@@ -394,8 +387,8 @@ button {
   inset: 0;
   border-radius: inherit;
   background:
-    linear-gradient(160deg, color-mix(in oklch, var(--glass-highlight) 88%, transparent), transparent 42%),
-    linear-gradient(340deg, color-mix(in oklch, var(--glass-tint-b) 58%, transparent), transparent 55%);
+    linear-gradient(160deg, color-mix(in oklch, var(--glass-highlight) 40%, transparent), transparent 42%),
+    linear-gradient(340deg, color-mix(in oklch, var(--glass-tint-b) 32%, transparent), transparent 55%);
   opacity: 0.72;
   pointer-events: none;
   z-index: 0;
@@ -407,11 +400,10 @@ button {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background-image: url("/noise.png");
-  background-repeat: repeat;
-  background-size: 180px 180px;
-  opacity: 0.03;
-  mix-blend-mode: soft-light;
+  background: none;
+  background-image: none;
+  opacity: 0;
+  mix-blend-mode: normal;
   pointer-events: none;
   z-index: 0;
 }
@@ -420,23 +412,23 @@ button {
   background: var(--accent-strong);
   transform: translateY(-1px);
   box-shadow:
-    inset 0 1px 0 color-mix(in oklch, var(--text) 22%, transparent),
-    0 18px 44px color-mix(in oklch, var(--accent-glow) 16%, transparent);
+    inset 0 1px 0 color-mix(in oklch, var(--text) 24%, transparent),
+    0 18px 44px color-mix(in oklch, var(--glass-shadow) 70%, transparent);
 }
 
 .btn-primary:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--accent-subtle), 0 0 0 4px color-mix(in oklch, var(--accent) 18%, transparent);
+  box-shadow: 0 0 0 2px var(--accent-subtle), 0 0 0 4px color-mix(in oklch, var(--text) 14%, transparent);
 }
 
 .ghost-button {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  border: 1px solid var(--glass-border);
+  border: 1px solid color-mix(in oklch, var(--glass-border) 92%, transparent);
   background:
-    linear-gradient(145deg, color-mix(in oklch, var(--glass-tint-a) 38%, transparent), transparent 50%),
-    color-mix(in oklch, var(--glass-fill) 78%, var(--bg));
+    linear-gradient(145deg, color-mix(in oklch, var(--glass-highlight) 22%, transparent), transparent 50%),
+    color-mix(in oklch, var(--bg-elevated) 90%, var(--bg));
   color: var(--text-muted);
   box-shadow: inset 0 1px 0 var(--glass-highlight);
   transition:
@@ -446,9 +438,9 @@ button {
 }
 
 .ghost-button:hover {
-  border-color: var(--accent);
+  border-color: color-mix(in oklch, var(--text) 28%, var(--glass-border));
   color: var(--text);
-  background: color-mix(in oklch, var(--glass-fill) 94%, var(--bg-soft));
+  background: color-mix(in oklch, var(--bg-elevated) 96%, var(--bg));
 }
 
 .btn-primary .t-label,
@@ -468,14 +460,14 @@ button {
 }
 
 .footer-link:hover {
-  color: var(--accent);
+  color: var(--text);
 }
 
 .footer-shell {
   --noise-surface-opacity: var(--noise-header-opacity);
-  background: color-mix(in oklch, var(--glass-fill) 80%, transparent);
-  backdrop-filter: blur(var(--glass-blur-shell)) saturate(136%);
-  -webkit-backdrop-filter: blur(var(--glass-blur-shell)) saturate(136%);
+  background: color-mix(in oklch, var(--bg-soft) 92%, var(--bg));
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .cart-noise-panel {
@@ -509,15 +501,15 @@ button {
 }
 
 .glow-text {
-  text-shadow: 0 0 18px color-mix(in oklch, var(--accent-glow) 24%, transparent);
+  text-shadow: 0 0 14px color-mix(in oklch, var(--text) 10%, transparent);
 }
 
 .image-skeleton {
   background: linear-gradient(
     90deg,
-    color-mix(in oklch, var(--accent) 9%, var(--bg-elevated)) 0%,
-    color-mix(in oklch, var(--accent-strong) 22%, var(--bg-elevated)) 50%,
-    color-mix(in oklch, var(--accent) 9%, var(--bg-elevated)) 100%
+    color-mix(in oklch, var(--bg-elevated) 96%, var(--bg)) 0%,
+    color-mix(in oklch, var(--text) 14%, var(--bg-elevated)) 50%,
+    color-mix(in oklch, var(--bg-elevated) 96%, var(--bg)) 100%
   );
   background-size: 200% 100%;
   animation: shimmer 1.8s ease-in-out infinite;
@@ -528,10 +520,10 @@ button {
     linear-gradient(
       110deg,
       transparent 0%,
-      color-mix(in oklch, var(--accent-strong) 16%, transparent) 48%,
+      color-mix(in oklch, var(--text) 16%, transparent) 48%,
       transparent 100%
     ),
-    color-mix(in oklch, var(--accent) 8%, var(--bg-elevated));
+    color-mix(in oklch, var(--bg-elevated) 96%, var(--bg));
   background-size: 200% 100%;
   animation: shimmer 1.8s ease-in-out infinite;
 }
@@ -540,7 +532,7 @@ button {
   display: inline-block;
   min-width: 0.35rem;
   text-align: left;
-  border-bottom: 1px solid color-mix(in oklch, var(--accent) 55%, transparent);
+  border-bottom: 1px solid color-mix(in oklch, var(--text-subtle) 48%, transparent);
   animation: underlinePulse 1.2s ease-in-out infinite;
 }
 
@@ -583,16 +575,16 @@ button {
 
 .size-table th {
   color: var(--text);
-  background: color-mix(in oklch, var(--glass-fill) 100%, transparent);
+  background: color-mix(in oklch, var(--bg-elevated) 92%, var(--bg));
 }
 
 .contact-input {
   width: 100%;
   border-radius: 20px;
-  border: 1px solid var(--glass-border);
+  border: 1px solid color-mix(in oklch, var(--glass-border) 84%, transparent);
   background:
-    linear-gradient(145deg, color-mix(in oklch, var(--glass-highlight) 10%, transparent), transparent 44%),
-    color-mix(in oklch, var(--glass-fill) 72%, var(--bg));
+    linear-gradient(145deg, color-mix(in oklch, var(--glass-highlight) 8%, transparent), transparent 44%),
+    color-mix(in oklch, var(--bg-elevated) 88%, var(--bg));
   color: var(--text);
   font-size: 0.95rem;
   padding: 0.95rem 1rem;
@@ -608,13 +600,13 @@ button {
 }
 
 .contact-input:focus {
-  border-color: var(--accent);
+  border-color: var(--text);
   background:
-    linear-gradient(145deg, color-mix(in oklch, var(--accent-subtle) 40%, transparent), transparent 48%),
-    color-mix(in oklch, var(--glass-fill) 86%, var(--bg));
+    linear-gradient(145deg, color-mix(in oklch, var(--glass-highlight) 18%, transparent), transparent 48%),
+    color-mix(in oklch, var(--bg-elevated) 94%, var(--bg));
   box-shadow:
     inset 0 1px 0 var(--glass-highlight),
-    0 0 0 2px color-mix(in oklch, var(--accent-glow) 30%, transparent);
+    0 0 0 2px color-mix(in oklch, var(--text) 16%, transparent);
 }
 
 .squircle-frame {
@@ -649,11 +641,11 @@ button {
 
 @media (max-width: 767px) {
   :root {
-    --glass-blur-panel: 14px;
-    --glass-blur-heavy: 18px;
-    --glass-blur-shell: 18px;
-    --noise-header-opacity: 0.035;
-    --noise-surface-opacity: 0.035;
+    --glass-blur-panel: 0px;
+    --glass-blur-heavy: 0px;
+    --glass-blur-shell: 0px;
+    --noise-header-opacity: 0;
+    --noise-surface-opacity: 0;
   }
 
   .t-hero {
@@ -684,21 +676,16 @@ button {
     font-size: 0.85rem;
   }
 
-  .glass-panel {
-    backdrop-filter: blur(var(--glass-blur-panel)) saturate(124%);
-    -webkit-backdrop-filter: blur(var(--glass-blur-panel)) saturate(124%);
-  }
-
   .glass-panel-heavy {
-    backdrop-filter: blur(var(--glass-blur-heavy)) saturate(126%);
-    -webkit-backdrop-filter: blur(var(--glass-blur-heavy)) saturate(126%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .glass-panel::after,
   .noise-surface::after,
   .btn-primary::after,
   .ghost-button::after {
-    opacity: 0.018;
+    opacity: 0;
   }
 
   .editorial-copy,

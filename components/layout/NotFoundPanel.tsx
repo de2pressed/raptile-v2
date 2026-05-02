@@ -10,7 +10,7 @@ export function NotFoundPanel() {
 
   return (
     <div className="flex min-h-[72vh] items-center justify-center py-16">
-      <GlassPanel className="animate-pulse-amber max-w-[42rem] rounded-[34px] px-6 py-8 md:px-10 md:py-10">
+      <GlassPanel className="animate-pulse-neutral max-w-[42rem] rounded-[34px] px-6 py-8 md:px-10 md:py-10">
         <div className="font-display text-3xl font-bold tracking-[-0.04em] md:text-4xl">404 — Not Found</div>
         <div className="mono-rule mt-4">────────────────────────────────</div>
         <div className="t-ui mt-5 space-y-2 text-[color:var(--text-muted)]">

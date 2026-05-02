@@ -1,327 +1,297 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-04-28T18:27:13.7227726Z",
+  "generatedAt": "2026-04-30T00:00:00.0000000Z",
   "title": "Design System: Raptile Studio",
   "extensions": {
     "colorMeta": {
-      "charcoal-ink": {
+      "stage-black": {
         "role": "neutral",
-        "displayName": "Charcoal Ink",
-        "canonical": "oklch(0.11 0.012 40)",
+        "displayName": "Stage Black",
+        "canonical": "oklch(0.11 0.004 255)",
         "tonalRamp": [
-          "oklch(0.04 0.008 40)",
-          "oklch(0.07 0.009 40)",
-          "oklch(0.11 0.012 40)",
-          "oklch(0.15 0.012 40)",
-          "oklch(0.22 0.012 40)",
-          "oklch(0.34 0.011 40)",
-          "oklch(0.58 0.01 40)",
-          "oklch(0.92 0.01 40)"
+          "oklch(0.03 0.002 255)",
+          "oklch(0.06 0.003 255)",
+          "oklch(0.11 0.004 255)",
+          "oklch(0.15 0.004 255)",
+          "oklch(0.22 0.005 255)",
+          "oklch(0.34 0.006 255)",
+          "oklch(0.58 0.008 255)",
+          "oklch(0.92 0.008 255)"
         ]
       },
-      "warm-shadow": {
+      "panel-black": {
         "role": "neutral",
-        "displayName": "Warm Shadow",
-        "canonical": "oklch(0.145 0.015 38)",
+        "displayName": "Panel Black",
+        "canonical": "oklch(0.145 0.005 255)",
         "tonalRamp": [
-          "oklch(0.05 0.009 38)",
-          "oklch(0.09 0.01 38)",
-          "oklch(0.145 0.015 38)",
-          "oklch(0.19 0.015 38)",
-          "oklch(0.27 0.015 38)",
-          "oklch(0.39 0.014 38)",
-          "oklch(0.63 0.012 38)",
-          "oklch(0.93 0.01 38)"
+          "oklch(0.05 0.002 255)",
+          "oklch(0.08 0.003 255)",
+          "oklch(0.145 0.005 255)",
+          "oklch(0.19 0.005 255)",
+          "oklch(0.27 0.006 255)",
+          "oklch(0.39 0.007 255)",
+          "oklch(0.63 0.009 255)",
+          "oklch(0.93 0.009 255)"
         ]
       },
-      "ash-lift": {
+      "graphite-plane": {
         "role": "neutral",
-        "displayName": "Ash Lift",
-        "canonical": "oklch(0.18 0.016 40)",
+        "displayName": "Graphite Plane",
+        "canonical": "oklch(0.19 0.006 255)",
         "tonalRamp": [
-          "oklch(0.06 0.008 40)",
-          "oklch(0.1 0.009 40)",
-          "oklch(0.18 0.016 40)",
-          "oklch(0.24 0.016 40)",
-          "oklch(0.32 0.015 40)",
-          "oklch(0.45 0.013 40)",
-          "oklch(0.68 0.011 40)",
-          "oklch(0.94 0.01 40)"
+          "oklch(0.06 0.002 255)",
+          "oklch(0.1 0.003 255)",
+          "oklch(0.19 0.006 255)",
+          "oklch(0.24 0.006 255)",
+          "oklch(0.32 0.007 255)",
+          "oklch(0.45 0.008 255)",
+          "oklch(0.68 0.009 255)",
+          "oklch(0.94 0.009 255)"
         ]
       },
-      "parchment": {
-        "role": "neutral",
-        "displayName": "Parchment",
-        "canonical": "oklch(0.92 0.012 78)",
-        "tonalRamp": [
-          "oklch(0.16 0.01 78)",
-          "oklch(0.26 0.011 78)",
-          "oklch(0.4 0.012 78)",
-          "oklch(0.55 0.012 78)",
-          "oklch(0.68 0.012 78)",
-          "oklch(0.8 0.012 78)",
-          "oklch(0.88 0.012 78)",
-          "oklch(0.95 0.011 78)"
-        ]
-      },
-      "muted-silt": {
-        "role": "neutral",
-        "displayName": "Muted Silt",
-        "canonical": "oklch(0.68 0.018 72)",
-        "tonalRamp": [
-          "oklch(0.18 0.01 72)",
-          "oklch(0.29 0.012 72)",
-          "oklch(0.42 0.014 72)",
-          "oklch(0.55 0.015 72)",
-          "oklch(0.68 0.018 72)",
-          "oklch(0.78 0.015 72)",
-          "oklch(0.86 0.012 72)",
-          "oklch(0.94 0.01 72)"
-        ]
-      },
-      "subtle-dust": {
-        "role": "neutral",
-        "displayName": "Subtle Dust",
-        "canonical": "oklch(0.46 0.015 62)",
-        "tonalRamp": [
-          "oklch(0.12 0.008 62)",
-          "oklch(0.2 0.01 62)",
-          "oklch(0.3 0.012 62)",
-          "oklch(0.4 0.013 62)",
-          "oklch(0.46 0.015 62)",
-          "oklch(0.58 0.014 62)",
-          "oklch(0.73 0.012 62)",
-          "oklch(0.9 0.01 62)"
-        ]
-      },
-      "amber-bronze": {
+      "chalk": {
         "role": "primary",
-        "displayName": "Amber Bronze",
-        "canonical": "oklch(0.69 0.085 48)",
+        "displayName": "Chalk",
+        "canonical": "oklch(0.93 0.008 90)",
         "tonalRamp": [
-          "oklch(0.18 0.055 48)",
-          "oklch(0.28 0.06 48)",
-          "oklch(0.4 0.07 48)",
-          "oklch(0.52 0.08 48)",
-          "oklch(0.69 0.085 48)",
-          "oklch(0.78 0.075 48)",
-          "oklch(0.86 0.055 48)",
-          "oklch(0.93 0.035 48)"
+          "oklch(0.16 0.004 90)",
+          "oklch(0.26 0.005 90)",
+          "oklch(0.4 0.006 90)",
+          "oklch(0.55 0.007 90)",
+          "oklch(0.68 0.008 90)",
+          "oklch(0.8 0.008 90)",
+          "oklch(0.88 0.008 90)",
+          "oklch(0.95 0.007 90)"
         ]
       },
-      "amber-bright": {
-        "role": "primary",
-        "displayName": "Amber Bright",
-        "canonical": "oklch(0.75 0.08 50)",
-        "tonalRamp": [
-          "oklch(0.2 0.05 50)",
-          "oklch(0.3 0.058 50)",
-          "oklch(0.42 0.068 50)",
-          "oklch(0.56 0.075 50)",
-          "oklch(0.75 0.08 50)",
-          "oklch(0.82 0.068 50)",
-          "oklch(0.89 0.05 50)",
-          "oklch(0.95 0.03 50)"
-        ]
-      },
-      "ember-glow": {
-        "role": "primary",
-        "displayName": "Ember Glow",
-        "canonical": "oklch(0.64 0.09 46)",
-        "tonalRamp": [
-          "oklch(0.17 0.06 46)",
-          "oklch(0.26 0.07 46)",
-          "oklch(0.38 0.08 46)",
-          "oklch(0.5 0.085 46)",
-          "oklch(0.64 0.09 46)",
-          "oklch(0.74 0.075 46)",
-          "oklch(0.84 0.05 46)",
-          "oklch(0.93 0.03 46)"
-        ]
-      },
-      "amber-haze": {
-        "role": "primary",
-        "displayName": "Amber Haze",
-        "canonical": "oklch(0.69 0.085 48 / 0.12)",
-        "tonalRamp": [
-          "oklch(0.18 0.05 48 / 0.04)",
-          "oklch(0.28 0.055 48 / 0.05)",
-          "oklch(0.4 0.06 48 / 0.07)",
-          "oklch(0.52 0.07 48 / 0.09)",
-          "oklch(0.69 0.085 48 / 0.12)",
-          "oklch(0.78 0.075 48 / 0.11)",
-          "oklch(0.87 0.055 48 / 0.08)",
-          "oklch(0.94 0.035 48 / 0.04)"
-        ]
-      },
-      "sold-out-oxide": {
+      "smoke": {
         "role": "neutral",
-        "displayName": "Sold Out Oxide",
-        "canonical": "oklch(0.38 0.04 40)",
+        "displayName": "Smoke",
+        "canonical": "oklch(0.72 0.01 255)",
         "tonalRamp": [
-          "oklch(0.11 0.02 40)",
-          "oklch(0.18 0.025 40)",
-          "oklch(0.26 0.03 40)",
-          "oklch(0.34 0.035 40)",
-          "oklch(0.38 0.04 40)",
-          "oklch(0.48 0.038 40)",
-          "oklch(0.63 0.03 40)",
-          "oklch(0.86 0.02 40)"
+          "oklch(0.18 0.003 255)",
+          "oklch(0.29 0.004 255)",
+          "oklch(0.42 0.005 255)",
+          "oklch(0.55 0.007 255)",
+          "oklch(0.72 0.01 255)",
+          "oklch(0.78 0.009 255)",
+          "oklch(0.86 0.008 255)",
+          "oklch(0.94 0.007 255)"
+        ]
+      },
+      "steel": {
+        "role": "neutral",
+        "displayName": "Steel",
+        "canonical": "oklch(0.52 0.008 255)",
+        "tonalRamp": [
+          "oklch(0.12 0.003 255)",
+          "oklch(0.2 0.004 255)",
+          "oklch(0.3 0.005 255)",
+          "oklch(0.4 0.006 255)",
+          "oklch(0.52 0.008 255)",
+          "oklch(0.58 0.008 255)",
+          "oklch(0.73 0.009 255)",
+          "oklch(0.9 0.008 255)"
+        ]
+      },
+      "frost": {
+        "role": "neutral",
+        "displayName": "Frost",
+        "canonical": "oklch(0.86 0.01 250)",
+        "tonalRamp": [
+          "oklch(0.14 0.003 250)",
+          "oklch(0.24 0.004 250)",
+          "oklch(0.38 0.006 250)",
+          "oklch(0.54 0.008 250)",
+          "oklch(0.86 0.01 250)",
+          "oklch(0.9 0.01 250)",
+          "oklch(0.94 0.009 250)",
+          "oklch(0.98 0.008 250)"
+        ]
+      },
+      "focus-ice": {
+        "role": "primary",
+        "displayName": "Focus Ice",
+        "canonical": "oklch(0.78 0.022 235)",
+        "tonalRamp": [
+          "oklch(0.2 0.01 235)",
+          "oklch(0.3 0.012 235)",
+          "oklch(0.42 0.015 235)",
+          "oklch(0.56 0.018 235)",
+          "oklch(0.78 0.022 235)",
+          "oklch(0.84 0.02 235)",
+          "oklch(0.9 0.015 235)",
+          "oklch(0.95 0.01 235)"
+        ]
+      },
+      "dim-oxide": {
+        "role": "neutral",
+        "displayName": "Dim Oxide",
+        "canonical": "oklch(0.42 0.015 30)",
+        "tonalRamp": [
+          "oklch(0.11 0.006 30)",
+          "oklch(0.18 0.008 30)",
+          "oklch(0.26 0.01 30)",
+          "oklch(0.34 0.012 30)",
+          "oklch(0.42 0.015 30)",
+          "oklch(0.48 0.014 30)",
+          "oklch(0.63 0.012 30)",
+          "oklch(0.86 0.01 30)"
         ]
       },
       "glass-fill": {
         "role": "neutral",
         "displayName": "Glass Fill",
-        "canonical": "oklch(0.17 0.02 40 / 0.84)",
+        "canonical": "oklch(0.17 0.006 255 / 0.72)",
         "tonalRamp": [
-          "oklch(0.08 0.01 40 / 0.7)",
-          "oklch(0.12 0.012 40 / 0.74)",
-          "oklch(0.17 0.02 40 / 0.84)",
-          "oklch(0.22 0.02 40 / 0.84)",
-          "oklch(0.3 0.018 40 / 0.82)",
-          "oklch(0.42 0.016 40 / 0.78)",
-          "oklch(0.64 0.012 40 / 0.6)",
-          "oklch(0.9 0.01 40 / 0.3)"
+          "oklch(0.07 0.003 255 / 0.56)",
+          "oklch(0.11 0.004 255 / 0.62)",
+          "oklch(0.17 0.006 255 / 0.72)",
+          "oklch(0.22 0.007 255 / 0.72)",
+          "oklch(0.3 0.008 255 / 0.68)",
+          "oklch(0.42 0.008 255 / 0.62)",
+          "oklch(0.64 0.008 255 / 0.42)",
+          "oklch(0.9 0.008 255 / 0.18)"
         ]
       },
       "glass-border": {
         "role": "neutral",
         "displayName": "Glass Border",
-        "canonical": "oklch(0.92 0.012 80 / 0.1)",
+        "canonical": "oklch(0.94 0.008 250 / 0.14)",
         "tonalRamp": [
-          "oklch(0.12 0.01 80 / 0.04)",
-          "oklch(0.2 0.01 80 / 0.05)",
-          "oklch(0.34 0.01 80 / 0.06)",
-          "oklch(0.52 0.011 80 / 0.08)",
-          "oklch(0.92 0.012 80 / 0.1)",
-          "oklch(0.94 0.012 80 / 0.12)",
-          "oklch(0.96 0.012 80 / 0.16)",
-          "oklch(0.98 0.012 80 / 0.2)"
+          "oklch(0.12 0.004 250 / 0.03)",
+          "oklch(0.2 0.005 250 / 0.04)",
+          "oklch(0.34 0.006 250 / 0.06)",
+          "oklch(0.52 0.007 250 / 0.08)",
+          "oklch(0.94 0.008 250 / 0.14)",
+          "oklch(0.96 0.008 250 / 0.16)",
+          "oklch(0.98 0.008 250 / 0.18)",
+          "oklch(1 0.008 250 / 0.22)"
         ]
       },
       "glass-highlight": {
         "role": "neutral",
         "displayName": "Glass Highlight",
-        "canonical": "oklch(0.96 0.01 80 / 0.04)",
+        "canonical": "oklch(0.98 0.004 90 / 0.05)",
         "tonalRamp": [
-          "oklch(0.16 0.008 80 / 0.01)",
-          "oklch(0.28 0.008 80 / 0.015)",
-          "oklch(0.42 0.009 80 / 0.02)",
-          "oklch(0.58 0.01 80 / 0.03)",
-          "oklch(0.96 0.01 80 / 0.04)",
-          "oklch(0.98 0.01 80 / 0.055)",
-          "oklch(0.99 0.01 80 / 0.075)",
-          "oklch(1 0.01 80 / 0.1)"
+          "oklch(0.16 0.002 90 / 0.01)",
+          "oklch(0.28 0.003 90 / 0.015)",
+          "oklch(0.42 0.003 90 / 0.02)",
+          "oklch(0.58 0.004 90 / 0.03)",
+          "oklch(0.98 0.004 90 / 0.05)",
+          "oklch(0.99 0.004 90 / 0.06)",
+          "oklch(1 0.004 90 / 0.08)",
+          "oklch(1 0.004 90 / 0.1)"
         ]
       },
-      "glass-tint-warm": {
+      "glass-haze-top": {
         "role": "neutral",
-        "displayName": "Warm Tint",
-        "canonical": "oklch(0.3 0.025 42 / 0.18)",
+        "displayName": "Glass Haze Top",
+        "canonical": "oklch(0.34 0.01 250 / 0.16)",
         "tonalRamp": [
-          "oklch(0.11 0.012 42 / 0.05)",
-          "oklch(0.18 0.015 42 / 0.07)",
-          "oklch(0.3 0.025 42 / 0.18)",
-          "oklch(0.38 0.024 42 / 0.18)",
-          "oklch(0.5 0.02 42 / 0.16)",
-          "oklch(0.64 0.018 42 / 0.12)",
-          "oklch(0.8 0.012 42 / 0.08)",
-          "oklch(0.94 0.01 42 / 0.04)"
+          "oklch(0.1 0.004 250 / 0.04)",
+          "oklch(0.16 0.005 250 / 0.06)",
+          "oklch(0.34 0.01 250 / 0.16)",
+          "oklch(0.42 0.01 250 / 0.16)",
+          "oklch(0.5 0.009 250 / 0.14)",
+          "oklch(0.64 0.008 250 / 0.12)",
+          "oklch(0.8 0.007 250 / 0.08)",
+          "oklch(0.94 0.006 250 / 0.04)"
         ]
       },
-      "glass-tint-cool": {
+      "glass-haze-bottom": {
         "role": "neutral",
-        "displayName": "Cool Tint",
-        "canonical": "oklch(0.26 0.02 54 / 0.14)",
+        "displayName": "Glass Haze Bottom",
+        "canonical": "oklch(0.24 0.008 255 / 0.1)",
         "tonalRamp": [
-          "oklch(0.1 0.01 54 / 0.04)",
-          "oklch(0.16 0.012 54 / 0.06)",
-          "oklch(0.26 0.02 54 / 0.14)",
-          "oklch(0.34 0.02 54 / 0.14)",
-          "oklch(0.46 0.018 54 / 0.12)",
-          "oklch(0.6 0.015 54 / 0.1)",
-          "oklch(0.76 0.012 54 / 0.06)",
-          "oklch(0.92 0.01 54 / 0.04)"
+          "oklch(0.08 0.003 255 / 0.03)",
+          "oklch(0.14 0.004 255 / 0.04)",
+          "oklch(0.24 0.008 255 / 0.1)",
+          "oklch(0.34 0.008 255 / 0.1)",
+          "oklch(0.46 0.008 255 / 0.09)",
+          "oklch(0.6 0.007 255 / 0.08)",
+          "oklch(0.76 0.006 255 / 0.05)",
+          "oklch(0.92 0.005 255 / 0.03)"
         ]
       },
-      "shadow-ink": {
+      "shadow-depth": {
         "role": "neutral",
-        "displayName": "Shadow Ink",
-        "canonical": "oklch(0 0 0 / 0.16)",
+        "displayName": "Shadow Depth",
+        "canonical": "oklch(0 0 0 / 0.3)",
         "tonalRamp": [
           "oklch(0 0 0 / 0.04)",
-          "oklch(0 0 0 / 0.06)",
-          "oklch(0 0 0 / 0.08)",
+          "oklch(0 0 0 / 0.07)",
           "oklch(0 0 0 / 0.1)",
           "oklch(0 0 0 / 0.16)",
-          "oklch(0 0 0 / 0.2)",
-          "oklch(0 0 0 / 0.28)",
-          "oklch(0 0 0 / 0.38)"
+          "oklch(0 0 0 / 0.3)",
+          "oklch(0 0 0 / 0.38)",
+          "oklch(0 0 0 / 0.48)",
+          "oklch(0 0 0 / 0.6)"
         ]
       }
     },
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "Hero headlines and strongest brand statements."
+        "purpose": "Hero headlines and the strongest editorial statements."
       },
       "headline": {
         "displayName": "Headline",
-        "purpose": "Section leads and editorial headings."
+        "purpose": "Section leads, collection intros, and story breaks."
       },
       "product": {
         "displayName": "Product",
-        "purpose": "Card titles and compact commerce copy."
+        "purpose": "Product titles and compact commerce copy."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Readable descriptive paragraphs."
+        "purpose": "Readable descriptive paragraphs kept in narrow measures."
       },
       "label": {
         "displayName": "Label",
-        "purpose": "UI captions, badges, and state language."
+        "purpose": "Navigation links, CTAs, and state language."
       },
       "mono": {
         "displayName": "Mono",
-        "purpose": "Technical helper lines and metadata."
+        "purpose": "Technical helper lines and lightweight metadata."
       },
       "price": {
         "displayName": "Price",
-        "purpose": "Monospace pricing and commerce metadata."
+        "purpose": "Monospace pricing and commerce evidence."
       }
     },
     "shadows": [
       {
-        "name": "ambient-lift",
-        "value": "0 18px 48px oklch(0 0 0 / 0.16)",
-        "purpose": "Large panels and hero frames."
+        "name": "matte-edge",
+        "value": "inset 0 1px 0 oklch(0.94 0.008 250 / 0.06)",
+        "purpose": "Hairline lift on plain black surfaces."
       },
       {
-        "name": "soft-lift",
-        "value": "0 10px 24px oklch(0 0 0 / 0.16)",
-        "purpose": "Compact cards and callouts."
+        "name": "glass-float",
+        "value": "0 18px 44px oklch(0 0 0 / 0.3)",
+        "purpose": "Reserved lift for glass shells and elevated utilities."
       },
       {
-        "name": "inset-sheen",
-        "value": "inset 0 1px 0 oklch(0.96 0.01 80 / 0.04)",
-        "purpose": "Polished glass highlight on layered surfaces."
+        "name": "focus-halo",
+        "value": "0 0 0 2px oklch(0.78 0.022 235 / 0.18)",
+        "purpose": "Keyboard focus and selected states."
       }
     ],
     "motion": [
       {
         "name": "ease-out-expo",
         "value": "cubic-bezier(0.16, 1, 0.3, 1)",
-        "purpose": "Primary transitions and scroll-driven reveals."
+        "purpose": "Primary transitions and restrained reveals."
       },
       {
         "name": "duration-base",
-        "value": "250ms",
-        "purpose": "Button and panel state changes."
+        "value": "220ms",
+        "purpose": "Button, hover, and panel state changes."
       },
       {
         "name": "duration-slow",
-        "value": "400ms",
-        "purpose": "Story section fades and heavier reveals."
+        "value": "320ms",
+        "purpose": "Short cross-dissolves and section fades."
       }
     ],
     "breakpoints": [
@@ -352,104 +322,112 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Lead CTA for collection entry, story CTAs, and confirmation actions.",
+      "description": "Lead CTA for collection entry, checkout, and decisive actions on black surfaces.",
       "html": "<button class=\"ds-btn-primary\">Shop Collection</button>",
-      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:9999px;padding:12px 20px;background:oklch(0.69 0.085 48);color:oklch(0.11 0.012 40);font-family:'JetBrains Mono',monospace;font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;transition:transform 250ms cubic-bezier(0.16,1,0.3,1),background 250ms cubic-bezier(0.16,1,0.3,1),box-shadow 250ms cubic-bezier(0.16,1,0.3,1)}.ds-btn-primary:hover{transform:translateY(-1px);background:oklch(0.75 0.08 50)}.ds-btn-primary:focus-visible{outline:none;box-shadow:0 0 0 2px oklch(0.69 0.085 48 / 0.12),0 0 0 4px oklch(0.69 0.085 48 / 0.18)}"
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;border:1px solid oklch(0.94 0.008 250 / 0.08);border-radius:16px;padding:12px 18px;background:oklch(0.93 0.008 90);color:oklch(0.11 0.004 255);font-family:'JetBrains Mono',monospace;font-size:0.66rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;transition:transform 220ms cubic-bezier(0.16,1,0.3,1),background 220ms cubic-bezier(0.16,1,0.3,1),box-shadow 220ms cubic-bezier(0.16,1,0.3,1)}.ds-btn-primary:hover{transform:translateY(-1px);background:oklch(0.95 0.007 90)}.ds-btn-primary:focus-visible{outline:none;box-shadow:0 0 0 2px oklch(0.78 0.022 235 / 0.18)}"
     },
     {
       "name": "Ghost Button",
       "kind": "button",
       "refersTo": "button-ghost",
-      "description": "Secondary CTA used for story links, support routes, and utility actions.",
-      "html": "<button class=\"ds-btn-ghost\">Read the Story</button>",
-      "css": ".ds-btn-ghost{display:inline-flex;align-items:center;justify-content:center;border:1px solid oklch(0.92 0.012 80 / 0.1);border-radius:9999px;padding:12px 20px;background:oklch(0.17 0.02 40 / 0.84);color:oklch(0.92 0.012 78);font-family:'JetBrains Mono',monospace;font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;transition:border-color 250ms cubic-bezier(0.16,1,0.3,1),color 250ms cubic-bezier(0.16,1,0.3,1),background 250ms cubic-bezier(0.16,1,0.3,1)}.ds-btn-ghost:hover{border-color:oklch(0.69 0.085 48);color:oklch(0.92 0.012 78);background:oklch(0.17 0.02 40 / 0.92)}.ds-btn-ghost:focus-visible{outline:none;box-shadow:0 0 0 2px oklch(0.69 0.085 48 / 0.12)}"
+      "description": "Secondary CTA for editorial links, support routes, and utility actions.",
+      "html": "<button class=\"ds-btn-ghost\">Read the Edit</button>",
+      "css": ".ds-btn-ghost{display:inline-flex;align-items:center;justify-content:center;border:1px solid oklch(0.94 0.008 250 / 0.14);border-radius:16px;padding:12px 18px;background:transparent;color:oklch(0.93 0.008 90);font-family:'JetBrains Mono',monospace;font-size:0.66rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;transition:border-color 220ms cubic-bezier(0.16,1,0.3,1),background 220ms cubic-bezier(0.16,1,0.3,1),color 220ms cubic-bezier(0.16,1,0.3,1)}.ds-btn-ghost:hover{border-color:oklch(0.78 0.022 235 / 0.5);background:oklch(0.19 0.006 255 / 0.7)}.ds-btn-ghost:focus-visible{outline:none;box-shadow:0 0 0 2px oklch(0.78 0.022 235 / 0.18)}"
+    },
+    {
+      "name": "Plain Panel",
+      "kind": "card",
+      "refersTo": "panel-plain",
+      "description": "Default matte container for support content, product information, and quiet editorial framing.",
+      "html": "<div class=\"ds-panel-plain\"><div class=\"ds-panel-inner\">Panel content</div></div>",
+      "css": ".ds-panel-plain{position:relative;overflow:hidden;border:1px solid oklch(0.94 0.008 250 / 0.08);border-radius:20px;background:oklch(0.145 0.005 255);box-shadow:inset 0 1px 0 oklch(0.94 0.008 250 / 0.06)}.ds-panel-inner{position:relative;z-index:1;padding:24px;color:oklch(0.93 0.008 90);font-family:'Cabinet Grotesk',sans-serif}"
     },
     {
       "name": "Glass Panel",
       "kind": "card",
       "refersTo": "glass-panel",
-      "description": "Shared container for nav shells, footer blocks, story modules, and support surfaces.",
-      "html": "<div class=\"ds-panel\"><div class=\"ds-panel-inner\">Panel content</div></div>",
-      "css": ".ds-panel{position:relative;overflow:hidden;border:1px solid oklch(0.92 0.012 80 / 0.1);border-radius:28px;background:linear-gradient(180deg,oklch(0.17 0.02 40 / 0.92) 0%,oklch(0.17 0.02 40 / 0.84) 100%);backdrop-filter:blur(10px) saturate(118%);-webkit-backdrop-filter:blur(10px) saturate(118%);box-shadow:inset 0 1px 0 oklch(0.96 0.01 80 / 0.04),0 18px 48px oklch(0 0 0 / 0.16)}.ds-panel-inner{position:relative;z-index:1;padding:24px;color:oklch(0.92 0.012 78);font-family:'Cabinet Grotesk',sans-serif}"
+      "description": "Reserved shell for navigation, search, and other layered utilities that need separation over moving content.",
+      "html": "<div class=\"ds-panel-glass\"><div class=\"ds-panel-inner\">Layered content</div></div>",
+      "css": ".ds-panel-glass{position:relative;overflow:hidden;border:1px solid oklch(0.94 0.008 250 / 0.14);border-radius:24px;background:linear-gradient(180deg,oklch(0.17 0.006 255 / 0.78) 0%,oklch(0.17 0.006 255 / 0.72) 100%);backdrop-filter:blur(14px) saturate(116%);-webkit-backdrop-filter:blur(14px) saturate(116%);box-shadow:inset 0 1px 0 oklch(0.98 0.004 90 / 0.05),0 18px 44px oklch(0 0 0 / 0.3)}.ds-panel-glass::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,oklch(0.34 0.01 250 / 0.16) 0%,transparent 42%),linear-gradient(220deg,transparent 0%,oklch(0.24 0.008 255 / 0.1) 100%);pointer-events:none}.ds-panel-inner{position:relative;z-index:1;padding:24px;color:oklch(0.93 0.008 90);font-family:'Cabinet Grotesk',sans-serif}"
     },
     {
       "name": "Product Card",
       "kind": "card",
       "refersTo": "product-card",
-      "description": "Square image card with compact metadata below for collection and featured product grids.",
-      "html": "<article class=\"ds-product-card\"><div class=\"ds-product-media\"></div><div class=\"ds-product-meta\"><div class=\"ds-product-title\">Product title</div><div class=\"ds-product-row\"><span class=\"ds-product-price\">$68</span><span class=\"ds-product-state\">Ready</span></div></div></article>",
-      "css": ".ds-product-card{display:grid;gap:16px;color:oklch(0.92 0.012 78);font-family:'Cabinet Grotesk',sans-serif}.ds-product-media{aspect-ratio:1/1;border:1px solid oklch(0.92 0.012 80 / 0.1);border-radius:28px;background:oklch(0.18 0.016 40)}.ds-product-meta{display:grid;gap:8px}.ds-product-title{font-size:clamp(0.95rem,2vw,1.4rem);font-weight:500;line-height:1.12}.ds-product-row{display:flex;align-items:center;justify-content:space-between;gap:12px}.ds-product-price,.ds-product-state{font-family:'JetBrains Mono',monospace;font-size:0.75rem;letter-spacing:0;text-transform:none;color:oklch(0.68 0.018 72)}"
+      "description": "Low-chrome product presentation with a framed image stage and restrained metadata below.",
+      "html": "<article class=\"ds-product-card\"><div class=\"ds-product-media\"></div><div class=\"ds-product-meta\"><div class=\"ds-product-title\">Product title</div><div class=\"ds-product-row\"><span class=\"ds-product-price\">INR 3,200</span><span class=\"ds-product-state\">In stock</span></div></div></article>",
+      "css": ".ds-product-card{display:grid;gap:14px;color:oklch(0.93 0.008 90);font-family:'Cabinet Grotesk',sans-serif}.ds-product-media{aspect-ratio:1/1;border:1px solid oklch(0.94 0.008 250 / 0.08);border-radius:20px;background:oklch(0.19 0.006 255)}.ds-product-meta{display:grid;gap:6px}.ds-product-title{font-size:clamp(1rem,1.8vw,1.22rem);font-weight:500;line-height:1.16;letter-spacing:-0.01em}.ds-product-row{display:flex;align-items:center;justify-content:space-between;gap:12px}.ds-product-price,.ds-product-state{font-family:'JetBrains Mono',monospace;font-size:0.78rem;letter-spacing:0;color:oklch(0.72 0.01 255)}"
     },
     {
       "name": "Navigation Shell",
       "kind": "nav",
       "refersTo": "nav-shell",
-      "description": "Sticky header shell with a taller frame, logo anchor, and clean text links.",
+      "description": "Slim, quiet header that can live as a plain black band or a restrained glass shell over photography.",
       "html": "<header class=\"ds-nav\"><a class=\"ds-logo\" href=\"/\">Raptile Studio</a><nav class=\"ds-nav-links\"><a href=\"/collection\">Collection</a><a href=\"/about\">About</a></nav></header>",
-      "css": ".ds-nav{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:84px;padding:16px 24px;border-bottom:1px solid oklch(0.92 0.012 80 / 0.1);background:oklch(0.145 0.015 38 / 0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:oklch(0.92 0.012 78)}.ds-logo{font-family:'Cabinet Grotesk',sans-serif;font-size:1.5rem;font-weight:700;letter-spacing:-0.04em;text-decoration:none}.ds-nav-links{display:flex;gap:20px;font-family:'JetBrains Mono',monospace;font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase}.ds-nav-links a{text-decoration:none;color:oklch(0.68 0.018 72);transition:color 250ms cubic-bezier(0.16,1,0.3,1)}.ds-nav-links a:hover{color:oklch(0.92 0.012 78)}"
+      "css": ".ds-nav{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:72px;padding:16px 20px;border:1px solid oklch(0.94 0.008 250 / 0.08);border-radius:20px;background:oklch(0.11 0.004 255 / 0.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:oklch(0.93 0.008 90)}.ds-logo{font-family:'Cabinet Grotesk',sans-serif;font-size:1.32rem;font-weight:600;letter-spacing:-0.04em;text-decoration:none}.ds-nav-links{display:flex;gap:18px;font-family:'JetBrains Mono',monospace;font-size:0.66rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase}.ds-nav-links a{text-decoration:none;color:oklch(0.72 0.01 255);transition:color 220ms cubic-bezier(0.16,1,0.3,1)}.ds-nav-links a:hover{color:oklch(0.93 0.008 90)}"
     },
     {
       "name": "Scroll Narrative",
       "kind": "custom",
-      "refersTo": "glass-panel",
-      "description": "Pinned image stage plus scroll-linked copy blocks for fabric notes and brand story sections.",
-      "html": "<section class=\"ds-story\"><aside class=\"ds-story-stage\"></aside><div class=\"ds-story-copy\"><h3>240gsm body</h3><p>Built to look finished.</p></div></section>",
-      "css": ".ds-story{display:grid;gap:24px}.ds-story-stage{min-height:28rem;border:1px solid oklch(0.92 0.012 80 / 0.1);border-radius:34px;background:oklch(0.18 0.016 40);box-shadow:0 18px 48px oklch(0 0 0 / 0.16)}.ds-story-copy h3{margin:0 0 8px;font-family:'Cabinet Grotesk',sans-serif;font-size:clamp(1.6rem,5vw,4rem);line-height:1.02;letter-spacing:-0.03em;color:oklch(0.92 0.012 78)}.ds-story-copy p{margin:0;font-family:'Cabinet Grotesk',sans-serif;font-size:0.98rem;line-height:1.85;color:oklch(0.68 0.018 72)}"
+      "refersTo": "panel-plain",
+      "description": "Distilled story section with a large image field and narrow copy blocks that read like captions in a spread.",
+      "html": "<section class=\"ds-story\"><aside class=\"ds-story-stage\"></aside><div class=\"ds-story-copy\"><h3>Heavyweight body</h3><p>Built to hold shape and stay quiet.</p></div></section>",
+      "css": ".ds-story{display:grid;gap:24px}.ds-story-stage{min-height:28rem;border:1px solid oklch(0.94 0.008 250 / 0.08);border-radius:24px;background:oklch(0.19 0.006 255)}.ds-story-copy{max-width:42ch}.ds-story-copy h3{margin:0 0 8px;font-family:'Cabinet Grotesk',sans-serif;font-size:clamp(1.5rem,4.2vw,3.5rem);line-height:1;letter-spacing:-0.03em;color:oklch(0.93 0.008 90)}.ds-story-copy p{margin:0;font-family:'Cabinet Grotesk',sans-serif;font-size:0.98rem;line-height:1.78;color:oklch(0.72 0.01 255)}"
     }
   ],
   "narrative": {
-    "northStar": "Polished Disruption",
+    "northStar": "Noir Precision",
     "overview": [
-      "Raptile Studio reads like a fashion label with a point of view, not a storefront trying to please everyone. The system is built to keep the cloth in front, with the interface acting as a precise frame around it.",
-      "The homepage is story-led, the collection page is commerce-led, and the about page is a slower editorial narrative, but they all share the same rule: the garment carries the emotion, the UI sharpens the read.",
-      "The visual tone is sharp, polished, and high-concept. Surfaces sit in deep warmth instead of flat black, accents stay deliberate, and motion should feel composed rather than playful."
+      "Raptile Studio should move away from smoked-warm disruption and into a colder, darker editorial frame. The site reads like a fashion spread on a black field, with fewer containers, wider negative space, sharper type, and product imagery carrying the emotional charge.",
+      "The shell stays almost silent. Most structure comes from spacing, alignment, and thin tone shifts between stage-black, panel-black, and graphite-plane. Plain panels are the baseline, and glass is reserved for the header, drawers, search, or any surface that truly benefits from layered separation.",
+      "Commerce stays obvious, but it should feel integrated into the editorial rhythm rather than bolted on as promo UI. The system explicitly rejects warm metallic accents, generic glow, overused blur, and merchandising clutter."
     ],
     "keyCharacteristics": [
-      "Cloth first, interface second.",
-      "Sharp surfaces, not flat black.",
-      "One amber accent, used with intent.",
-      "Scroll-led storytelling with controlled motion.",
-      "Commerce surfaces stay legible, compact, and exact.",
-      "The brand should read as specific and self-possessed, not generic or borrowed."
+      "Near-black canvas with pale type.",
+      "Plain planes first, glass second.",
+      "Monochrome system with one cold focus note.",
+      "Large image fields and narrow copy measures.",
+      "Sparse motion and deliberate pacing.",
+      "Commerce clarity without promo noise."
     ],
     "rules": [
       {
-        "name": "One Accent Rule",
-        "body": "Amber is reserved for primary actions, active states, and the occasional editorial callout. If it starts appearing everywhere, the system has lost its focus.",
+        "name": "Black Is the Field Rule",
+        "body": "The background should read as one continuous stage, not a patchwork of competing dark tones.",
         "section": "colors"
       },
       {
-        "name": "Noise-On-UI Rule",
-        "body": "Texture belongs on panels, shells, and controls only. Product photography stays clean.",
+        "name": "Plain Before Glass Rule",
+        "body": "If a matte plane solves the hierarchy, do not blur it.",
         "section": "colors"
       },
       {
-        "name": "Mono Layer Rule",
-        "body": "JetBrains Mono handles the technical layer, prices, labels, and system metadata.",
+        "name": "Column Stays Narrow Rule",
+        "body": "Editorial paragraphs should usually sit between 36ch and 44ch.",
         "section": "typography"
       },
       {
-        "name": "Flat By Default Rule",
-        "body": "Resting surfaces should read as layered planes, not floating widgets. Depth appears only when the component needs it.",
+        "name": "Blur Must Justify Itself Rule",
+        "body": "Blur is only allowed when content visibly moves behind the surface and the separation materially helps.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "Do keep product imagery dominant and let the UI stay dark, warm, and polished.",
-      "Do keep the background stage, page transitions, and navigation shell composed so the shell supports the cloth.",
-      "Do use noise-surface and glass-panel on controls, headers, footers, and story cards so texture lives on interface elements, not garments.",
-      "Do keep the homepage sequence explicit: Onyx collection first, featured products second, fabric story third."
+      "Do keep the site predominantly black, with just enough tone separation to guide the eye.",
+      "Do let product imagery, silhouette, and spacing carry most of the emotion.",
+      "Do use plain panels as the default structure and reserve glass for shell or utility layers.",
+      "Do keep copy blocks narrow, headlines short, and CTAs obvious through contrast.",
+      "Do make support and commerce surfaces feel edited, not promotional.",
+      "Do keep motion quiet and quick enough to disappear."
     ],
     "donts": [
-      "Don't use generic SaaS gradients.",
-      "Don't use glowing dashboard cards.",
-      "Don't use loud streetwear neon.",
-      "Don't use playful DTC pastels.",
-      "Don't use white-label Shopify templates.",
-      "Don't let the copy sound like AI slop or \"just another clothing brand\".",
-      "Don't add decorative amber fill on secondary UI.",
-      "Don't rely on hover gimmicks or icon-card grids.",
-      "Don't let any interface treatment compete with product images."
+      "Don't warm the palette with amber, bronze, or brown luxury cues.",
+      "Don't turn every section into a rounded card.",
+      "Don't stack glass on glass or use blur as a default styling shortcut.",
+      "Don't use glowing highlights, visible grain, or cinematic haze on product imagery.",
+      "Don't fill the homepage with badges, metrics, icon grids, or promo strips.",
+      "Don't let editorial minimalism become sterile emptiness, the product and copy still need tension.",
+      "Don't hide critical commerce actions behind hover-only or gesture-dependent affordances."
     ]
   }
 }

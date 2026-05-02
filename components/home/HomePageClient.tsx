@@ -231,7 +231,10 @@ export function HomePageClient({ collectionTitle, collectionDescription, product
         <div className="flex flex-col gap-4 border-b border-[color:var(--glass-border)] pb-5 md:flex-row md:items-end md:justify-between">
           <div className="space-y-3">
             <div className="t-label text-[color:var(--text-muted)]">Shop the drop</div>
-            <h2 className="t-display max-w-[10ch] text-[color:var(--text)]">Featured Products</h2>
+            <h2 className="t-display max-w-[10ch] text-[color:var(--text)] md:flex md:max-w-none md:items-end md:gap-4">
+              <span className="block md:inline">Featured</span>
+              <span className="block md:inline">Products</span>
+            </h2>
           </div>
 
           <Link

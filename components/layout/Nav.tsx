@@ -5,6 +5,7 @@ import * as motion from "framer-motion/client";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { createPortal } from "react-dom";
 import { useEffect, useRef, useState } from "react";
 
 import { BrandLogo } from "@/components/layout/BrandLogo";
@@ -132,6 +133,7 @@ export function Nav() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<CatalogSearchResult[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const desktopInputRef = useRef<HTMLInputElement | null>(null);
   const mobileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -210,6 +212,10 @@ export function Nav() {
   }, [mobileMode]);
 
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
     if (mobileMode !== "menu") {
       return;
     }
@@ -284,6 +290,104 @@ export function Nav() {
       />
     </form>
   );
+
+  const mobileMenuPortal =
+    isMounted && mobileMode === "menu"
+      ? createPortal(
+          <motion.div
+            key="mobile-menu"
+            className="fixed inset-0 z-[220] md:hidden"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <button
+              aria-label="Close navigation menu"
+              className="absolute inset-0 z-0 bg-[color:rgba(0,0,0,0.6)]"
+              onClick={() => setMobileMode("idle")}
+              type="button"
+            />
+
+            <div className="absolute inset-x-0 top-[var(--header-height)] bottom-0 z-[1] border-t border-[color:var(--glass-border)] bg-[color:color-mix(in_oklch,var(--bg-elevated)_94%,var(--bg))] shadow-[0_24px_70px_rgba(0,0,0,0.34)]">
+              <div className="h-full overflow-y-auto px-4 py-4">
+                <div className="grid gap-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-2">
+                      <div className="t-label text-[color:var(--text-muted)]">Menu</div>
+                      <div className="font-display text-[1.6rem] font-bold tracking-[-0.04em] text-[color:var(--text)]">
+                        Navigate the store
+                      </div>
+                    </div>
+                    <button
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]"
+                      onClick={() => setMobileMode("idle")}
+                      type="button"
+                    >
+                      <CloseIcon className="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  <div className="grid gap-4">
+                    {mobileMenuSections.map((section) => (
+                      <div key={section.label} className="grid gap-3">
+                        <div className="t-label text-[color:var(--text-muted)]">{section.label}</div>
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          {section.links.map((link) => {
+                            const active = isActiveLink(pathname, link.href);
+
+                            return (
+                              <Link
+                                key={link.href}
+                                href={link.href}
+                                className={cn(
+                                  "flex items-center justify-between rounded-[22px] border px-4 py-4 transition duration-200",
+                                  active
+                                    ? "border-[color:var(--accent)] bg-[color:var(--accent-subtle)] text-[color:var(--text)]"
+                                    : "border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] text-[color:var(--text-muted)] hover:border-[color:var(--accent)] hover:text-[color:var(--text)]",
+                                )}
+                                onClick={() => setMobileMode("idle")}
+                              >
+                                <span className="font-display text-[1.05rem] font-semibold tracking-[-0.03em]">
+                                  {link.label}
+                                </span>
+                                <ArrowRightIcon className="h-4 w-4 shrink-0" />
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="grid gap-3 border-t border-[color:var(--glass-border)] pt-4">
+                    <p className="t-ui max-w-[26rem] text-[color:var(--text-muted)]">
+                      Heavyweight fits, precise cuts, and direct support routes. No extra page wandering.
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <Link
+                        className="ghost-button rounded-full px-4 py-2"
+                        href="/collection"
+                        onClick={() => setMobileMode("idle")}
+                      >
+                        <span className="t-label">Shop now</span>
+                      </Link>
+                      <Link
+                        className="ghost-button rounded-full px-4 py-2"
+                        href="/size-guide"
+                        onClick={() => setMobileMode("idle")}
+                      >
+                        <span className="t-label">Size guide</span>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>,
+          document.body,
+        )
+      : null;
 
   const searchOverlay = (
     <motion.div
@@ -514,101 +618,13 @@ export function Nav() {
                     <ArrowRightIcon className="h-4 w-4 text-[color:var(--text-subtle)] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-[color:var(--text)]" />
                   </Link>
                 </motion.div>
-              ) : mobileMode === "menu" ? (
-                <motion.div
-                  key="mobile-menu"
-                  className="fixed inset-0 z-[140] md:hidden"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <button
-                    aria-label="Close navigation menu"
-                    className="absolute inset-0 z-0 bg-[color:rgba(0,0,0,0.6)]"
-                    onClick={() => setMobileMode("idle")}
-                    type="button"
-                  />
-
-                  <div className="absolute inset-x-0 top-[var(--header-height)] bottom-0 z-[1] border-t border-[color:var(--glass-border)] bg-[color:color-mix(in_oklch,var(--bg-elevated)_94%,var(--bg))] shadow-[0_24px_70px_rgba(0,0,0,0.34)]">
-                    <div className="h-full overflow-y-auto px-4 py-4">
-                      <div className="grid gap-4">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="space-y-2">
-                            <div className="t-label text-[color:var(--text-muted)]">Menu</div>
-                            <div className="font-display text-[1.6rem] font-bold tracking-[-0.04em] text-[color:var(--text)]">
-                              Navigate the store
-                            </div>
-                          </div>
-                          <button
-                            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.03)] text-[color:var(--text-muted)] transition duration-200 hover:border-[color:var(--accent)] hover:text-[color:var(--text)]"
-                            onClick={() => setMobileMode("idle")}
-                            type="button"
-                          >
-                            <CloseIcon className="h-4 w-4" />
-                          </button>
-                        </div>
-
-                        <div className="grid gap-4">
-                          {mobileMenuSections.map((section) => (
-                            <div key={section.label} className="grid gap-3">
-                              <div className="t-label text-[color:var(--text-muted)]">{section.label}</div>
-                              <div className="grid gap-3 sm:grid-cols-2">
-                                {section.links.map((link) => {
-                                  const active = isActiveLink(pathname, link.href);
-
-                                  return (
-                                    <Link
-                                      key={link.href}
-                                      href={link.href}
-                                      className={cn(
-                                        "flex items-center justify-between rounded-[22px] border px-4 py-4 transition duration-200",
-                                        active
-                                          ? "border-[color:var(--accent)] bg-[color:var(--accent-subtle)] text-[color:var(--text)]"
-                                          : "border-[color:var(--glass-border)] bg-[color:rgba(255,255,255,0.02)] text-[color:var(--text-muted)] hover:border-[color:var(--accent)] hover:text-[color:var(--text)]",
-                                      )}
-                                      onClick={() => setMobileMode("idle")}
-                                    >
-                                      <span className="font-display text-[1.05rem] font-semibold tracking-[-0.03em]">
-                                        {link.label}
-                                      </span>
-                                      <ArrowRightIcon className="h-4 w-4 shrink-0" />
-                                    </Link>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className="grid gap-3 border-t border-[color:var(--glass-border)] pt-4">
-                          <p className="t-ui max-w-[26rem] text-[color:var(--text-muted)]">
-                            Heavyweight fits, precise cuts, and direct support routes. No extra page wandering.
-                          </p>
-                          <div className="flex flex-wrap gap-2">
-                            <Link
-                              className="ghost-button rounded-full px-4 py-2"
-                              href="/collection"
-                              onClick={() => setMobileMode("idle")}
-                            >
-                              <span className="t-label">Shop now</span>
-                            </Link>
-                            <Link
-                              className="ghost-button rounded-full px-4 py-2"
-                              href="/size-guide"
-                              onClick={() => setMobileMode("idle")}
-                            >
-                              <span className="t-label">Size guide</span>
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
               ) : null}
             </AnimatePresence>
           </div>
+
+          <AnimatePresence initial={false}>
+            {mobileMenuPortal}
+          </AnimatePresence>
 
           <AnimatePresence>{desktopSearchOpen ? searchOverlay : null}</AnimatePresence>
         </div>
